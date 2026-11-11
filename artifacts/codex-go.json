@@ -1,0 +1,11 @@
+{
+  "version": "0.17.0",
+  "abi": "arm64-v8a",
+  "apkBytes": 290310629,
+  "sha256": "1bebe795929d5e7d67ea8521cf1b8d6b57fa074109cd460b034819f2be8f2fa1",
+  "unitTests": 115,
+  "unitFailures": 0,
+  "uiSmoke": false,
+  "runtimeIncluded": true,
+  "runtimeSourceApkSha256": "bc3397b104129776aba6e9eaff213dab878c189863ec78c5b174650cbbc7bf16"
+}

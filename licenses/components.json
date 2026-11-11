@@ -1,0 +1,1571 @@
+{
+  "version": "0.17.0",
+  "originalLicense": "MIT",
+  "scope": "Original Codex Go contributions only; dependencies and artwork retain upstream terms.",
+  "runtimeInputs": [
+    {
+      "name": "codex",
+      "kind": "codex",
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.165.0/codex-package-aarch64-unknown-linux-musl.tar.gz",
+      "file": "codex-package-0.165.0.tar.gz",
+      "sha256": "c8b2844fdef57498572db960344aee8c836ce9f75c203379da0a9c3a334fc3b7"
+    },
+    {
+      "name": "alpine",
+      "kind": "rootfs",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/aarch64/alpine-minirootfs-3.22.1-aarch64.tar.gz",
+      "file": "alpine-3.22.1.tar.gz",
+      "sha256": "188416d41f9f0c9a6e9427b75149e43ccf3a89587b2d27c9ad506e7ffca78d1c"
+    },
+    {
+      "name": "libandroid-shmem",
+      "kind": "deb",
+      "url": "https://packages.termux.dev/apt/termux-main/pool/main/liba/libandroid-shmem/libandroid-shmem_0.7_aarch64.deb",
+      "file": "libandroid-shmem_0.7_aarch64.deb",
+      "sha256": "0da3a24d558b93c92bcf8d611e0826a99ff96e396b148e6cdf33b47c47c57ff6"
+    },
+    {
+      "name": "libtalloc",
+      "kind": "deb",
+      "url": "https://packages.termux.dev/apt/termux-main/pool/main/libt/libtalloc/libtalloc_2.5.0_aarch64.deb",
+      "file": "libtalloc_2.5.0_aarch64.deb",
+      "sha256": "556591f43bb773ad8777e1a29522640866a55f95dab71914418b94a8c58ad5a7"
+    },
+    {
+      "name": "proot",
+      "kind": "deb",
+      "url": "https://packages.termux.dev/apt/termux-main/pool/main/p/proot/proot_5.1.107.101_aarch64.deb",
+      "file": "proot_5.1.107.101_aarch64.deb",
+      "sha256": "a28355e9be257e1f87f4e9294b3118470d4fd7a5442fed8b278f4443c83407d7"
+    },
+    {
+      "name": "ada-libs",
+      "kind": "apk",
+      "version": "2.9.2-r4",
+      "license": "( Apache-2.0 OR MIT ) AND MPL-2.0",
+      "origin": "ada",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/ada-libs-2.9.2-r4.apk",
+      "file": "aarch64-ada-libs-2.9.2-r4.apk",
+      "sha256": "58147891c4ae32752fd81792dfec19c71b8d88661c4aa30db3f26600df33bb28"
+    },
+    {
+      "name": "brotli-libs",
+      "kind": "apk",
+      "version": "1.1.1-r0",
+      "license": "MIT",
+      "origin": "brotli",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/brotli-libs-1.1.1-r0.apk",
+      "file": "aarch64-brotli-libs-1.1.1-r0.apk",
+      "sha256": "c4ecb26f02ab93c7e41c019c98bf024bd6d90593be308a003bc516806732500e"
+    },
+    {
+      "name": "busybox",
+      "kind": "apk",
+      "version": "1.37.0-r20",
+      "license": "GPL-2.0-only",
+      "origin": "busybox",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/busybox-1.37.0-r20.apk",
+      "file": "aarch64-busybox-1.37.0-r20.apk",
+      "sha256": "9d25af67564c92a4a4c603462efdbcd23019e90b8785f1ebcad640cbb1551c93"
+    },
+    {
+      "name": "busybox-binsh",
+      "kind": "apk",
+      "version": "1.37.0-r20",
+      "license": "GPL-2.0-only",
+      "origin": "busybox",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/busybox-binsh-1.37.0-r20.apk",
+      "file": "aarch64-busybox-binsh-1.37.0-r20.apk",
+      "sha256": "9180dcee3f67ea806fe45361cffab94f8ce7e417d5f373bb0d989e88eb609903"
+    },
+    {
+      "name": "c-ares",
+      "kind": "apk",
+      "version": "1.34.9-r0",
+      "license": "MIT",
+      "origin": "c-ares",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/c-ares-1.34.9-r0.apk",
+      "file": "aarch64-c-ares-1.34.9-r0.apk",
+      "sha256": "9ff2336ef422f2278e0f854ab914c5115747e5621205f85b4d1290c755923e05"
+    },
+    {
+      "name": "ca-certificates",
+      "kind": "apk",
+      "version": "20261020-r0",
+      "license": "MPL-2.0 AND MIT",
+      "origin": "ca-certificates",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/ca-certificates-20261020-r0.apk",
+      "file": "aarch64-ca-certificates-20261020-r0.apk",
+      "sha256": "dccb394d104e7dcefa64101131119fbf0a674d75e0c6913daea7dace9eb2ea27"
+    },
+    {
+      "name": "ca-certificates-bundle",
+      "kind": "apk",
+      "version": "20261020-r0",
+      "license": "MPL-2.0 AND MIT",
+      "origin": "ca-certificates",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/ca-certificates-bundle-20261020-r0.apk",
+      "file": "aarch64-ca-certificates-bundle-20261020-r0.apk",
+      "sha256": "eb15a8dba0e6ae8c540d172836d44fe058d6c64adc4a2fca5d2c6eaffa015f1c"
+    },
+    {
+      "name": "gdbm",
+      "kind": "apk",
+      "version": "1.24-r0",
+      "license": "GPL-3.0-or-later",
+      "origin": "gdbm",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/gdbm-1.24-r0.apk",
+      "file": "aarch64-gdbm-1.24-r0.apk",
+      "sha256": "dd9525bc443d995b86bc0671f6ac4384cff9e3e3d28822ac6279d08796ed7acc"
+    },
+    {
+      "name": "git",
+      "kind": "apk",
+      "version": "2.49.1-r0",
+      "license": "GPL-2.0-only",
+      "origin": "git",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/git-2.49.1-r0.apk",
+      "file": "aarch64-git-2.49.1-r0.apk",
+      "sha256": "9d27f0e5e57b234e6d6a8a2b635ba82286e1dd441ea26c280aba4c8e416b4f60"
+    },
+    {
+      "name": "icu-data-en",
+      "kind": "apk",
+      "version": "76.1-r1",
+      "license": "ICU",
+      "origin": "icu",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/icu-data-en-76.1-r1.apk",
+      "file": "aarch64-icu-data-en-76.1-r1.apk",
+      "sha256": "2c2d36d47c82d0f6cff1b549044fe3562f327f944971ef367b9c40eeb35aa6e8"
+    },
+    {
+      "name": "icu-libs",
+      "kind": "apk",
+      "version": "76.1-r1",
+      "license": "ICU",
+      "origin": "icu",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/icu-libs-76.1-r1.apk",
+      "file": "aarch64-icu-libs-76.1-r1.apk",
+      "sha256": "6c9dd2e6b0ddc6e7d5fd2a21b427799d7ca4f7e8b5aad72d17e84520db3cd249"
+    },
+    {
+      "name": "libbz2",
+      "kind": "apk",
+      "version": "1.0.8-r6",
+      "license": "bzip2-1.0.6",
+      "origin": "bzip2",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libbz2-1.0.8-r6.apk",
+      "file": "aarch64-libbz2-1.0.8-r6.apk",
+      "sha256": "1d588037cc45108acafdbb1507e9f683019a8816fb74d9aba9b0a2dc099463c4"
+    },
+    {
+      "name": "libcrypto3",
+      "kind": "apk",
+      "version": "3.5.9-r0",
+      "license": "Apache-2.0",
+      "origin": "openssl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libcrypto3-3.5.9-r0.apk",
+      "file": "aarch64-libcrypto3-3.5.9-r0.apk",
+      "sha256": "ede2ef7eca3b65a42e902aaf7890f9c5647dca0c55123a817179ad9f3bc6ef24"
+    },
+    {
+      "name": "libcurl",
+      "kind": "apk",
+      "version": "8.14.1-r4",
+      "license": "curl",
+      "origin": "curl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libcurl-8.14.1-r4.apk",
+      "file": "aarch64-libcurl-8.14.1-r4.apk",
+      "sha256": "99768d3f61dc96ac3b35049a0df4107d9cc6c51e118e865628fa8fa781e0b419"
+    },
+    {
+      "name": "libexpat",
+      "kind": "apk",
+      "version": "2.9.0-r0",
+      "license": "MIT",
+      "origin": "expat",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libexpat-2.9.0-r0.apk",
+      "file": "aarch64-libexpat-2.9.0-r0.apk",
+      "sha256": "3a53825b470556ebd0c08b27dd6c23f6b039232f27951ca983f1b1540edf8d1b"
+    },
+    {
+      "name": "libffi",
+      "kind": "apk",
+      "version": "3.4.8-r0",
+      "license": "MIT",
+      "origin": "libffi",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libffi-3.4.8-r0.apk",
+      "file": "aarch64-libffi-3.4.8-r0.apk",
+      "sha256": "9391f60a14c146655deaf65115563bc8dcd749cf0f93ec567e6443f2ed7d3bfc"
+    },
+    {
+      "name": "libgcc",
+      "kind": "apk",
+      "version": "14.2.0-r6",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later",
+      "origin": "gcc",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libgcc-14.2.0-r6.apk",
+      "file": "aarch64-libgcc-14.2.0-r6.apk",
+      "sha256": "ba1835eec3ad8a120efd3d5020e561d53553a0513763a08f509e3ce6d4baa9ca"
+    },
+    {
+      "name": "libidn2",
+      "kind": "apk",
+      "version": "2.3.7-r0",
+      "license": "GPL-2.0-or-later OR LGPL-3.0-or-later",
+      "origin": "libidn2",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libidn2-2.3.7-r0.apk",
+      "file": "aarch64-libidn2-2.3.7-r0.apk",
+      "sha256": "9ddc248988707da96752077d05bacbda751d46cc1f7aa1460b3a40c4fbf66a6e"
+    },
+    {
+      "name": "libncursesw",
+      "kind": "apk",
+      "version": "6.5_p20250503-r0",
+      "license": "X11",
+      "origin": "ncurses",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libncursesw-6.5_p20250503-r0.apk",
+      "file": "aarch64-libncursesw-6.5_p20250503-r0.apk",
+      "sha256": "419b375e8a4345e7172b1f0f3a3c57db61374f5408cdb875d9e860bd4c243aca"
+    },
+    {
+      "name": "libpanelw",
+      "kind": "apk",
+      "version": "6.5_p20250503-r0",
+      "license": "X11",
+      "origin": "ncurses",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libpanelw-6.5_p20250503-r0.apk",
+      "file": "aarch64-libpanelw-6.5_p20250503-r0.apk",
+      "sha256": "e09049ba44385a53ad9c39386a1868ef677c025859ea38fe286072263799537c"
+    },
+    {
+      "name": "libpsl",
+      "kind": "apk",
+      "version": "0.21.5-r3",
+      "license": "MIT",
+      "origin": "libpsl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libpsl-0.21.5-r3.apk",
+      "file": "aarch64-libpsl-0.21.5-r3.apk",
+      "sha256": "b9f7270cb2980876f57360f38ca11093aefaf7f5eb4b777dfbc4e5738449e438"
+    },
+    {
+      "name": "libssl3",
+      "kind": "apk",
+      "version": "3.5.9-r0",
+      "license": "Apache-2.0",
+      "origin": "openssl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libssl3-3.5.9-r0.apk",
+      "file": "aarch64-libssl3-3.5.9-r0.apk",
+      "sha256": "338c9f6154582b4b76455a59f95538bcea8df039c5c72916dd2d8d0d844c9583"
+    },
+    {
+      "name": "libstdc++",
+      "kind": "apk",
+      "version": "14.2.0-r6",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later",
+      "origin": "gcc",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libstdc++-14.2.0-r6.apk",
+      "file": "aarch64-libstdc++-14.2.0-r6.apk",
+      "sha256": "0d2f054057a4f932e985a129eccb79908b40964185139a0a609aed3032aba064"
+    },
+    {
+      "name": "libunistring",
+      "kind": "apk",
+      "version": "1.3-r0",
+      "license": "GPL-2.0-or-later OR LGPL-3.0-or-later",
+      "origin": "libunistring",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libunistring-1.3-r0.apk",
+      "file": "aarch64-libunistring-1.3-r0.apk",
+      "sha256": "6b6631284b25fa28bb9e63f9d423145e96d0f7aeb55a592f5cd5d54fb39380f7"
+    },
+    {
+      "name": "mpdecimal",
+      "kind": "apk",
+      "version": "4.0.1-r0",
+      "license": "BSD-2-Clause",
+      "origin": "mpdecimal",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/mpdecimal-4.0.1-r0.apk",
+      "file": "aarch64-mpdecimal-4.0.1-r0.apk",
+      "sha256": "c299cd2c5d39c452054257965fb13e307562038f948b761030abbc55d1346223"
+    },
+    {
+      "name": "musl",
+      "kind": "apk",
+      "version": "1.2.5-r13",
+      "license": "MIT",
+      "origin": "musl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/musl-1.2.5-r13.apk",
+      "file": "aarch64-musl-1.2.5-r13.apk",
+      "sha256": "d616c430bcbe0bf452b7f6ea2669f2cad14e85644a7599f4f495115d021742ef"
+    },
+    {
+      "name": "ncurses-terminfo-base",
+      "kind": "apk",
+      "version": "6.5_p20250503-r0",
+      "license": "X11",
+      "origin": "ncurses",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/ncurses-terminfo-base-6.5_p20250503-r0.apk",
+      "file": "aarch64-ncurses-terminfo-base-6.5_p20250503-r0.apk",
+      "sha256": "3d37403e0b5ab9eb0c1ce269444e4a385faec9fe6af452c1c6956806b13d2bd6"
+    },
+    {
+      "name": "nghttp2-libs",
+      "kind": "apk",
+      "version": "1.69.0-r0",
+      "license": "MIT",
+      "origin": "nghttp2",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/nghttp2-libs-1.69.0-r0.apk",
+      "file": "aarch64-nghttp2-libs-1.69.0-r0.apk",
+      "sha256": "19db967a36f1e041e96240484d94063354f5c837e36d50daa017c2e96393a5e7"
+    },
+    {
+      "name": "nodejs",
+      "kind": "apk",
+      "version": "22.23.4-r0",
+      "license": "MIT",
+      "origin": "nodejs",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/nodejs-22.23.4-r0.apk",
+      "file": "aarch64-nodejs-22.23.4-r0.apk",
+      "sha256": "5abb3b0c666309289ef610b4d8a0d2a395ec32040acdc3940258b196920634bc"
+    },
+    {
+      "name": "npm",
+      "kind": "apk",
+      "version": "11.6.4-r0",
+      "license": "Artistic-2.0",
+      "origin": "npm",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/aarch64/npm-11.6.4-r0.apk",
+      "file": "aarch64-npm-11.6.4-r0.apk",
+      "sha256": "0ec0386135848268c5d316b2f28f2cbac7084686df20919e727942914f74cbfe"
+    },
+    {
+      "name": "pcre2",
+      "kind": "apk",
+      "version": "10.46-r1",
+      "license": "BSD-3-Clause",
+      "origin": "pcre2",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/pcre2-10.46-r1.apk",
+      "file": "aarch64-pcre2-10.46-r1.apk",
+      "sha256": "7c24699bbfc009e02c23577071a09c80f687c051138f3863eb732eeb45da1f36"
+    },
+    {
+      "name": "py3-packaging",
+      "kind": "apk",
+      "version": "25.0-r0",
+      "license": "Apache-2.0 AND BSD-2-Clause",
+      "origin": "py3-packaging",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/py3-packaging-25.0-r0.apk",
+      "file": "aarch64-py3-packaging-25.0-r0.apk",
+      "sha256": "43acd9d1587a43edd7899b9e7efed92f3d1243d02aab369825fc7772ad823d6a"
+    },
+    {
+      "name": "py3-parsing",
+      "kind": "apk",
+      "version": "3.2.5-r0",
+      "license": "MIT",
+      "origin": "py3-parsing",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/py3-parsing-3.2.5-r0.apk",
+      "file": "aarch64-py3-parsing-3.2.5-r0.apk",
+      "sha256": "ececfd940e509a96df54a7b3b6534b65c6bbf1565d9c44b7be3fa48e8443aee1"
+    },
+    {
+      "name": "py3-pip",
+      "kind": "apk",
+      "version": "25.1.1-r0",
+      "license": "MIT",
+      "origin": "py3-pip",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/aarch64/py3-pip-25.1.1-r0.apk",
+      "file": "aarch64-py3-pip-25.1.1-r0.apk",
+      "sha256": "93de46aacaa03ccdef793eec554cd38382b3cbf9bf61e133599b534841920226"
+    },
+    {
+      "name": "py3-setuptools",
+      "kind": "apk",
+      "version": "80.9.0-r0",
+      "license": "MIT",
+      "origin": "py3-setuptools",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/py3-setuptools-80.9.0-r0.apk",
+      "file": "aarch64-py3-setuptools-80.9.0-r0.apk",
+      "sha256": "49f9930e1fc56c15135abaa5b5e17bb3e53eb49a7638694988e062033fb2d80e"
+    },
+    {
+      "name": "python3",
+      "kind": "apk",
+      "version": "3.12.16-r0",
+      "license": "PSF-2.0",
+      "origin": "python3",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/python3-3.12.16-r0.apk",
+      "file": "aarch64-python3-3.12.16-r0.apk",
+      "sha256": "d21dd05b578d14c84a735d66d8623e9454bdc18a1b3841815b37948ce3e2aa92"
+    },
+    {
+      "name": "readline",
+      "kind": "apk",
+      "version": "8.2.13-r1",
+      "license": "GPL-3.0-or-later",
+      "origin": "readline",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/readline-8.2.13-r1.apk",
+      "file": "aarch64-readline-8.2.13-r1.apk",
+      "sha256": "334af29dbf6b5a71a87af4d6a58e2967a8f711a51d00093de0e1498daf83ceb2"
+    },
+    {
+      "name": "simdjson",
+      "kind": "apk",
+      "version": "3.12.0-r0",
+      "license": "Apache-2.0 OR MIT",
+      "origin": "simdjson",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/simdjson-3.12.0-r0.apk",
+      "file": "aarch64-simdjson-3.12.0-r0.apk",
+      "sha256": "5605c691ab62e5a0071d065b5afdd5c3740d763821d689a6bf54e46c95916974"
+    },
+    {
+      "name": "simdutf",
+      "kind": "apk",
+      "version": "7.2.1-r0",
+      "license": "Apache-2.0 OR MIT",
+      "origin": "simdutf",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/simdutf-7.2.1-r0.apk",
+      "file": "aarch64-simdutf-7.2.1-r0.apk",
+      "sha256": "b20688ad72d096ba903bc77ea92165153427dcf5d25b5b9dcf27e7b4ca7046b9"
+    },
+    {
+      "name": "sqlite-libs",
+      "kind": "apk",
+      "version": "3.49.2-r1",
+      "license": "blessing",
+      "origin": "sqlite",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/sqlite-libs-3.49.2-r1.apk",
+      "file": "aarch64-sqlite-libs-3.49.2-r1.apk",
+      "sha256": "204910bcbb13df4d517cb01acb178ebe14f12ff0e55a04b38d1565941780ee29"
+    },
+    {
+      "name": "xz-libs",
+      "kind": "apk",
+      "version": "5.8.4-r0",
+      "license": "GPL-2.0-or-later AND 0BSD AND Public-Domain AND LGPL-2.1-or-later",
+      "origin": "xz",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/xz-libs-5.8.4-r0.apk",
+      "file": "aarch64-xz-libs-5.8.4-r0.apk",
+      "sha256": "8a64b55223f29e24f934ccbc8167d535b913bf923dab5e14de7946a7c36091a7"
+    },
+    {
+      "name": "zlib",
+      "kind": "apk",
+      "version": "1.3.2-r1",
+      "license": "Zlib",
+      "origin": "zlib",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/zlib-1.3.2-r1.apk",
+      "file": "aarch64-zlib-1.3.2-r1.apk",
+      "sha256": "2d274cb1b2a36d0e8347d802e6dea8648cab952ea5fae1989ab72e725842a2c3"
+    },
+    {
+      "name": "zstd-libs",
+      "kind": "apk",
+      "version": "1.5.7-r0",
+      "license": "BSD-3-Clause OR GPL-2.0-or-later",
+      "origin": "zstd",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/zstd-libs-1.5.7-r0.apk",
+      "file": "aarch64-zstd-libs-1.5.7-r0.apk",
+      "sha256": "a0e92d2225941a514eb0b2325b137fe6444ef9171627aae8129b74a6ad934ac4"
+    }
+  ],
+  "baseImagePackageDatabase": [
+    {
+      "name": "alpine-baselayout",
+      "version": "3.7.0-r0",
+      "license": "GPL-2.0-only",
+      "origin": "alpine-baselayout",
+      "upstream": "https://git.alpinelinux.org/cgit/aports/tree/main/alpine-baselayout"
+    },
+    {
+      "name": "alpine-baselayout-data",
+      "version": "3.7.0-r0",
+      "license": "GPL-2.0-only",
+      "origin": "alpine-baselayout",
+      "upstream": "https://git.alpinelinux.org/cgit/aports/tree/main/alpine-baselayout"
+    },
+    {
+      "name": "alpine-keys",
+      "version": "2.5-r0",
+      "license": "MIT",
+      "origin": "alpine-keys",
+      "upstream": "https://alpinelinux.org"
+    },
+    {
+      "name": "alpine-release",
+      "version": "3.22.1-r0",
+      "license": "MIT",
+      "origin": "alpine-base",
+      "upstream": "https://alpinelinux.org"
+    },
+    {
+      "name": "apk-tools",
+      "version": "2.14.9-r2",
+      "license": "GPL-2.0-only",
+      "origin": "apk-tools",
+      "upstream": "https://gitlab.alpinelinux.org/alpine/apk-tools"
+    },
+    {
+      "name": "busybox",
+      "version": "1.37.0-r18",
+      "license": "GPL-2.0-only",
+      "origin": "busybox",
+      "upstream": "https://busybox.net/"
+    },
+    {
+      "name": "busybox-binsh",
+      "version": "1.37.0-r18",
+      "license": "GPL-2.0-only",
+      "origin": "busybox",
+      "upstream": "https://busybox.net/"
+    },
+    {
+      "name": "ca-certificates-bundle",
+      "version": "20250619-r0",
+      "license": "MPL-2.0 AND MIT",
+      "origin": "ca-certificates",
+      "upstream": "https://www.mozilla.org/en-US/about/governance/policies/security-group/certs/"
+    },
+    {
+      "name": "libapk2",
+      "version": "2.14.9-r2",
+      "license": "GPL-2.0-only",
+      "origin": "apk-tools",
+      "upstream": "https://gitlab.alpinelinux.org/alpine/apk-tools"
+    },
+    {
+      "name": "libcrypto3",
+      "version": "3.5.1-r0",
+      "license": "Apache-2.0",
+      "origin": "openssl",
+      "upstream": "https://www.openssl.org/"
+    },
+    {
+      "name": "libssl3",
+      "version": "3.5.1-r0",
+      "license": "Apache-2.0",
+      "origin": "openssl",
+      "upstream": "https://www.openssl.org/"
+    },
+    {
+      "name": "musl",
+      "version": "1.2.5-r10",
+      "license": "MIT",
+      "origin": "musl",
+      "upstream": "https://musl.libc.org/"
+    },
+    {
+      "name": "musl-utils",
+      "version": "1.2.5-r10",
+      "license": "MIT AND BSD-2-Clause AND GPL-2.0-or-later",
+      "origin": "musl",
+      "upstream": "https://musl.libc.org/"
+    },
+    {
+      "name": "scanelf",
+      "version": "1.3.8-r1",
+      "license": "GPL-2.0-only",
+      "origin": "pax-utils",
+      "upstream": "https://wiki.gentoo.org/wiki/Hardened/PaX_Utilities"
+    },
+    {
+      "name": "ssl_client",
+      "version": "1.37.0-r18",
+      "license": "GPL-2.0-only",
+      "origin": "busybox",
+      "upstream": "https://busybox.net/"
+    },
+    {
+      "name": "zlib",
+      "version": "1.3.1-r2",
+      "license": "Zlib",
+      "origin": "zlib",
+      "upstream": "https://zlib.net/"
+    }
+  ],
+  "sourceMaterials": [
+    {
+      "ecosystem": "Alpine",
+      "name": "ada",
+      "version": "2.9.2-r4",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/ada",
+      "sources": [
+        {
+          "file": "alpine/ada-2.9.2-r4/archives/ada-2.9.2.tar.gz",
+          "upstream": "https://github.com/ada-url/ada/archive/v2.9.2/ada-2.9.2.tar.gz",
+          "sha256": "f41575ad7eec833afd9f6a0d6101ee7dc2f947fdf19ae8f1b54a71d59f4ba5ec",
+          "packagerChecksum": "bc876db537153d6b0599215ca8be8261bceca6d213fcc63af5fda13c1b32876496cb8d4e98c787f17317cf8ffd1940431551513807f1a18f9ce993fad35f5ec6",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "alpine-base",
+      "version": "3.22.1-r0",
+      "packagingCommit": "96586cb7ed12d722ab560ee2ec0fc5294a9dc84b",
+      "recipe": "https://github.com/alpinelinux/aports/tree/96586cb7ed12d722ab560ee2ec0fc5294a9dc84b/main/alpine-base",
+      "sources": []
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "alpine-baselayout",
+      "version": "3.7.0-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/alpine-baselayout",
+      "sources": [
+        {
+          "file": "alpine/alpine-baselayout-3.7.0-r0/archives/protocols-6.4",
+          "upstream": "https://salsa.debian.org/md/netbase/-/raw/v6.4/etc/protocols",
+          "sha256": "4959498abbadaa1e50894a266f8d0d94500101cfe5b5f09dcad82e9d5bdfab46",
+          "packagerChecksum": "3a00083bcdf5a9e884c9d07877d52311e3d99e79cbee656e236ba06e08ba0dddb7ba76494fdc9dd1a826c48e197a790a69e6bb458e9df64832d6b5e904e9fd15",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/alpine-baselayout-3.7.0-r0/archives/services-6.4",
+          "upstream": "https://salsa.debian.org/md/netbase/-/raw/v6.4/etc/services",
+          "sha256": "f6183055fd949f9c53d49ee620f85d0150123ea691d25ed1bba0c641b4ee2f48",
+          "packagerChecksum": "47b0f3ee73af2d259bd206a026204be0ea25531a895a0b035a904b38fe5407bc3dd2beab7f8fcb3d760587e6159702ebdb9cbc4f508942befdf7f10c10c87888",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "alpine-keys",
+      "version": "2.5-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/alpine-keys",
+      "sources": []
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "apk-tools",
+      "version": "2.14.9-r2",
+      "packagingCommit": "a73d5616eaf4e16a219366d848d8e46b85d458ea",
+      "recipe": "https://github.com/alpinelinux/aports/tree/a73d5616eaf4e16a219366d848d8e46b85d458ea/main/apk-tools",
+      "sources": [
+        {
+          "file": "alpine/apk-tools-2.14.9-r2/archives/apk-tools-v2.14.9.tar.gz",
+          "upstream": "https://gitlab.alpinelinux.org/alpine/apk-tools/-/archive/v2.14.9/apk-tools-v2.14.9.tar.gz",
+          "sha256": "0a646fbd49079fa1fd1a4125dec9b62ea514092961ceff24d0dd90e28576cbc8",
+          "packagerChecksum": "835c43190a2f72e78f269d115e93cc8baae21b87df7b86a7e9bc37e571dc176aeb9e743a512e659743a99d918117811f2b091319d640ba192ed4a1e360d5513c",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "brotli",
+      "version": "1.1.1-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/brotli",
+      "sources": [
+        {
+          "file": "alpine/brotli-1.1.1-r0/archives/brotli-1.1.1.tar.gz",
+          "upstream": "https://github.com/google/brotli/archive/refs/tags/v1.1.1.tar.gz",
+          "sha256": "1a84dfaa740994d19254bf78aa7d74a4a8040d1638f3d5f2cdecb188fd520da8",
+          "packagerChecksum": "f7f3a7e4620403aa26d69458e0bb886d322f7677685c55717fac824f0b789e0c25cf4ff7d8d455d70a8526d0150d7a09b9df292a11f9ef5d3bf625878cb51368",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "busybox",
+      "version": "1.37.0-r18",
+      "packagingCommit": "28ab379633dca30ff5d3ebd36b274d15a2f15719",
+      "recipe": "https://github.com/alpinelinux/aports/tree/28ab379633dca30ff5d3ebd36b274d15a2f15719/main/busybox",
+      "sources": [
+        {
+          "file": "alpine/busybox-1.37.0-r18/archives/busybox-1.37.0.tar.bz2",
+          "upstream": "https://busybox.net/downloads/busybox-1.37.0.tar.bz2",
+          "sha256": "3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4",
+          "packagerChecksum": "ad8fd06f082699774f990a53d7a73b189ed404fe0a2166aff13eae4d9d8ee5c9239493befe949c98801fe7897520dbff3ed0224faa7205854ce4fa975e18467e",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "busybox",
+      "version": "1.37.0-r20",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/busybox",
+      "sources": [
+        {
+          "file": "alpine/busybox-1.37.0-r20/archives/busybox-1.37.0.tar.bz2",
+          "upstream": "https://busybox.net/downloads/busybox-1.37.0.tar.bz2",
+          "sha256": "3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4",
+          "packagerChecksum": "ad8fd06f082699774f990a53d7a73b189ed404fe0a2166aff13eae4d9d8ee5c9239493befe949c98801fe7897520dbff3ed0224faa7205854ce4fa975e18467e",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "bzip2",
+      "version": "1.0.8-r6",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/bzip2",
+      "sources": [
+        {
+          "file": "alpine/bzip2-1.0.8-r6/archives/bzip2-1.0.8.tar.gz",
+          "upstream": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz",
+          "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+          "packagerChecksum": "083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "c-ares",
+      "version": "1.34.9-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/c-ares",
+      "sources": [
+        {
+          "file": "alpine/c-ares-1.34.9-r0/archives/c-ares-1.34.9.tar.gz",
+          "upstream": "https://github.com/c-ares/c-ares/releases/download/v1.34.9/c-ares-1.34.9.tar.gz",
+          "sha256": "9364b70a12eb59a06830fb488d9357f90100dff0d98b23ea3593a183d43e6f2f",
+          "packagerChecksum": "f4be5818d14cec48e96cc66d3f7dea3de60e3ae3d990972cf2e055140ad995a3bbf38f2a6ffd5c671f04b5f105f28ef022af721477a2d126be0803355c7c297a",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "ca-certificates",
+      "version": "20250619-r0",
+      "packagingCommit": "78856465c851ab2ce0cb1e12fe9f57d04204919a",
+      "recipe": "https://github.com/alpinelinux/aports/tree/78856465c851ab2ce0cb1e12fe9f57d04204919a/main/ca-certificates",
+      "sources": [
+        {
+          "file": "alpine/ca-certificates-20250619-r0/archives/ca-certificates-20250619.tar.bz2",
+          "upstream": "https://gitlab.alpinelinux.org/alpine/ca-certificates/-/archive/20250619/ca-certificates-20250619.tar.bz2",
+          "sha256": "8727947e4b5370b775c4d188a7288b330afeb9cc6f9107052038c3a6e7cf2131",
+          "packagerChecksum": "803f714421b2293b99a52a812cf367e4f764152e1aedfbd31a261658d91540fd311394cbcb95a8055f417ed56291c6c99d33403954446ed84f6a9f728bdf002e",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "ca-certificates",
+      "version": "20261020-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/ca-certificates",
+      "sources": [
+        {
+          "file": "alpine/ca-certificates-20261020-r0/archives/ca-certificates-20261020.tar.bz2",
+          "upstream": "https://gitlab.alpinelinux.org/alpine/ca-certificates/-/archive/20261020/ca-certificates-20261020.tar.bz2",
+          "sha256": "1048bc7f50fa42a6621bc2f8816173f89a0c0098f26dff072bc8fe40af714400",
+          "packagerChecksum": "d28eb01751b1a914ffb5d8cb99e662f0a35a95148c21dcf98de1ab3108b54db9714a99472d07715023867f4f76a21f2a79a2bc1c7e9876ce5167fdd865ad2dd7",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "curl",
+      "version": "8.14.1-r4",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/curl",
+      "sources": [
+        {
+          "file": "alpine/curl-8.14.1-r4/archives/curl-8.14.1.tar.xz",
+          "upstream": "https://curl.se/download/curl-8.14.1.tar.xz",
+          "sha256": "f4619a1e2474c4bbfedc88a7c2191209c8334b48fa1f4e53fd584cc12e9120dd",
+          "packagerChecksum": "7f6eae04cc23c50fc41d448aa28dfa59141018009e42c5b1e3f4e0d40c0633460b4e6eec05dfc290f7953671096abfa70a8b5443fccdd3f1be6be32ac10b31d9",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "expat",
+      "version": "2.9.0-r0",
+      "packagingCommit": "f71ec7147f3df6e984064717d4200875fc8834c4",
+      "recipe": "https://github.com/alpinelinux/aports/tree/f71ec7147f3df6e984064717d4200875fc8834c4/main/expat",
+      "sources": [
+        {
+          "file": "alpine/expat-2.9.0-r0/archives/expat-2.9.0.tar.xz",
+          "upstream": "https://github.com/libexpat/libexpat/releases/download/R_2_9_0/expat-2.9.0.tar.xz",
+          "sha256": "1e6371862cc31999b368c3b89b49994f0677e1bab5f1b2b85ae3741f5d803051",
+          "packagerChecksum": "677b5a39ea47aa238813412061eefba0ff2e819597efee69452eab7fd63b1387537eda0dfd4e5891b938be202dc87df4b5115bdae75c6b81643ac2363bb99b34",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "gcc",
+      "version": "14.2.0-r6",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/gcc",
+      "sources": [
+        {
+          "file": "alpine/gcc-14.2.0-r6/archives/gcc-14.2.0.tar.xz",
+          "upstream": "https://gcc.gnu.org/pub/gcc/releases/gcc-14.2.0/gcc-14.2.0.tar.xz",
+          "sha256": "a7b39bc69cbf9e25826c5a60ab26477001f7c08d85cec04bc0e29cabed6f3cc9",
+          "packagerChecksum": "932bdef0cda94bacedf452ab17f103c0cb511ff2cec55e9112fc0328cbf1d803b42595728ea7b200e0a057c03e85626f937012e49a7515bc5dd256b2bf4bc396",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "gdbm",
+      "version": "1.24-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/gdbm",
+      "sources": [
+        {
+          "file": "alpine/gdbm-1.24-r0/archives/gdbm-1.24.tar.gz",
+          "upstream": "https://ftp.gnu.org/gnu/gdbm/gdbm-1.24.tar.gz",
+          "sha256": "695e9827fdf763513f133910bc7e6cfdb9187943a4fec943e57449723d2b8dbf",
+          "packagerChecksum": "401ff8c707079f21da1ac1d6f4714a87f224b6f41943078487dc891be49f51fd1ac7a32fd599aae0fad185f2c6ba7432616d328fd6aaab068eb54db9562ff7fa",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "git",
+      "version": "2.49.1-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/git",
+      "sources": [
+        {
+          "file": "alpine/git-2.49.1-r0/archives/git-2.49.1.tar.xz",
+          "upstream": "https://www.kernel.org/pub/software/scm/git/git-2.49.1.tar.xz",
+          "sha256": "310831de967f1c8c5e8ff55f92807dea89f83dc3d3d2a5d16c209bd01a31def1",
+          "packagerChecksum": "4dc63f2935e66d708dbecfdb77c6e5d697f4bc79af51ab860ed87499336d66d44f16abc7edf414c56f30d46de3a1a676c56c240557140c91aa388136e652cbdc",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "icu",
+      "version": "76.1-r1",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/icu",
+      "sources": [
+        {
+          "file": "alpine/icu-76.1-r1/archives/icu4c-76_1-src.tgz",
+          "upstream": "https://github.com/unicode-org/icu/releases/download/release-76-1/icu4c-76_1-src.tgz",
+          "sha256": "dfacb46bfe4747410472ce3e1144bf28a102feeaa4e3875bac9b4c6cf30f4f3e",
+          "packagerChecksum": "b702ab62fb37a1574d5f4a768326d0f8fa30d9db5b015605b5f8215b5d8547f83d84880c586d3dcc7b6c76f8d47ef34e04b0f51baa55908f737024dd79a42a6c",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/icu-76.1-r1/archives/icu4c-76_1-data.zip",
+          "upstream": "https://github.com/unicode-org/icu/releases/download/release-76-1/icu4c-76_1-data.zip",
+          "sha256": "133ae58a67d68b46f7296822904cd3c30126a0b4b2f65f0f905e7f47c0ef9e47",
+          "packagerChecksum": "db029885e4bb274ebabb71de35adfd16f463a1d23b30ee909991b0e443d9dae374f2289924358e9042b1159167626b314a94a482e1e01fe097f7b6a9695ec119",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/icu-76.1-r1/archives/icu4c-76_1-data-bin-b.zip",
+          "upstream": "https://github.com/unicode-org/icu/releases/download/release-76-1/icu4c-76_1-data-bin-b.zip",
+          "sha256": "fc93ce2f19f93120cc815570555a85755c10f5f1bf4df0c61db39b1cf7c8e49a",
+          "packagerChecksum": "098326fbb0f4a1b70a314985cbe6918f3fec94feb17236dcf8efbc516e139294ec96ae49210e11ee40f4de1ac6977e939cbfd6087009be057b8a60d3ad01daad",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/icu-76.1-r1/archives/icu4c-76_1-data-bin-l.zip",
+          "upstream": "https://github.com/unicode-org/icu/releases/download/release-76-1/icu4c-76_1-data-bin-l.zip",
+          "sha256": "8577bb036a5c08204b1622a85485b92cdfaea521c251d22fd36899e99e426d9a",
+          "packagerChecksum": "1359ff28bad54f73fe29cc5c4fffb4c11c64399ddcc39bea2ee60b5d3672e7f79546a2255d604474cbd861791c11e62eb50bcecc0cf2cf9a7ece59180e8520fc",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "libffi",
+      "version": "3.4.8-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/libffi",
+      "sources": [
+        {
+          "file": "alpine/libffi-3.4.8-r0/archives/libffi-3.4.8.tar.gz",
+          "upstream": "https://github.com/libffi/libffi/releases/download/v3.4.8/libffi-3.4.8.tar.gz",
+          "sha256": "bc9842a18898bfacb0ed1252c4febcc7e78fa139fd27fdc7a3e30d9d9356119b",
+          "packagerChecksum": "05344c6c1a1a5b44704f6cf99277098d1ea3ac1dc11c2a691c501786a214f76184ec0637135588630db609ce79e49df3dbd00282dd61e7f21137afba70e24ffe",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "libidn2",
+      "version": "2.3.7-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/libidn2",
+      "sources": [
+        {
+          "file": "alpine/libidn2-2.3.7-r0/archives/libidn2-2.3.7.tar.gz",
+          "upstream": "https://ftp.gnu.org/gnu/libidn/libidn2-2.3.7.tar.gz",
+          "sha256": "4c21a791b610b9519b9d0e12b8097bf2f359b12f8dd92647611a929e6bfd7d64",
+          "packagerChecksum": "eab5702bc0baed45492f8dde43a4d2ea3560ad80645e5f9e0cfa8d3b57bccd7fd782d04638e000ba07924a5d9f85e760095b55189188c4017b94705bef9b4a66",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "libpsl",
+      "version": "0.21.5-r3",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/libpsl",
+      "sources": [
+        {
+          "file": "alpine/libpsl-0.21.5-r3/archives/libpsl-0.21.5.tar.gz",
+          "upstream": "https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz",
+          "sha256": "1dcc9ceae8b128f3c0b3f654decd0e1e891afc6ff81098f227ef260449dae208",
+          "packagerChecksum": "c14d575cecc0f1693894dd79565b6b9220084ddfa43b908a1cefe16d147cdd5ec47796eb0c2135e2f829a951abaf39d8a371ab5c1352f57b36e610e25adf91f5",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "libunistring",
+      "version": "1.3-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/libunistring",
+      "sources": [
+        {
+          "file": "alpine/libunistring-1.3-r0/archives/libunistring-1.3.tar.xz",
+          "upstream": "https://ftp.gnu.org/gnu/libunistring/libunistring-1.3.tar.xz",
+          "sha256": "f245786c831d25150f3dfb4317cda1acc5e3f79a5da4ad073ddca58886569527",
+          "packagerChecksum": "864d42b1d4ae4941fe5c8327d6726ab8e3a35d2d5f9d25ce4859a72ab2f549a7b68f58638cf8767d863f58161d1a4053495d185860964a942d6750e42facf931",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "mpdecimal",
+      "version": "4.0.1-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/mpdecimal",
+      "sources": [
+        {
+          "file": "alpine/mpdecimal-4.0.1-r0/archives/mpdecimal-4.0.1.tar.gz",
+          "upstream": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-4.0.1.tar.gz",
+          "sha256": "96d33abb4bb0070c7be0fed4246cd38416188325f820468214471938545b1ac8",
+          "packagerChecksum": "431fa8ab90d6b8cdecc38b1618fd89d040185dec3c1150203e20f40f10a16160058f6b8abddd000f6ecb74f4dc42d9fef8111444f1496ab34c34f6b814ed32b7",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "musl",
+      "version": "1.2.5-r10",
+      "packagingCommit": "1a5f5e699b2eae883e73c93a789f87bd89a2a190",
+      "recipe": "https://github.com/alpinelinux/aports/tree/1a5f5e699b2eae883e73c93a789f87bd89a2a190/main/musl",
+      "sources": [
+        {
+          "file": "alpine/musl-1.2.5-r10/archives/musl-1.2.5.tar.gz",
+          "upstream": "https://musl.libc.org/releases/musl-1.2.5.tar.gz",
+          "sha256": "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4",
+          "packagerChecksum": "7bb7f7833923cd69c7a1a9b8a5f1784bfd5289663eb6061dcd43d583e45987df8a68a1be05d75cc1c88a3f5b610653d1a70f4a9cff4d8f7fd41ae73ee058c17c",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "musl",
+      "version": "1.2.5-r13",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/musl",
+      "sources": [
+        {
+          "file": "alpine/musl-1.2.5-r13/archives/musl-1.2.5.tar.gz",
+          "upstream": "https://musl.libc.org/releases/musl-1.2.5.tar.gz",
+          "sha256": "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4",
+          "packagerChecksum": "7bb7f7833923cd69c7a1a9b8a5f1784bfd5289663eb6061dcd43d583e45987df8a68a1be05d75cc1c88a3f5b610653d1a70f4a9cff4d8f7fd41ae73ee058c17c",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "ncurses",
+      "version": "6.5_p20250503-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/ncurses",
+      "sources": [
+        {
+          "file": "alpine/ncurses-6.5_p20250503-r0/archives/ncurses-6.5-20250503.tgz",
+          "upstream": "https://invisible-mirror.net/archives/ncurses/current/ncurses-6.5-20250503.tgz",
+          "sha256": "1d2dfa0c2b07ebb8075e40386467fa1f164b86f43f2380da2d3c35be4d7bbbf8",
+          "packagerChecksum": "b417ea609e497eb746ddb3bef89eafb9eb9e78e605b4b8445cc47f005c22dae24c2c461cd014f7a76c1c6e3f685e0363a7a229af24360b4505483e3bd36efd41",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "nghttp2",
+      "version": "1.69.0-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/nghttp2",
+      "sources": [
+        {
+          "file": "alpine/nghttp2-1.69.0-r0/archives/nghttp2-1.69.0.tar.xz",
+          "upstream": "https://github.com/nghttp2/nghttp2/releases/download/v1.69.0/nghttp2-1.69.0.tar.xz",
+          "sha256": "1fb324b6ec2c56f6bde0658f4139ffd8209fa9e77ce98fd7a5f63af8d0e508ad",
+          "packagerChecksum": "31858cfd4a85995d006753c40393a7c23d2bfdd54fdb355757bef1a72b42177d31fff958e9e765a19d83e949eac77998e2bbe933b9390d1f2a1365506f5f6271",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "nodejs",
+      "version": "22.23.4-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/nodejs",
+      "sources": [
+        {
+          "file": "alpine/nodejs-22.23.4-r0/archives/node-v22.23.4.tar.gz",
+          "upstream": "https://nodejs.org/dist/v22.23.4/node-v22.23.4.tar.gz",
+          "sha256": "4dd79de8cdc85d65cb32f48a75aee1067bf00bf94b96ecc8e4c2f82f6f0272c2",
+          "packagerChecksum": "e4fb29ea28b8fa03ed91175c0fcf45779d40bb80c3d5fa07c08a2ebf5c34fc8935d835753c7c7fc13e21bff23842343216e58ff4c642d101cfd82fda79a4e228",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "npm",
+      "version": "11.6.4-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/community/npm",
+      "sources": [
+        {
+          "file": "alpine/npm-11.6.4-r0/archives/npm-11.6.4.tgz",
+          "upstream": "https://registry.npmjs.org/npm/-/npm-11.6.4.tgz",
+          "sha256": "9c07edca12853cddbf4fed4e372485aa60c064f9bf3e4cd157a2db5518a1792b",
+          "packagerChecksum": "1118cab46a05a50aee6bff5b1b4fa1df18afff89d57465620a3518035026955db87c5bdf9d207b07b7487d99f2490d450cb774655ad63ec2cba7bf1d0ad25d45",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "openssl",
+      "version": "3.5.1-r0",
+      "packagingCommit": "370a62f0ac139d30d09aba7ed93fcbf455a032ae",
+      "recipe": "https://github.com/alpinelinux/aports/tree/370a62f0ac139d30d09aba7ed93fcbf455a032ae/main/openssl",
+      "sources": [
+        {
+          "file": "alpine/openssl-3.5.1-r0/archives/openssl-3.5.1.tar.gz",
+          "upstream": "https://github.com/openssl/openssl/releases/download/openssl-3.5.1/openssl-3.5.1.tar.gz",
+          "sha256": "529043b15cffa5f36077a4d0af83f3de399807181d607441d734196d889b641f",
+          "packagerChecksum": "0fa152ae59ab5ea066319de039dfb1d24cbb247172d7512feb5dd920db3740f219d76b0195ea562f84fe5eae36c23772302eddfbb3509df13761452b4dafb9d3",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "openssl",
+      "version": "3.5.9-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/openssl",
+      "sources": [
+        {
+          "file": "alpine/openssl-3.5.9-r0/archives/openssl-3.5.9.tar.gz",
+          "upstream": "https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz",
+          "sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+          "packagerChecksum": "c4c8136fd2c98d13bb85a57bfb0def25c906f47f1fe97675cd114594944eab957b5b81a3e0f48826e1a0f093afff5e83766b539d49768f6db68310fd678d7de6",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "pax-utils",
+      "version": "1.3.8-r1",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/pax-utils",
+      "sources": [
+        {
+          "file": "alpine/pax-utils-1.3.8-r1/archives/pax-utils-1.3.8.tar.xz",
+          "upstream": "https://dev.gentoo.org/~sam/distfiles/app-misc/pax-utils/pax-utils-1.3.8.tar.xz",
+          "sha256": "12a168d1aeae2626efdbde3979da88a60ca80bb38e1db565e95ee441ff1d5a0c",
+          "packagerChecksum": "0dde95f86802729d80b7b38af84dec636e973f6abc70600633edcb05d3d5f95c1b2861300ce478dd7f798c7a1e5eccb1011c06c53adba38e11a996b69d463656",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "pcre2",
+      "version": "10.46-r1",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/pcre2",
+      "sources": [
+        {
+          "file": "alpine/pcre2-10.46-r1/archives/pcre2-10.46.tar.bz2",
+          "upstream": "https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.bz2",
+          "sha256": "15fbc5aba6beee0b17aecb04602ae39432393aba1ebd8e39b7cabf7db883299f",
+          "packagerChecksum": "795b0d74efb898347990c29fefc85f37ac81e7795f9d6a5598d1169a03c547df7ff7eac280f708b1fef68d3e7686e0d4cd55f0c6364e287ff2a983bbd1a3c334",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "py3-packaging",
+      "version": "25.0-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/py3-packaging",
+      "sources": [
+        {
+          "file": "alpine/py3-packaging-25.0-r0/archives/packaging-25.0.tar.gz",
+          "upstream": "https://files.pythonhosted.org/packages/source/p/packaging/packaging-25.0.tar.gz",
+          "sha256": "d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f",
+          "packagerChecksum": "0672602d2e18c3aee71b3e567b0de572bc8613ee3d24a79a655ded23ac08ec4582193225bc0c0ea390ed81cf5efbb46e8afbe0798d14f2235f811f263c25728c",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "py3-parsing",
+      "version": "3.2.5-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/py3-parsing",
+      "sources": [
+        {
+          "file": "alpine/py3-parsing-3.2.5-r0/archives/pyparsing-3.2.5.tar.gz",
+          "upstream": "https://files.pythonhosted.org/packages/source/p/pyparsing/pyparsing-3.2.5.tar.gz",
+          "sha256": "2df8d5b7b2802ef88e8d016a2eb9c7aeaa923529cd251ed0fe4608275d4105b6",
+          "packagerChecksum": "e9c4e4c7a7e324331ced2214b5a406c538209fedd8b56ffa2a28b44b497be0d4a03b705e9ce9a449e8f126a8fa555e8c1572894b09dda0eda4e3da156ba7e3ff",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "py3-pip",
+      "version": "25.1.1-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/community/py3-pip",
+      "sources": [
+        {
+          "file": "alpine/py3-pip-25.1.1-r0/archives/pip-25.1.1.tar.gz",
+          "upstream": "https://github.com/pypa/pip/archive/25.1.1/pip-25.1.1.tar.gz",
+          "sha256": "b25615caeef66bb5049a44e6df257ebae2fcc9dc774d5369a338db29b7f53f1c",
+          "packagerChecksum": "ce61c9861265139b3c5ea9be9dc246097cd75c21687cf8301f80a377d02420c4524f0d6307d2ca0232ff8715b1105343bcfdb9cac6b69503780ab2c4645558dc",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "py3-setuptools",
+      "version": "80.9.0-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/py3-setuptools",
+      "sources": [
+        {
+          "file": "alpine/py3-setuptools-80.9.0-r0/archives/py3-setuptools-80.9.0.tar.gz",
+          "upstream": "https://github.com/pypa/setuptools/archive/refs/tags/v80.9.0.tar.gz",
+          "sha256": "06921ef18c10968ab35116603645c6e64cde851ff3886838d9c448db5329fe35",
+          "packagerChecksum": "e67c6c5e74691e65ecbf24fd19c1da545434ac1674f37c917f5ecc282a00bffc62d64164a885d19f177e99a3fa53db196e2be1cf0aa6811027e61d05119682da",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "python3",
+      "version": "3.12.16-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/python3",
+      "sources": [
+        {
+          "file": "alpine/python3-3.12.16-r0/archives/Python-3.12.16.tar.xz",
+          "upstream": "https://www.python.org/ftp/python/3.12.16/Python-3.12.16.tar.xz",
+          "sha256": "b5796915dc45ff745cfb4e990a7e7c93d6f546328a102ce31448d69ebc37575c",
+          "packagerChecksum": "adc13563d138248e5049e3d71f6497ff645e5fb3713fc14146fef8809608f447c7d205a6fa468434239504e56b9f826554e1a02c31c9e123e65b17030a7c2afc",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "readline",
+      "version": "8.2.13-r1",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/readline",
+      "sources": [
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline-8.2.tar.gz",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz",
+          "sha256": "3feb7171f16a84ee82ca18a36d7b9be109a52c04f492a053331d7d1095007c35",
+          "packagerChecksum": "0a451d459146bfdeecc9cdd94bda6a6416d3e93abd80885a40b334312f16eb890f8618a27ca26868cebbddf1224983e631b1cbc002c1a4d1cd0d65fba9fea49a",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-001.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-001",
+          "sha256": "bbf97f1ec40a929edab5aa81998c1e2ef435436c597754916e6a5868f273aff7",
+          "packagerChecksum": "ea3800a62e992b3e594d78e77b6c4b662fb8c501b81010277e478656bb3b56db7747ba40c6c3d68c3ec5ab8e9e41be104788ec52268135d7e642ff40dea421a8",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-002.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-002",
+          "sha256": "e06503822c62f7bc0d9f387d4c78c09e0ce56e53872011363c74786c7cd4c053",
+          "packagerChecksum": "2d4058c5c886498486d8514c238c0a05c0a97409011a7da40745e842977f0a29754e8b678f7e6e7a47c00df7e2e4c522d34d473118a24524af3824eed912e74a",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-003.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-003",
+          "sha256": "24f587ba46b46ed2b1868ccaf9947504feba154bb8faabd4adaea63ef7e6acb0",
+          "packagerChecksum": "796df5a5bc4fc4077158621ac5359a7ccf81261e55880e6e70577ba24b50bd4fce4f2c70521d69a776f6ae8890d14d4f5c95cb9ba7c10f1065978c70626faeab",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-004.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-004",
+          "sha256": "79572eeaeb82afdc6869d7ad4cba9d4f519b1218070e17fa90bbecd49bd525ac",
+          "packagerChecksum": "dc5e4cb6b7a058f433c9c6a587772a4c63e0aeef9c59f45f3f859a007cdbaa46dfd560c43cfe51b9c5c0a3a4d662c100540afc6026b2f8544984867ea3b52661",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-005.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-005",
+          "sha256": "622ba387dae5c185afb4b9b20634804e5f6c1c6e5e87ebee7c35a8f065114c99",
+          "packagerChecksum": "f20bcea5ce592edd0e41e0d725611ce536ceffc9ab176511ba6786ae802160b277c412ccbb2ce175da656bdfe5f0fd3f3ace11752cf1a152abff64c90f67a53a",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-006.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-006",
+          "sha256": "c7b45ff8c0d24d81482e6e0677e81563d13c74241f7b86c4de00d239bc81f5a1",
+          "packagerChecksum": "0a2737b2e566fafd60da8c0c7abcbaef24139165fb62a422d257b4cf38835b1e9b7a639c9e64228bbaac432d6a9ce62363b134284e55f3473df788f6433fbe63",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-007.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-007",
+          "sha256": "5911a5b980d7900aabdbee483f86dab7056851e6400efb002776a0a4a1bab6f6",
+          "packagerChecksum": "e96dafe28f20b1092af08422b9be99965e3a973a0c19f7c57669a6a7fbf74ad4cc3490fa2ad50a1845644a65b0a0e001cfc7ad29528b3b36827a1b9a2c9a96e7",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-008.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-008",
+          "sha256": "a177edc9d8c9f82e8c19d0630ab351f3fd1b201d655a1ddb5d51c4cee197b26a",
+          "packagerChecksum": "a92a00a6b6fefc576ef26cf7522525ac99c1a05de510ca8bd5a72a6db40fb4dc5c277931efa1f4a91e7cf72c9da5287bb14bfa8f0668d36bec40e3ccd7cbe418",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-009.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-009",
+          "sha256": "3d9885e692e1998523fd5c61f558cecd2aafd67a07bd3bfe1d7ad5a31777a116",
+          "packagerChecksum": "57c084c6186befac58a3432c483c9f879cd199d6947ad7dd29f0d60e67ae4ddf5ee8d861b0231b41582868dd6556ae2dda95a849caf11cbd3692fcd2f8663452",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-010.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-010",
+          "sha256": "758e2ec65a0c214cfe6161f5cde3c5af4377c67d820ea01d13de3ca165f67b4c",
+          "packagerChecksum": "b611b42e31601ea5fcd7de59e6c1cdd3fece7cc8287e0e495ddfc4d5e8f765b3c6567b728fe0a317d6cb00240b772fa4c26f374c8bf361355a9d262bc5133874",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-011.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-011",
+          "sha256": "e0013d907f3a9e6482cc0934de1bd82ee3c3c4fd07a9646aa9899af237544dd7",
+          "packagerChecksum": "13694129f388364bea8009e1d2156c2a27e4b63bf780be2bc18129134e9f0454cad82106b6aeed03fab5ffe1f1fa630b80b77d1bc8b824a3d2280a71bf5d2ea6",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-012.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-012",
+          "sha256": "6c8adf8ed4a2ca629f7fd11301ed6293a6248c9da0c674f86217df715efccbd3",
+          "packagerChecksum": "8921328ed899702a4e0f5c924efee7955d70909cc6ccd2722c87127891e0639376ef5a642ca4b27f92e0ee06d4fad7297fe5f2d2db425e1b6a9b1eaf5c1e4b63",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/readline-8.2.13-r1/archives/readline82-013.patch",
+          "upstream": "https://ftp.gnu.org/gnu/readline/readline-8.2-patches/readline82-013",
+          "sha256": "1ea434957d6ec3a7b61763f1f3552dad0ebdd6754d65888b5cd6d80db3a788a8",
+          "packagerChecksum": "9a768946c91e4af31e872fb856b017662cdd5a12ed432d84ba13013fbac327673b655a034dbcfab52da2ff9e45eb1fdb562c3e26c224a5f4e86bff23df25175e",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "simdjson",
+      "version": "3.12.0-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/simdjson",
+      "sources": [
+        {
+          "file": "alpine/simdjson-3.12.0-r0/archives/simdjson-3.12.0.tar.gz",
+          "upstream": "https://github.com/simdjson/simdjson/archive/v3.12.0/simdjson-3.12.0.tar.gz",
+          "sha256": "1e5e82f0a34c331c1b0d0c21609791bfe6d6849edfc24983fc241626b433e1c3",
+          "packagerChecksum": "c28a235b252d520cf45defab8d64088db71aa8f3fa75746db237cbd8145054b4fb6b8c2783b0a9fefaf8a8f860feb2bd0b2f5ce4303eed8ceca3725d79af6c13",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "simdutf",
+      "version": "7.2.1-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/simdutf",
+      "sources": [
+        {
+          "file": "alpine/simdutf-7.2.1-r0/archives/simdutf-7.2.1.tar.gz",
+          "upstream": "https://github.com/simdutf/simdutf/archive/v7.2.1/simdutf-7.2.1.tar.gz",
+          "sha256": "5c2c0f8c752af8bc0f18d5eccdc78595c2c698aedd087beeee8aebd93dba6d1d",
+          "packagerChecksum": "589c27549fd74755fabd6f06f6f80b2b19768dc9a5b73447d448d2fa66fffba9770ac1ab756f7c757c9eb4f40b333a622b8b5d5657df27dfab5779a2d8afacd7",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "sqlite",
+      "version": "3.49.2-r1",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/sqlite",
+      "sources": [
+        {
+          "file": "alpine/sqlite-3.49.2-r1/archives/sqlite-autoconf-3490200.tar.gz",
+          "upstream": "https://www.sqlite.org/2025/sqlite-autoconf-3490200.tar.gz",
+          "sha256": "5c6d8697e8a32a1512a9be5ad2b2e7a891241c334f56f8b0fb4fc6051e1652e8",
+          "packagerChecksum": "59bbed0f49bcc17abcc3ba180858c7a7128038e43fd0b24a786505f0223340f85eb956e64a2b66e245d0b8d0769daa5e4688ae4686c64fc8ff91c546acce0070",
+          "packagerAlgorithm": "sha512"
+        },
+        {
+          "file": "alpine/sqlite-3.49.2-r1/archives/sqlite-3490200-LICENSE.md",
+          "upstream": "https://www.sqlite.org/src/raw?name=LICENSE.md&ci=version-3.49.2",
+          "sha256": "a7a58d6022c090c528e3167026167b3141d682efc6a3c188b473ba59f1788fc7",
+          "packagerChecksum": "38844727b09d11ded660c069d19a5289100405b0b243e75338060d237e3190fd99f0270611d214862beeb54a67993c2a337f917fdc452084f812d1371ce9869b",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "xz",
+      "version": "5.8.4-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/xz",
+      "sources": [
+        {
+          "file": "alpine/xz-5.8.4-r0/archives/xz-5.8.4.tar.gz",
+          "upstream": "https://github.com/tukaani-project/xz/archive/refs/tags/v5.8.4/xz-5.8.4.tar.gz",
+          "sha256": "b6b34c52e672e810d339db14e0c10b5b6f5f67a30d8d05cdac5d8cb4d82f78d5",
+          "packagerChecksum": "6a0e9c3b05f9c20255c5e35c06fdcd44b9e201f4ed566d1dec052b6cfda6cdfb42f73ffd258eaad2d8b7737c66b78ae353aebd44502e24a3d89d8765d698dcae",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "zlib",
+      "version": "1.3.1-r2",
+      "packagingCommit": "4c2722e7ecc1c5e3ba882429044a101497121223",
+      "recipe": "https://github.com/alpinelinux/aports/tree/4c2722e7ecc1c5e3ba882429044a101497121223/main/zlib",
+      "sources": [
+        {
+          "file": "alpine/zlib-1.3.1-r2/archives/zlib-1.3.1.tar.gz",
+          "upstream": "https://zlib.net/fossils/zlib-1.3.1.tar.gz",
+          "sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
+          "packagerChecksum": "580677aad97093829090d4b605ac81c50327e74a6c2de0b85dd2e8525553f3ddde17556ea46f8f007f89e435493c9a20bc997d1ef1c1c2c23274528e3c46b94f",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "zlib",
+      "version": "1.3.2-r1",
+      "packagingCommit": "121fc97db0e7c59db704891b6d7ef83ae5df2cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/121fc97db0e7c59db704891b6d7ef83ae5df2cc2/main/zlib",
+      "sources": [
+        {
+          "file": "alpine/zlib-1.3.2-r1/archives/zlib-1.3.2.tar.gz",
+          "upstream": "https://zlib.net/fossils/zlib-1.3.2.tar.gz",
+          "sha256": "bb329a0a2cd0274d05519d61c667c062e06990d72e125ee2dfa8de64f0119d16",
+          "packagerChecksum": "70963771ea5d763614278a69b474f09b7d237ef8f53b675a10fe31d9923aeef601504b35d7ebd1b1e7f347e9ebb048e6b3b47fffdf137e7bdc7e8d5eb4ec4692",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Alpine",
+      "name": "zstd",
+      "version": "1.5.7-r0",
+      "packagingCommit": "e30fb966aa1d9cec17dac8283b37f4e779575cc2",
+      "recipe": "https://github.com/alpinelinux/aports/tree/e30fb966aa1d9cec17dac8283b37f4e779575cc2/main/zstd",
+      "sources": [
+        {
+          "file": "alpine/zstd-1.5.7-r0/archives/zstd-1.5.7.tar.gz",
+          "upstream": "https://github.com/facebook/zstd/archive/v1.5.7.tar.gz",
+          "sha256": "37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c9012ee3",
+          "packagerChecksum": "26e441267305f6e58080460f96ab98645219a90d290a533410b1b0b1d2f870721c95f8384e342ee647c5e968385a5b7e30c2d04340c37f59b3e6d86762c3260c",
+          "packagerAlgorithm": "sha512"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Codex voice",
+      "name": "voice native libraries",
+      "packagingCommit": "360319d8dee62d87e2d59fc0c21805d79519cfed",
+      "sources": [
+        {
+          "name": "ninja",
+          "version": "1.13.2",
+          "role": "build-tool",
+          "upstream": "https://codeload.github.com/ninja-build/ninja/tar.gz/3441b633c2fe2c494e958780ba0f4227b1327634",
+          "sha256": "bccc6197cd8c3ac2a439e26d6bf41506fe49c430cf3d593269a15379f24266ee",
+          "file": "codex-voice/archives/ninja-1.13.2.tar.gz"
+        },
+        {
+          "name": "libffi",
+          "version": "3.8.0",
+          "role": "native-library",
+          "upstream": "https://github.com/libffi/libffi/releases/download/v3.8.0/libffi-3.8.0.tar.gz",
+          "sha256": "7da3e2d9a171eb0a038f592ecad3ff2bb2550f3496d87b3b29ad0cf4430c0db4",
+          "file": "codex-voice/archives/libffi-3.8.0.tar.gz"
+        },
+        {
+          "name": "meson",
+          "version": "1.12.0",
+          "role": "build-tool",
+          "upstream": "https://github.com/mesonbuild/meson/releases/download/1.12.0/meson-1.12.0.tar.gz",
+          "sha256": "88afe0c20e52030218924ac37d0c81c59b4b5f3ae3752c8c6d7470c7d365886c",
+          "file": "codex-voice/archives/meson-1.12.0.tar.gz"
+        },
+        {
+          "name": "proxy-libintl",
+          "version": "0.5",
+          "role": "native-library",
+          "upstream": "https://github.com/frida/proxy-libintl/archive/refs/tags/0.5.tar.gz",
+          "sha256": "f7a1cbd7579baaf575c66f9d99fb6295e9b0684a28b095967cfda17857595303",
+          "file": "codex-voice/archives/proxy-libintl-0.5.tar.gz"
+        },
+        {
+          "name": "zlib",
+          "version": "1.3.2",
+          "role": "native-library",
+          "upstream": "https://github.com/madler/zlib/releases/download/v1.3.2/zlib-1.3.2.tar.gz",
+          "sha256": "bb329a0a2cd0274d05519d61c667c062e06990d72e125ee2dfa8de64f0119d16",
+          "file": "codex-voice/archives/zlib-1.3.2.tar.gz"
+        },
+        {
+          "name": "pcre2",
+          "version": "10.47",
+          "role": "native-library",
+          "upstream": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.47/pcre2-10.47.tar.gz",
+          "sha256": "c08ae2388ef333e8403e670ad70c0a11f1eed021fd88308d7e02f596fcd9dc16",
+          "file": "codex-voice/archives/pcre2-10.47.tar.gz"
+        },
+        {
+          "name": "gstreamer",
+          "version": "1.28.6",
+          "role": "native-library",
+          "upstream": "https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.28.6.tar.xz",
+          "sha256": "62b6b9f0ad3147a6dd6420ac64a91180b14e990695bddd353b96041611d052ca",
+          "file": "codex-voice/archives/gstreamer-1.28.6.tar.xz"
+        },
+        {
+          "name": "gst-plugins-base",
+          "version": "1.28.6",
+          "role": "native-library",
+          "upstream": "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.28.6.tar.xz",
+          "sha256": "0ba699c7c6c66f4ba640be78cb38a24715add9683f3e3a199f5369dc5a4f04ac",
+          "file": "codex-voice/archives/gst-plugins-base-1.28.6.tar.xz"
+        },
+        {
+          "name": "glib",
+          "version": "2.88.3",
+          "role": "native-library",
+          "upstream": "https://download.gnome.org/sources/glib/2.88/glib-2.88.3.tar.xz",
+          "sha256": "ab24d24e698dfa1e408b7bcdb508f4aafc906185a8b8ce72fdf79bbbdc9b383b",
+          "file": "codex-voice/archives/glib-2.88.3.tar.xz"
+        },
+        {
+          "name": "gst-plugins-good",
+          "version": "1.28.6",
+          "role": "native-library",
+          "upstream": "https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.28.6.tar.xz",
+          "sha256": "b0c620a4b18b6ee931b4c43bbf1760d308666dc37f730a7e7f1ad327e59ce2df",
+          "file": "codex-voice/archives/gst-plugins-good-1.28.6.tar.xz"
+        },
+        {
+          "name": "opus",
+          "version": "1.6.1",
+          "role": "native-library",
+          "upstream": "https://downloads.xiph.org/releases/opus/opus-1.6.1.tar.gz",
+          "sha256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1",
+          "file": "codex-voice/archives/opus-1.6.1.tar.gz"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Termux",
+      "name": "libandroid-shmem",
+      "version": "0.7",
+      "packagingCommit": "50682c5dcfa4e86cef0366ea89f3adb2423d467d",
+      "recipe": "https://github.com/termux/termux-packages/tree/50682c5dcfa4e86cef0366ea89f3adb2423d467d/packages/libandroid-shmem",
+      "sources": [
+        {
+          "file": "termux/libandroid-shmem-0.7/archives/libandroid-shmem-0.7.tar.gz",
+          "upstream": "https://github.com/termux/libandroid-shmem/archive/refs/tags/v0.7.tar.gz",
+          "sha256": "1e5ff8459bc0a8c229dd8a94b27d119987e09ef3414331c2b5ebfff20b98e867"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Termux",
+      "name": "libtalloc",
+      "version": "2.5.0",
+      "packagingCommit": "50682c5dcfa4e86cef0366ea89f3adb2423d467d",
+      "recipe": "https://github.com/termux/termux-packages/tree/50682c5dcfa4e86cef0366ea89f3adb2423d467d/packages/libtalloc",
+      "sources": [
+        {
+          "file": "termux/libtalloc-2.5.0/archives/libtalloc-2.5.0.tar.gz",
+          "upstream": "https://www.samba.org/ftp/talloc/talloc-2.5.0.tar.gz",
+          "sha256": "912afa237510ae542a7733998eb18a12bcda35ab6729c8e2ddb43e8d0ebab007"
+        }
+      ]
+    },
+    {
+      "ecosystem": "Termux",
+      "name": "proot",
+      "version": "5.1.107.101",
+      "packagingCommit": "d6a36549b20eadb7723015eb3423e753ea125567",
+      "recipe": "https://github.com/termux/termux-packages/tree/d6a36549b20eadb7723015eb3423e753ea125567/packages/proot",
+      "sources": [
+        {
+          "file": "termux/proot-5.1.107.101/archives/proot-5.1.107.101.zip",
+          "upstream": "https://github.com/termux/proot/archive/v5.1.107.101.zip",
+          "sha256": "a66743f50c7b0bac1913b83bf55e139d679c80a0ca2808eec76432a65640017f"
+        }
+      ]
+    }
+  ]
+}

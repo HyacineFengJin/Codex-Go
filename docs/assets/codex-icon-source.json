@@ -1,0 +1,8 @@
+{
+  "source": "Installed official Codex/ChatGPT desktop app",
+  "archive": "/usr/lib/chatgpt/resources/app.asar",
+  "launcherAsset": "webview/assets/codex-app-ga-logo-3e5209898ca3.png",
+  "glyphAsset": "webview/assets/codex_new-f14177b03534.svg",
+  "launcherSha256": "8e82b26c98a10e45798ce48124515720657f7735fb8d0853b3f087eaa8a6b74e",
+  "reference": "https://openai.com/index/introducing-the-codex-app/"
+}

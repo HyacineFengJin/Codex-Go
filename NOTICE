@@ -1,0 +1,18 @@
+Codex Go
+Copyright (c) 2026 HyacineFengJin
+
+The MIT License in LICENSE applies to this project's original contributions.
+Third-party code, dependencies, bundled programs, build tooling and artwork
+retain their respective copyrights, licenses and notices. They are not
+relicensed under MIT by this project.
+
+See docs/third-party.md and licenses/ for component notices, license texts,
+source provenance and the source materials accompanying binary releases.
+Source code and build/packaging recipes for bundled copyleft components are
+provided alongside the APK as a separate Release asset.
+
+Codex Go is an independent community project, not an official OpenAI product.
+OpenAI and Codex names, logos and official icon assets remain the property of
+their respective owner; the project MIT License grants no trademark rights or
+additional license to those assets. Icon provenance is recorded separately in
+docs/assets/codex-icon-source.json.

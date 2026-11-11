@@ -1,0 +1,443 @@
+{
+  "branch": "v3.22",
+  "abi": "x86_64",
+  "wanted": [
+    "python3",
+    "py3-pip",
+    "nodejs",
+    "npm",
+    "git"
+  ],
+  "packages": [
+    {
+      "name": "ada-libs",
+      "kind": "apk",
+      "version": "2.9.2-r4",
+      "license": "( Apache-2.0 OR MIT ) AND MPL-2.0",
+      "origin": "ada",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/ada-libs-2.9.2-r4.apk",
+      "file": "x86_64-ada-libs-2.9.2-r4.apk",
+      "sha256": "183fd6d3164c8236b578b410d5ad9b19204d7d06f3dd60075c6a5466289fd483"
+    },
+    {
+      "name": "brotli-libs",
+      "kind": "apk",
+      "version": "1.1.1-r0",
+      "license": "MIT",
+      "origin": "brotli",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/brotli-libs-1.1.1-r0.apk",
+      "file": "x86_64-brotli-libs-1.1.1-r0.apk",
+      "sha256": "9e52618457762f65bf273f42d71db8084633a1e9d938ff2611015ba20d44a8cf"
+    },
+    {
+      "name": "busybox",
+      "kind": "apk",
+      "version": "1.37.0-r20",
+      "license": "GPL-2.0-only",
+      "origin": "busybox",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/busybox-1.37.0-r20.apk",
+      "file": "x86_64-busybox-1.37.0-r20.apk",
+      "sha256": "7cc34c2dda2520b456ab4a55abc37fe245ac90f98ab9f1c7a9be3aec035df48e"
+    },
+    {
+      "name": "busybox-binsh",
+      "kind": "apk",
+      "version": "1.37.0-r20",
+      "license": "GPL-2.0-only",
+      "origin": "busybox",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/busybox-binsh-1.37.0-r20.apk",
+      "file": "x86_64-busybox-binsh-1.37.0-r20.apk",
+      "sha256": "ad33d8d799ed80eab45bb68d63c14062165d3653f4fb52e73959cd31d032210e"
+    },
+    {
+      "name": "c-ares",
+      "kind": "apk",
+      "version": "1.34.9-r0",
+      "license": "MIT",
+      "origin": "c-ares",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/c-ares-1.34.9-r0.apk",
+      "file": "x86_64-c-ares-1.34.9-r0.apk",
+      "sha256": "9b23aa07901ed64bde0be7ec544f8d2b29de80d996277dc861218c54fff8bc97"
+    },
+    {
+      "name": "ca-certificates",
+      "kind": "apk",
+      "version": "20261020-r0",
+      "license": "MPL-2.0 AND MIT",
+      "origin": "ca-certificates",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/ca-certificates-20261020-r0.apk",
+      "file": "x86_64-ca-certificates-20261020-r0.apk",
+      "sha256": "8dd7538699961927a36327d622b3b9e9f5c944fd7d486a0cb8b6b833dc74cfbf"
+    },
+    {
+      "name": "ca-certificates-bundle",
+      "kind": "apk",
+      "version": "20261020-r0",
+      "license": "MPL-2.0 AND MIT",
+      "origin": "ca-certificates",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/ca-certificates-bundle-20261020-r0.apk",
+      "file": "x86_64-ca-certificates-bundle-20261020-r0.apk",
+      "sha256": "d35216a0a9adde79031df246759bad03f235cf201bf0aff8436b88bff59594eb"
+    },
+    {
+      "name": "gdbm",
+      "kind": "apk",
+      "version": "1.24-r0",
+      "license": "GPL-3.0-or-later",
+      "origin": "gdbm",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/gdbm-1.24-r0.apk",
+      "file": "x86_64-gdbm-1.24-r0.apk",
+      "sha256": "cb524a457ffbd9c79c6711d9ee883a64a5a9bc6aec4f4b4d047ee67527ac6e6d"
+    },
+    {
+      "name": "git",
+      "kind": "apk",
+      "version": "2.49.1-r0",
+      "license": "GPL-2.0-only",
+      "origin": "git",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/git-2.49.1-r0.apk",
+      "file": "x86_64-git-2.49.1-r0.apk",
+      "sha256": "42f4573799ffce0c7dd4954d2247eb882eb87360dc18637930624484ecfd1c90"
+    },
+    {
+      "name": "icu-data-en",
+      "kind": "apk",
+      "version": "76.1-r1",
+      "license": "ICU",
+      "origin": "icu",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/icu-data-en-76.1-r1.apk",
+      "file": "x86_64-icu-data-en-76.1-r1.apk",
+      "sha256": "bdb3507fd8eb21d0934ae2cc986f416d76d085dc27ca6b86b75643214eb5d0cb"
+    },
+    {
+      "name": "icu-libs",
+      "kind": "apk",
+      "version": "76.1-r1",
+      "license": "ICU",
+      "origin": "icu",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/icu-libs-76.1-r1.apk",
+      "file": "x86_64-icu-libs-76.1-r1.apk",
+      "sha256": "0d6d3b9173f388f7450b168f8a98647f21356d1d4e5ae414e160db2843c6a2c8"
+    },
+    {
+      "name": "libbz2",
+      "kind": "apk",
+      "version": "1.0.8-r6",
+      "license": "bzip2-1.0.6",
+      "origin": "bzip2",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libbz2-1.0.8-r6.apk",
+      "file": "x86_64-libbz2-1.0.8-r6.apk",
+      "sha256": "0c98810f9332bf1bb1b0acc64eaac4b101036689bffba9ea621416b4b3c190cd"
+    },
+    {
+      "name": "libcrypto3",
+      "kind": "apk",
+      "version": "3.5.9-r0",
+      "license": "Apache-2.0",
+      "origin": "openssl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libcrypto3-3.5.9-r0.apk",
+      "file": "x86_64-libcrypto3-3.5.9-r0.apk",
+      "sha256": "3f5825ced5fde1c66a5376a3f6076b3c08538ad52d9ef23f069857e212d9175a"
+    },
+    {
+      "name": "libcurl",
+      "kind": "apk",
+      "version": "8.14.1-r4",
+      "license": "curl",
+      "origin": "curl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libcurl-8.14.1-r4.apk",
+      "file": "x86_64-libcurl-8.14.1-r4.apk",
+      "sha256": "3887f3b2e66b513cb0f8211af6369a0ffaf87270c05ed1f18f7313eddc6b3660"
+    },
+    {
+      "name": "libexpat",
+      "kind": "apk",
+      "version": "2.9.0-r0",
+      "license": "MIT",
+      "origin": "expat",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libexpat-2.9.0-r0.apk",
+      "file": "x86_64-libexpat-2.9.0-r0.apk",
+      "sha256": "4c9fb621d455d12475767e261821a4be7b4e91e2ba19c20a02e7fa99189b0d6d"
+    },
+    {
+      "name": "libffi",
+      "kind": "apk",
+      "version": "3.4.8-r0",
+      "license": "MIT",
+      "origin": "libffi",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libffi-3.4.8-r0.apk",
+      "file": "x86_64-libffi-3.4.8-r0.apk",
+      "sha256": "9a75cb9024693c1e52c3d8d7c9afb7c79e6e20f6c08df28effdb8dd816095083"
+    },
+    {
+      "name": "libgcc",
+      "kind": "apk",
+      "version": "14.2.0-r6",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later",
+      "origin": "gcc",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libgcc-14.2.0-r6.apk",
+      "file": "x86_64-libgcc-14.2.0-r6.apk",
+      "sha256": "04f3467bc967e705221a843fe4d3de5850db826e571686e0c0ed453d38cb5c59"
+    },
+    {
+      "name": "libidn2",
+      "kind": "apk",
+      "version": "2.3.7-r0",
+      "license": "GPL-2.0-or-later OR LGPL-3.0-or-later",
+      "origin": "libidn2",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libidn2-2.3.7-r0.apk",
+      "file": "x86_64-libidn2-2.3.7-r0.apk",
+      "sha256": "515cfe061176c7456ea3548651d0014084d77dd3774b78e2c944404ae75a41ff"
+    },
+    {
+      "name": "libncursesw",
+      "kind": "apk",
+      "version": "6.5_p20250503-r0",
+      "license": "X11",
+      "origin": "ncurses",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libncursesw-6.5_p20250503-r0.apk",
+      "file": "x86_64-libncursesw-6.5_p20250503-r0.apk",
+      "sha256": "aeafdfca68147b014705b4e2564639ade6345198debb522f2c6c51d32e417651"
+    },
+    {
+      "name": "libpanelw",
+      "kind": "apk",
+      "version": "6.5_p20250503-r0",
+      "license": "X11",
+      "origin": "ncurses",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libpanelw-6.5_p20250503-r0.apk",
+      "file": "x86_64-libpanelw-6.5_p20250503-r0.apk",
+      "sha256": "046257a4535a9ced124595a33053948f6bf8b2f02988fefd1108f514d213ad4b"
+    },
+    {
+      "name": "libpsl",
+      "kind": "apk",
+      "version": "0.21.5-r3",
+      "license": "MIT",
+      "origin": "libpsl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libpsl-0.21.5-r3.apk",
+      "file": "x86_64-libpsl-0.21.5-r3.apk",
+      "sha256": "1e79da4fa1364b7153b8950a363a6de0bef1d1b48d46fcb3b850cd4f233727b2"
+    },
+    {
+      "name": "libssl3",
+      "kind": "apk",
+      "version": "3.5.9-r0",
+      "license": "Apache-2.0",
+      "origin": "openssl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libssl3-3.5.9-r0.apk",
+      "file": "x86_64-libssl3-3.5.9-r0.apk",
+      "sha256": "6801c740b9760b5b08da8db6367ebc18b2cc4dbaf371f7148429538b8bb04e23"
+    },
+    {
+      "name": "libstdc++",
+      "kind": "apk",
+      "version": "14.2.0-r6",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later",
+      "origin": "gcc",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libstdc++-14.2.0-r6.apk",
+      "file": "x86_64-libstdc++-14.2.0-r6.apk",
+      "sha256": "939f7c99898f3e8154207a17f4acbe8bc40437e1bb1b43f5525620ca9e452a2e"
+    },
+    {
+      "name": "libunistring",
+      "kind": "apk",
+      "version": "1.3-r0",
+      "license": "GPL-2.0-or-later OR LGPL-3.0-or-later",
+      "origin": "libunistring",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/libunistring-1.3-r0.apk",
+      "file": "x86_64-libunistring-1.3-r0.apk",
+      "sha256": "989640e58f7646c0495c3950df36eb7b4df152d8150c2c888f8ab954fed8c908"
+    },
+    {
+      "name": "mpdecimal",
+      "kind": "apk",
+      "version": "4.0.1-r0",
+      "license": "BSD-2-Clause",
+      "origin": "mpdecimal",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/mpdecimal-4.0.1-r0.apk",
+      "file": "x86_64-mpdecimal-4.0.1-r0.apk",
+      "sha256": "28f3d868efbc1e9093b95f4a3f6e74393acd4a37292fcb5c0e0e0612fe83fff3"
+    },
+    {
+      "name": "musl",
+      "kind": "apk",
+      "version": "1.2.5-r13",
+      "license": "MIT",
+      "origin": "musl",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/musl-1.2.5-r13.apk",
+      "file": "x86_64-musl-1.2.5-r13.apk",
+      "sha256": "359890bc7c4dc5fee7a85192de60a471c987e4664767288578beca60a44db2c8"
+    },
+    {
+      "name": "ncurses-terminfo-base",
+      "kind": "apk",
+      "version": "6.5_p20250503-r0",
+      "license": "X11",
+      "origin": "ncurses",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/ncurses-terminfo-base-6.5_p20250503-r0.apk",
+      "file": "x86_64-ncurses-terminfo-base-6.5_p20250503-r0.apk",
+      "sha256": "0815a5f0403974bb9c34d456e71dc9c0222cb5455d393bc63c44b573da3d7fe0"
+    },
+    {
+      "name": "nghttp2-libs",
+      "kind": "apk",
+      "version": "1.69.0-r0",
+      "license": "MIT",
+      "origin": "nghttp2",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/nghttp2-libs-1.69.0-r0.apk",
+      "file": "x86_64-nghttp2-libs-1.69.0-r0.apk",
+      "sha256": "d6ee515d30d703e94b55ef9c0a02aea053313f654acbd2c655d18e3907ecb66a"
+    },
+    {
+      "name": "nodejs",
+      "kind": "apk",
+      "version": "22.23.4-r0",
+      "license": "MIT",
+      "origin": "nodejs",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/nodejs-22.23.4-r0.apk",
+      "file": "x86_64-nodejs-22.23.4-r0.apk",
+      "sha256": "729f9744c49b6c8accd87a48efe9d05a9fced61b4e9235017a761ef6c789fad2"
+    },
+    {
+      "name": "npm",
+      "kind": "apk",
+      "version": "11.6.4-r0",
+      "license": "Artistic-2.0",
+      "origin": "npm",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/npm-11.6.4-r0.apk",
+      "file": "x86_64-npm-11.6.4-r0.apk",
+      "sha256": "d99a0e253f190f513fb80c1dfb7032dbb0a423f37c43b1e7fc333f2b29ddab1c"
+    },
+    {
+      "name": "pcre2",
+      "kind": "apk",
+      "version": "10.46-r1",
+      "license": "BSD-3-Clause",
+      "origin": "pcre2",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/pcre2-10.46-r1.apk",
+      "file": "x86_64-pcre2-10.46-r1.apk",
+      "sha256": "e0e0e3c5f3b4a37a77799a7367bb40dd38596be55f56f3bc60f2cb4b584f842c"
+    },
+    {
+      "name": "py3-packaging",
+      "kind": "apk",
+      "version": "25.0-r0",
+      "license": "Apache-2.0 AND BSD-2-Clause",
+      "origin": "py3-packaging",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/py3-packaging-25.0-r0.apk",
+      "file": "x86_64-py3-packaging-25.0-r0.apk",
+      "sha256": "06ab1a2853857e1f53da6c4fceaec25ec3c942c24071f6598396d4e18ec68769"
+    },
+    {
+      "name": "py3-parsing",
+      "kind": "apk",
+      "version": "3.2.5-r0",
+      "license": "MIT",
+      "origin": "py3-parsing",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/py3-parsing-3.2.5-r0.apk",
+      "file": "x86_64-py3-parsing-3.2.5-r0.apk",
+      "sha256": "eb98adcfe7a7242b8e4ff77a894e4b8ca3e5a62539c8fa96bc8d07ab9f49c38d"
+    },
+    {
+      "name": "py3-pip",
+      "kind": "apk",
+      "version": "25.1.1-r0",
+      "license": "MIT",
+      "origin": "py3-pip",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/py3-pip-25.1.1-r0.apk",
+      "file": "x86_64-py3-pip-25.1.1-r0.apk",
+      "sha256": "9b17d8a160a41a93ebdd79bb24174788e310d31d07b4642d8416487696053979"
+    },
+    {
+      "name": "py3-setuptools",
+      "kind": "apk",
+      "version": "80.9.0-r0",
+      "license": "MIT",
+      "origin": "py3-setuptools",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/py3-setuptools-80.9.0-r0.apk",
+      "file": "x86_64-py3-setuptools-80.9.0-r0.apk",
+      "sha256": "53d35a4530371f61481fc800f18f226f68b3600140b851f902764bc91a7273db"
+    },
+    {
+      "name": "python3",
+      "kind": "apk",
+      "version": "3.12.16-r0",
+      "license": "PSF-2.0",
+      "origin": "python3",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/python3-3.12.16-r0.apk",
+      "file": "x86_64-python3-3.12.16-r0.apk",
+      "sha256": "4bd1bf5b980cdf906c04a507258cfae8b44b3070d82b7c4cbf77ef2552bbdb06"
+    },
+    {
+      "name": "readline",
+      "kind": "apk",
+      "version": "8.2.13-r1",
+      "license": "GPL-3.0-or-later",
+      "origin": "readline",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/readline-8.2.13-r1.apk",
+      "file": "x86_64-readline-8.2.13-r1.apk",
+      "sha256": "520fa586c689144928191bee13e2c85ff4e170ad87d1471ec48e3e97611673d8"
+    },
+    {
+      "name": "simdjson",
+      "kind": "apk",
+      "version": "3.12.0-r0",
+      "license": "Apache-2.0 OR MIT",
+      "origin": "simdjson",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/simdjson-3.12.0-r0.apk",
+      "file": "x86_64-simdjson-3.12.0-r0.apk",
+      "sha256": "e051fefd290e6b3658e5510a09785df6db2a2b2291f69f6ddfceefc03d7a811d"
+    },
+    {
+      "name": "simdutf",
+      "kind": "apk",
+      "version": "7.2.1-r0",
+      "license": "Apache-2.0 OR MIT",
+      "origin": "simdutf",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/simdutf-7.2.1-r0.apk",
+      "file": "x86_64-simdutf-7.2.1-r0.apk",
+      "sha256": "a29bb33167c1e2d478dab9e83172a8a455db41d62dcdfe34f680c4f18572bea0"
+    },
+    {
+      "name": "sqlite-libs",
+      "kind": "apk",
+      "version": "3.49.2-r1",
+      "license": "blessing",
+      "origin": "sqlite",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/sqlite-libs-3.49.2-r1.apk",
+      "file": "x86_64-sqlite-libs-3.49.2-r1.apk",
+      "sha256": "7af9a58595642de91ea35d3d070cd38d969680a720ce76b14966859e6fb4af99"
+    },
+    {
+      "name": "xz-libs",
+      "kind": "apk",
+      "version": "5.8.4-r0",
+      "license": "GPL-2.0-or-later AND 0BSD AND Public-Domain AND LGPL-2.1-or-later",
+      "origin": "xz",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/xz-libs-5.8.4-r0.apk",
+      "file": "x86_64-xz-libs-5.8.4-r0.apk",
+      "sha256": "37e169b7b400304fa7027cab79f9c1c7a280e83acf6c95463384b8abb7ebb254"
+    },
+    {
+      "name": "zlib",
+      "kind": "apk",
+      "version": "1.3.2-r1",
+      "license": "Zlib",
+      "origin": "zlib",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/zlib-1.3.2-r1.apk",
+      "file": "x86_64-zlib-1.3.2-r1.apk",
+      "sha256": "af24e502645e2b392cae833856d776691ac21655362e5db69d7b89f147f76216"
+    },
+    {
+      "name": "zstd-libs",
+      "kind": "apk",
+      "version": "1.5.7-r0",
+      "license": "BSD-3-Clause OR GPL-2.0-or-later",
+      "origin": "zstd",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/zstd-libs-1.5.7-r0.apk",
+      "file": "x86_64-zstd-libs-1.5.7-r0.apk",
+      "sha256": "1bdd6e57cfbfbfd6e8481cad37ddd5d199950715bec1879b3afb600272dbb09e"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.codex.go.sharefixture">
+    <uses-sdk android:minSdkVersion="30" android:targetSdkVersion="35" />
+    <application android:label="Codex Go Share Fixture" android:debuggable="true" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <activity android:name="dev.codex.go.testdriver.ReadingFixtureActivity" android:exported="true" />
+        <activity android:name="dev.codex.go.testdriver.ShareSourceActivity" android:launchMode="singleTask" android:exported="true" />
+        <provider android:name="dev.codex.go.testdriver.ShareProvider" android:authorities="dev.codex.go.sharefixture.shares" android:exported="false" android:grantUriPermissions="true" />
+    </application>
+</manifest>

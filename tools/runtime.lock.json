@@ -1,0 +1,37 @@
+[
+  {
+    "name": "codex",
+    "kind": "codex",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.165.0/codex-package-aarch64-unknown-linux-musl.tar.gz",
+    "file": "codex-package-0.165.0.tar.gz",
+    "sha256": "c8b2844fdef57498572db960344aee8c836ce9f75c203379da0a9c3a334fc3b7"
+  },
+  {
+    "name": "alpine",
+    "kind": "rootfs",
+    "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/aarch64/alpine-minirootfs-3.22.1-aarch64.tar.gz",
+    "file": "alpine-3.22.1.tar.gz",
+    "sha256": "188416d41f9f0c9a6e9427b75149e43ccf3a89587b2d27c9ad506e7ffca78d1c"
+  },
+  {
+    "name": "libandroid-shmem",
+    "kind": "deb",
+    "url": "https://packages.termux.dev/apt/termux-main/pool/main/liba/libandroid-shmem/libandroid-shmem_0.7_aarch64.deb",
+    "file": "libandroid-shmem_0.7_aarch64.deb",
+    "sha256": "0da3a24d558b93c92bcf8d611e0826a99ff96e396b148e6cdf33b47c47c57ff6"
+  },
+  {
+    "name": "libtalloc",
+    "kind": "deb",
+    "url": "https://packages.termux.dev/apt/termux-main/pool/main/libt/libtalloc/libtalloc_2.5.0_aarch64.deb",
+    "file": "libtalloc_2.5.0_aarch64.deb",
+    "sha256": "556591f43bb773ad8777e1a29522640866a55f95dab71914418b94a8c58ad5a7"
+  },
+  {
+    "name": "proot",
+    "kind": "deb",
+    "url": "https://packages.termux.dev/apt/termux-main/pool/main/p/proot/proot_5.1.107.101_aarch64.deb",
+    "file": "proot_5.1.107.101_aarch64.deb",
+    "sha256": "a28355e9be257e1f87f4e9294b3118470d4fd7a5442fed8b278f4443c83407d7"
+  }
+]

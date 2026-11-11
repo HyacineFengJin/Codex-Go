@@ -1,0 +1,13 @@
+.gradle/
+.kotlin/
+.idea/
+local.properties
+**/build/
+*.keystore
+
+artifacts/*
+!artifacts/codex-go.json
+!artifacts/verification.json
+*.hprof
+
+__pycache__/

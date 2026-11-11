@@ -1,0 +1,163 @@
+{
+  "version": "0.17.0",
+  "scope": "ui",
+  "distributionFile": "codex-go.apk",
+  "installedEmulatorApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660",
+  "builds": {
+    "arm64-v8a": {
+      "version": "0.17.0",
+      "abi": "arm64-v8a",
+      "apkBytes": 290310629,
+      "sha256": "1bebe795929d5e7d67ea8521cf1b8d6b57fa074109cd460b034819f2be8f2fa1",
+      "unitTests": 115,
+      "unitFailures": 0,
+      "uiSmoke": false,
+      "runtimeIncluded": true,
+      "runtimeSourceApkSha256": "bc3397b104129776aba6e9eaff213dab878c189863ec78c5b174650cbbc7bf16"
+    },
+    "x86_64": {
+      "version": "0.17.0",
+      "abi": "x86_64",
+      "apkBytes": 72881761,
+      "sha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660",
+      "unitTests": 115,
+      "unitFailures": 0,
+      "uiSmoke": true,
+      "runtimeIncluded": false
+    }
+  },
+  "android15_x86_64": {
+    "localization": {
+      "result": {
+        "version": "0.17.0",
+        "notificationAndChannelRefresh": true,
+        "formattedResources": 725,
+        "englishFallback": true,
+        "legacyStatusLocalization": true,
+        "unknownMetadataPreserved": true,
+        "englishIndicatorsInBothLanguages": true,
+        "followSystemDefault": true,
+        "inAppChineseAndEnglish": true,
+        "selectionPersistsColdStart": true,
+        "systemAppLanguageSettingSync": true,
+        "draftPreservedAcrossLanguageAndRestart": true,
+        "userProjectNamePreserved": true,
+        "englishDeviceAndQuickControls": true,
+        "englishLargeFontAndDarkTheme": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660"
+    },
+    "expressive-ui": {
+      "result": {
+        "version": "0.17.0",
+        "conciseHomeActions": true,
+        "modelPickerAccessible": true,
+        "bentoActionsCreateDrafts": true,
+        "draftSurvivesLandscape": true,
+        "drawerHidesComposerKeyboard": true,
+        "projectGridActions": true,
+        "twoColumnGridAt360dp": true,
+        "advancedSettingsExpandAndCollapse": true,
+        "preReadSettingRetained": true,
+        "quickChatControlsAccessible": true,
+        "lightAndDarkThemes": true,
+        "largeFontComposerAndModelSheetUsable": true,
+        "largeFontControlsAndSettingsUsable": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660"
+    },
+    "phone-indicator-accessibility": {
+      "result": {
+        "version": "0.17.0",
+        "backend": "accessibility",
+        "viewingReadingAndControlLabels": true,
+        "badgeTouchPassesThrough": true,
+        "keyboardFocusRetained": true,
+        "overlappingAndDuplicateExit": true,
+        "pauseInvalidatesOldLeases": true,
+        "cachedImagesHandoffsAndShellStayDark": true,
+        "exceptionCleanup": true,
+        "cancellationCleanup": true,
+        "cancelToRemovalMs": 3,
+        "actualAccessibilityGestureCancellation": true,
+        "actualObservationCleanup": true,
+        "actualBackendFailureCleanup": true,
+        "serviceInterruptCleanup": true,
+        "serviceDisconnectCleanup": true,
+        "fourBlueEdges": true,
+        "portrait": true,
+        "smallScreenAndLargeFont": true,
+        "displayCutout": true,
+        "landscape": true,
+        "processDeathCleanup": true,
+        "noNewPermissionSwitch": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660"
+    },
+    "phone-indicator-adb": {
+      "result": {
+        "version": "0.17.0",
+        "backend": "adb",
+        "viewingReadingAndControlLabels": true,
+        "badgeTouchPassesThrough": true,
+        "keyboardFocusRetained": true,
+        "overlappingAndDuplicateExit": true,
+        "pauseInvalidatesOldLeases": true,
+        "cachedImagesHandoffsAndShellStayDark": true,
+        "exceptionCleanup": true,
+        "cancellationCleanup": true,
+        "cancelToRemovalMs": 3,
+        "fourBlueEdges": true,
+        "portrait": true,
+        "smallScreenAndLargeFont": true,
+        "displayCutout": true,
+        "landscape": true,
+        "processDeathCleanup": true,
+        "noNewPermissionSwitch": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660"
+    }
+  },
+  "lintErrors": [],
+  "externalInference": false,
+  "realAccountLogin": false,
+  "pending": [
+    "Android 11 / 12 app-language compatibility and OEM per-app locale behavior; this run uses Android 15",
+    "0.17.0 native engine end-to-end checks; this emulator run uses UI_SMOKE",
+    "complete DOM, independent OCR and embedded on-device model inference",
+    "real Luna/account pre-read accuracy, image escalation and token/time savings",
+    "physical-device history gateway with real ChatGPT auth, workspace routing and token/time measurements",
+    "legacy user-image originals absent from app storage, paginated/file-ID-only histories and archive capacity stress",
+    "ADB-only deferred original image on an authenticated wireless connection",
+    "real rooted device and su-manager grant/revoke",
+    "full regression suite",
+    "ARM64/OEM physical-device compatibility",
+    "complete real ChatGPT account login",
+    "real model inference",
+    "physical-device background/network recovery",
+    "OEM floating-window and notification-input compatibility",
+    "dedicated gallery picker",
+    "native move/delete/binary/empty-file edge cases",
+    "share import killed before inbox commit",
+    "receiver rotation during an active copy",
+    "more source apps and OEM share sheets",
+    "project-level configuration recovery",
+    "long content/diff navigation",
+    "plans/context/quota display",
+    "Android stress test for first-thread creation during attachment import"
+  ],
+  "nativeRuntimeEndToEnd": false,
+  "runtimeByteComparison": {
+    "entries": 177,
+    "identical": true,
+    "sourceApkSha256": "bc3397b104129776aba6e9eaff213dab878c189863ec78c5b174650cbbc7bf16"
+  }
+}

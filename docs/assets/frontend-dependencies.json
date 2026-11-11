@@ -1,0 +1,37 @@
+{
+  "version": "0.8.0",
+  "selectedMaterial3": "1.5.0-alpha12",
+  "theme": "MaterialExpressiveTheme",
+  "motion": "MotionScheme.expressive()",
+  "compileSdk": 36,
+  "androidGradlePlugin": "8.9.2",
+  "officialArtifacts": [
+    {
+      "version": "1.5.0-alpha12",
+      "url": "https://dl.google.com/dl/android/maven2/androidx/compose/material3/material3-android/1.5.0-alpha12/material3-android-1.5.0-alpha12.aar",
+      "sha256": "6a1140683a8e227b066908bc4493828a4037a0933b902b9af102e28656b4223e",
+      "aarMetadata": {
+        "aarFormatVersion": "1.0",
+        "aarMetadataVersion": "1.0",
+        "minCompileSdk": "35",
+        "minCompileSdkExtension": "0",
+        "minAndroidGradlePluginVersion": "8.6.0",
+        "coreLibraryDesugaringEnabled": "false"
+      }
+    },
+    {
+      "version": "1.5.0-beta02",
+      "url": "https://dl.google.com/dl/android/maven2/androidx/compose/material3/material3-android/1.5.0-beta02/material3-android-1.5.0-beta02.aar",
+      "sha256": "937daaf7b67833e9efceb297a3a89f957ccd993f7d736e1ac96ef7ff5081e5db",
+      "aarMetadata": {
+        "aarFormatVersion": "1.0",
+        "aarMetadataVersion": "1.0",
+        "minCompileSdk": "37",
+        "minCompileMinorSdk": "0",
+        "minCompileSdkExtension": "0",
+        "minAndroidGradlePluginVersion": "9.1.0",
+        "coreLibraryDesugaringEnabled": "false"
+      }
+    }
+  ]
+}
