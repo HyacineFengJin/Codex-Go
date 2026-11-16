@@ -24,7 +24,7 @@ data class Project(val id: String, val name: String) {
         const val DIRECTORY = "projects"
         val UUID_PATTERN = Regex("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}")
         val DEFAULT = Project(DEFAULT_ID, "默认项目")
-        fun validateName(name: String) { require(name.isNotBlank() && name.length <= 60 && name == name.trim() && name.none(Char::isISOControl)) { "项目名称需为 1–60 字，不能包含换行或控制字符" } }
+        fun validateName(name: String) { require(name.isNotBlank() && name == name.trim() && name.none(Char::isISOControl)) { "项目名称不能为空，也不能包含换行或控制字符" } }
         fun guestRoot(root: File): String = if (root.parentFile?.name == DIRECTORY && UUID_PATTERN.matches(root.name)) "/$DIRECTORY/${root.name}" else "/workspace"
     }
 }
@@ -47,7 +47,6 @@ class ProjectRepository(private val context: Context) {
     }
     fun create(name: String): Project {
         val projects = list(); val title = name.trim(); Project.validateName(title)
-        require(projects.size < 50) { "最多创建 50 个项目" }
         require(projects.none { it.name.equals(title, true) }) { "已有同名项目" }
         val project = Project(UUID.randomUUID().toString(), title)
         project.directory(context.filesDir)

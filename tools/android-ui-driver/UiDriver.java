@@ -21,6 +21,13 @@ public final class UiDriver extends Instrumentation {
         Bundle result = new Bundle();
         try {
             if (!Build.HARDWARE.contains("ranchu") && !Build.HARDWARE.contains("goldfish")) throw new SecurityException("Disposable emulators only");
+            if (arguments.containsKey("faultService")) {
+                getContext().getPackageManager().setComponentEnabledSetting(
+                    new android.content.ComponentName(getContext(), FaultPluginService.class),
+                    "enabled".equals(arguments.getString("faultService")) ? android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED : android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    android.content.pm.PackageManager.DONT_KILL_APP);
+                result.putString("componentChanged", "true"); finish(Activity.RESULT_OK, result); return;
+            }
             UiAutomation automation = getUiAutomation(UiAutomation.FLAG_DONT_SUPPRESS_ACCESSIBILITY_SERVICES);
             AccessibilityServiceInfo info = automation.getServiceInfo();
             info.flags |= AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS | AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS;
@@ -73,7 +80,9 @@ public final class UiDriver extends Instrumentation {
         xml.attribute(null, "content-desc", node.getContentDescription() == null ? "" : node.getContentDescription().toString());
         xml.attribute(null, "state-desc", node.getStateDescription() == null ? "" : node.getStateDescription().toString());
         xml.attribute(null, "class", node.getClassName() == null ? "" : node.getClassName().toString());
+        xml.attribute(null, "package", node.getPackageName() == null ? "" : node.getPackageName().toString());
         xml.attribute(null, "resource-id", node.getViewIdResourceName() == null ? "" : node.getViewIdResourceName());
+        xml.attribute(null, "password", Boolean.toString(node.isPassword()));
         xml.attribute(null, "checkable", Boolean.toString(node.isCheckable()));
         xml.attribute(null, "checked", Boolean.toString(node.isChecked()));
         xml.attribute(null, "enabled", Boolean.toString(node.isEnabled()));

@@ -1,0 +1,12 @@
+{
+  "apiVersion": 1,
+  "capabilities": ["tools"],
+  "name": "Text Tools",
+  "description": "Count characters, words and lines locally. No network or device permissions.",
+  "timeoutMs": 3000,
+  "tools": [{
+    "name": "text_stats",
+    "description": "Count Unicode code points, whitespace-separated words and lines in the supplied text. Does not read other data.",
+    "inputSchema": {"type": "object", "properties": {"text": {"type": "string", "maxLength": 16000}}, "required": ["text"], "additionalProperties": false}
+  }]
+}

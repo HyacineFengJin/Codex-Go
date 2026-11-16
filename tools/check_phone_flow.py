@@ -69,7 +69,7 @@ requires_openai_auth=false
 supports_websockets=false
 '''.encode())
     driver.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS')
-    driver.start();driver.click('打开侧栏');driver.click('本机环境');driver.click('启动本机 Codex');driver.find('本机 Codex 已就绪',timeout=80)
+    driver.start();driver.click('打开侧栏');driver.click('本机环境');driver.click('启动 Codex');driver.find('本机 Codex 已就绪',timeout=80)
     driver.shell('settings','put','secure','enabled_accessibility_services','dev.codex.go/.phone.PhoneAccessService')
     driver.shell('settings','put','secure','accessibility_enabled','1')
     driver.click('返回对话');driver.click('打开侧栏');driver.click('手机操作');driver.find('已连接')

@@ -87,12 +87,7 @@ def wait_not_busy():
         if not any(n.get('content-desc') in ['停止任务','插话'] for n in driver.xml().iter('node')):return
     raise AssertionError('Native turn did not finish')
 def send(kind):replace_text(kind+'_'+token);driver.click('发送消息')
-def scroll_click(label):
-    for _ in range(10):
-        node=next((n for n in driver.xml().iter('node') if n.get('text')==label),None)
-        if node is not None:driver.tap(node);return
-        driver.shell('input','swipe','950','2000','950','850','350')
-    raise AssertionError('Missing scroll action: '+label)
+def scroll_click(label):driver.scroll_click(label)
 
 try:
     subprocess.run(driver.adb+['reverse',f'tcp:{port}',f'tcp:{port}'],check=True,stdout=subprocess.DEVNULL)
@@ -112,7 +107,7 @@ stream_max_retries = 0
 stream_idle_timeout_ms = 3000
 '''
     driver.shell('am','force-stop','dev.codex.go');driver.private_write('files/codex/config.toml',config.encode());driver.private_write('files/codex/auth.json',json.dumps({'OPENAI_API_KEY':'sk-local-recovery-fixture-'+token}).encode())
-    driver.start();settings();driver.click('启动本机 Codex');driver.find('本机 Codex 已就绪',timeout=90);driver.click('返回对话');driver.click('新建对话')
+    driver.start();settings();driver.click('启动 Codex');driver.find('本机 Codex 已就绪',timeout=90);driver.click('返回对话');driver.click('新建对话')
     driver.click('选择模型');driver.find('选择模型')
     model_ids=[n.get('text','') for n in driver.xml().iter('node') if re.fullmatch(r'[a-z][a-z0-9._-]{2,}',n.get('text','')) and '-' in n.get('text','')]
     assert model_ids,'Native model IDs are not discoverable in the model sheet'
@@ -132,13 +127,19 @@ stream_idle_timeout_ms = 3000
     driver.click('完成');replace_text('REC_QUEUED_'+token);driver.click('发送方式 ▾');driver.click('排队，本轮结束后发送')
     auth_release.set();complete('账户验证未通过');wait_not_busy();driver.capture(out/'authentication.png')
     assert counts['REC_QUEUED']==0,'Failed turn silently continued its queue'
-    replace_text('KEEP_NEW_DRAFT_'+token);driver.click('前往账户');scroll_click('刷新账户状态');driver.find('已刷新账户与模型信息，可以检查后重试。',timeout=30);driver.click('返回对话')
+    replace_text('KEEP_NEW_DRAFT_'+token);driver.click('前往账户')
+    for _ in range(3):
+        scroll_click('刷新账户状态')
+        try:driver.find('已刷新账户与模型信息，可以检查后重试。',timeout=6);break
+        except AssertionError:continue
+    else:raise AssertionError('Account refresh did not complete')
+    driver.click('返回对话')
     auth_fixed.set();driver.click('重试上一条消息');complete('REC_AUTH_OK');wait_not_busy()
     assert driver.find(classname='android.widget.EditText').get('text')=='KEEP_NEW_DRAFT_'+token
     assert counts['REC_QUEUED']==0
     print('401 recovery and retained next draft/paused queue verified',flush=True)
     send('REC_NET');complete('连接暂时中断');wait_not_busy();driver.capture(out/'network-failure.png')
-    replace_text('DRAFT_AFTER_RESTART_'+token);driver.start();settings();driver.click('启动本机 Codex');driver.find('本机 Codex 已就绪',timeout=90);driver.click('返回对话');driver.find('上次任务状态待确认')
+    replace_text('DRAFT_AFTER_RESTART_'+token);driver.start();settings();driver.click('启动 Codex');driver.find('本机 Codex 已就绪',timeout=90);driver.click('返回对话');driver.find('上次任务状态待确认')
     assert driver.find(classname='android.widget.EditText').get('text')=='DRAFT_AFTER_RESTART_'+token
     network_fixed.set();driver.click('重试上一条消息');complete('REC_NET_OK');wait_not_busy()
     assert driver.find(classname='android.widget.EditText').get('text')=='DRAFT_AFTER_RESTART_'+token
@@ -164,15 +165,18 @@ stream_idle_timeout_ms = 3000
     assert subprocess.run(driver.adb+['shell','run-as','dev.codex.go','test','-e','files/workspace/'+patch_name]).returncode!=0
     send('REC_PATCH_ACCEPT');driver.find('允许修改文件？',timeout=40);driver.capture(out/'patch-accept.png');driver.click('允许本次');complete('REC_PATCH_ACCEPT_OK');wait_not_busy()
     assert driver.shell('run-as','dev.codex.go','cat','files/workspace/'+patch_name)=='APPROVED_'+token+'\n'
-    send('REC_PATCH_LARGE');driver.find('允许修改文件？',timeout=40);driver.find('差异超过展示上限，未完整显示。请拒绝并让 Codex 拆分修改。')
-    # Material Text can remain enabled under a disabled parent button. Check the action itself.
-    driver.click('允许本次');driver.find('允许修改文件？')
-    assert subprocess.run(driver.adb+['shell','run-as','dev.codex.go','test','-e','files/workspace/'+large_name]).returncode!=0
-    driver.capture(out/'patch-large.png');driver.click('拒绝');complete('REC_PATCH_LARGE_OK');wait_not_busy()
-    assert subprocess.run(driver.adb+['shell','run-as','dev.codex.go','test','-e','files/workspace/'+large_name]).returncode!=0
+    send('REC_PATCH_LARGE');driver.find('允许修改文件？',timeout=40)
+    for _ in range(12):
+        full=next((n for n in driver.xml().iter('node') if n.get('text')=='查看全文'),None)
+        if full is not None:driver.tap(full);break
+        driver.shell('input','swipe','540','1650','540','850','250')
+    else:raise AssertionError('Complete diff reader unavailable')
+    driver.find('全文');driver.click('末页');driver.capture(out/'patch-large-full.png');driver.click('关闭')
+    driver.click('允许本次');complete('REC_PATCH_LARGE_OK');wait_not_busy()
+    assert driver.shell('run-as','dev.codex.go','cat','files/workspace/'+large_name)==('OVERSIZED_LINE_'+token+'\n')*4000
     assert counts['REC_QUEUED']==0
     driver.shell('input','swipe','540','800','540','1500','500');driver.find('回到最新回复');driver.click('回到最新回复');driver.find('REC_PATCH_LARGE_OK')
-    result={'version':driver.version(),'nativeModelSearch':True,'busyModelSelectionLocked':True,'nativeModelAndEffort':True,'restoredModelAndEffort':True,'nativeUnauthorizedRecovery':True,'failedQueuePaused':True,'retryPreservesDifferentDraft':True,'nativeStreamDisconnectRecovery':True,'retrySurvivesAppRestart':True,'offlineDraftPreserved':True,'networkReturnNeedsExplicitSend':True,'nativeFileChangeApproval':True,'fileChangeDeclinePreventsWrite':True,'fileChangeAcceptWritesExpectedBytes':True,'oversizedDiffCannotBeApproved':True,'lateFileCardKeepsLatestReplyVisible':True,'manualHistoryScrollPreserved':True,'externalInference':False,'realAccountLogin':False}
+    result={'version':driver.version(),'nativeModelSearch':True,'busyModelSelectionLocked':True,'nativeModelAndEffort':True,'restoredModelAndEffort':True,'nativeUnauthorizedRecovery':True,'failedQueuePaused':True,'retryPreservesDifferentDraft':True,'nativeStreamDisconnectRecovery':True,'retrySurvivesAppRestart':True,'offlineDraftPreserved':True,'networkReturnNeedsExplicitSend':True,'nativeFileChangeApproval':True,'fileChangeDeclinePreventsWrite':True,'fileChangeAcceptWritesExpectedBytes':True,'largeCompleteDiffReviewAndApproval':True,'lateFileCardKeepsLatestReplyVisible':True,'manualHistoryScrollPreserved':True,'externalInference':False,'realAccountLogin':False}
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print('PASS: native reasoning, authentication/network recovery, offline draft retention and actual file-change approvals',flush=True)
 finally:
     auth_release.set();driver.capture(out/'last-screen.png');driver.shell('am','force-stop','dev.codex.go')

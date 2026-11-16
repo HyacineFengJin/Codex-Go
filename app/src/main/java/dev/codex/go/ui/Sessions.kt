@@ -13,7 +13,7 @@ import dev.codex.go.runtime.Session
 @Composable fun SessionActions(session: Session, archived: Boolean, close: () -> Unit, rename: (String, String) -> Unit, archive: (String) -> Unit, restore: (String) -> Unit) {
     var action by remember(session.id) { mutableStateOf("") }
     var name by remember(session.id) { mutableStateOf(session.title) }
-    val valid = name.trim().let { it.isNotEmpty() && it.length <= 120 && !it.any(Char::isISOControl) }
+    val valid = name.trim().let { it.isNotEmpty() && !it.any(Char::isISOControl) }
     when (action) {
         "rename" -> AlertDialog(onDismissRequest = close, title = { Text(tr(R.string.rename_chat)) }, text = {
             OutlinedTextField(name, { name = it }, singleLine = true, label = { Text(tr(R.string.chat_name)) }, supportingText = { Text("${name.trim().length} / 120") }, isError = !valid)

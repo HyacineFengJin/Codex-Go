@@ -1,8 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.codex.go.testdriver">
     <uses-sdk android:minSdkVersion="30" android:targetSdkVersion="35" />
     <application android:label="Codex Go Emulator UI Driver" android:debuggable="true">
+        <service android:name=".FaultPluginService" android:exported="true"><intent-filter><action android:name="dev.codex.go.action.PLUGIN" /></intent-filter><meta-data android:name="dev.codex.go.PLUGIN_MANIFEST" android:resource="@raw/plugin_faults" /></service>
     </application>
     <instrumentation android:name=".UiDriver" android:targetPackage="dev.codex.go.testdriver" android:functionalTest="true" />
     <instrumentation android:name=".IndicatorDriver" android:targetPackage="dev.codex.go" android:functionalTest="true" />
     <instrumentation android:name=".LocalizationDriver" android:targetPackage="dev.codex.go" android:functionalTest="true" />
+    <instrumentation android:name=".OverlayDriver" android:targetPackage="dev.codex.go" android:functionalTest="true" />
+    <instrumentation android:name=".PluginDriver" android:targetPackage="dev.codex.go" android:functionalTest="true" />
+    <instrumentation android:name=".AntigravityDriver" android:targetPackage="dev.codex.go" android:functionalTest="true" />
+    <instrumentation android:name=".AgentLoginUiDriver" android:targetPackage="dev.codex.go" android:functionalTest="true" />
+    <instrumentation android:name=".LimitUiDriver" android:targetPackage="dev.codex.go" android:functionalTest="true" />
+    <instrumentation android:name=".StorageRecoveryDriver" android:targetPackage="dev.codex.go" android:functionalTest="true" />
 </manifest>

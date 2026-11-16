@@ -111,17 +111,17 @@ requires_openai_auth=false
 supports_websockets=false
 '''.encode())
     d.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS')
-    d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=100)
+    d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=100)
     d.shell('settings','put','secure','accessibility_enabled','0')
     if not args.adb:
         d.shell('settings','put','secure','enabled_accessibility_services','dev.codex.go/.phone.PhoneAccessService');d.shell('settings','put','secure','accessibility_enabled','1')
     d.click('返回对话');d.click('打开侧栏');d.click('手机操作');d.set_switch('预读优先',False)
     if args.adb:
-        d.scroll_click('手动端口');d.set_text('5555');d.click('连接');d.find('无线调试已连接',timeout=30)
+        d.scroll_click('手动端口');d.set_text('5555');d.click('连接');d.find('Android Shell 已就绪',timeout=30)
     d.capability('phone',True);d.click('返回对话');d.click('新建对话')
     d.set_text('PHONE_ACTION_FIXTURE')
     if 'mInputShown=true' in d.shell('dumpsys','input_method'):d.shell('input','keyevent','4')
-    d.click('发送消息');d.shell('am','start','-n','dev.codex.go.sharefixture/dev.codex.go.testdriver.ReadingFixtureActivity','--es','mode','actions')
+    d.click('发送消息');d.shell('am','start','-f','0x10008000','-n','dev.codex.go.sharefixture/dev.codex.go.testdriver.ReadingFixtureActivity','--es','mode','actions')
     points['target']=center(d.find('点击计数按钮'));points['input']=center(d.find('动态输入测试'));ready.set()
     await_gate(captured,40);d.find('点击次数 1');d.click('开始持续变化');time.sleep(.8);changed.set()
     await_gate(navigated,40);d.shell('am','start','-f','0x20000','-n','dev.codex.go.sharefixture/dev.codex.go.testdriver.ReadingFixtureActivity');d.find('typed_after_change');returned.set()

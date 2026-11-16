@@ -16,7 +16,6 @@ class ImageArchive(private val root: File, private val encoder: PreviewEncoder) 
     companion object {
         const val MARKER = HISTORY_IMAGE_METADATA
         const val MAX_IMAGE_BYTES = 64 * 1024 * 1024
-        const val MAX_ARCHIVE_BYTES = 512L * 1024 * 1024
         fun digest(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
         fun validThread(id: String) = id.matches(Regex("[a-zA-Z0-9_-]{1,96}"))
         fun validId(id: String) = id.matches(Regex("[a-f0-9]{64}"))
@@ -49,8 +48,6 @@ class ImageArchive(private val root: File, private val encoder: PreviewEncoder) 
         metadata(thread, id)?.let { return it }
         val preview = encoder.encode(bytes) ?: return null
         if (preview.bytes.isEmpty()) return null
-        val required = bytes.size.toLong() + preview.bytes.size + 4096
-        if (root.walkTopDown().filter(File::isFile).sumOf(File::length) + required > MAX_ARCHIVE_BYTES) return null
         check(dir.mkdirs() || dir.isDirectory)
         atomic(file(dir, "$id.original"), bytes)
         atomic(file(dir, "$id.preview"), preview.bytes)
@@ -96,7 +93,7 @@ class ImageArchive(private val root: File, private val encoder: PreviewEncoder) 
     @Synchronized fun callImages(thread: String, callId: String): List<String> = runCatching {
         if (callId.isBlank()) return emptyList()
         val f = file(directory(thread), "call-${digest(callId.toByteArray())}.json")
-        if (!f.isFile || f.length() > 16_384) return emptyList()
+        if (!f.isFile) return emptyList()
         val a = JSONArray(f.readText()); (0 until a.length()).map { a.getString(it) }.takeIf { ids -> ids.all { metadata(thread, it) != null } }.orEmpty()
     }.getOrDefault(emptyList())
 }

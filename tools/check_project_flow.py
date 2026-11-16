@@ -27,8 +27,8 @@ def patch(entries):
  write('shared_prefs/codex_go.xml',ET.tostring(root,encoding='utf-8',xml_declaration=True))
 def labels():return [n.get('text','') or n.get('content-desc','') for n in d.xml().iter('node')]
 def text_input(text):
- node=d.find(classname='android.widget.EditText');d.tap(node);d.shell('input','keyevent','KEYCODE_MOVE_END',*(['KEYCODE_DEL']*(len(node.get('text',''))+2)))
- d.shell('input','text',text)
+ d.set_text(text)
+ if 'mInputShown=true' in d.shell('dumpsys','input_method'):d.shell('input','keyevent','KEYCODE_BACK')
 def scroll_click(label):
  for _ in range(3):d.shell('input','swipe','530','700','530','1900','200')
  for _ in range(8):
@@ -48,10 +48,10 @@ def choose(name):
 def open_history(title):
  d.click('打开侧栏');d.find(title,timeout=25);d.click(title);d.find('更多')
 def start_engine():
- d.click('打开侧栏');d.click('本机环境');d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=80);d.click('返回对话')
+ d.click('打开侧栏');d.click('本机环境');d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=80);d.click('返回对话')
 def send_share(text,kind='one'):
  d.shell('am','start','-n','dev.codex.go.sharefixture/dev.codex.go.testdriver.ShareSourceActivity','--es','kind',kind,'--es','text',text)
- d.find('来自其他 App 的分享',timeout=25)
+ d.find('分享收件箱',timeout=25)
 def complete(marker):
  end=time.monotonic()+70
  while time.monotonic()<end:
@@ -170,9 +170,15 @@ supports_websockets=false
  patch({'shareRoute:'+entry['id']:route,'project':ids['B'],'thread':None})
  d.shell('run-as','dev.codex.go','mkdir','-p','files/projects/'+ids['A']+'/imports')
  d.shell('run-as','dev.codex.go','mv','files/share-staging/imports/'+batch,'files/projects/'+ids['A']+'/imports/'+batch)
- d.start();d.shell('am','start','-a','OPEN_SHARES','-n','dev.codex.go/.MainActivity');d.find('来自其他 App 的分享')
+ d.start();d.shell('am','start','-a','OPEN_SHARES','-n','dev.codex.go/.MainActivity');d.find('分享收件箱')
  d.click('加入当前草稿');d.find('这条分享上次已分配到其他目标，请回到原项目和草稿继续处理');assert len(inbox())==1
- d.click('回到上次分享目标');assert value('project')==ids['A'];d.click('加入当前草稿');assert not inbox()
+ d.click('回到上次分享目标')
+ until=time.monotonic()+80
+ while time.monotonic()<until and value('project')!=ids['A']:time.sleep(.1)
+ assert value('project')==ids['A'];d.click('加入当前草稿')
+ until=time.monotonic()+10
+ while time.monotonic()<until and inbox():time.sleep(.1)
+ assert not inbox()
  assert draft('new@'+ids['A'])['attachments'][0]['path'].startswith('/projects/'+ids['A']+'/imports/')
  assert read('files/workspace/'+filename)==b'LEGACY_KEEP'
  assert all(value(k)==v for k,v in legacy_drafts.items())

@@ -135,7 +135,7 @@ class AndroidShell(private val context: Context, private val wireless: WirelessD
     private suspend fun shizukuExecute(command: String, timeout: Long): String {
         check(Shizuku.pingBinder() && Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) { tr(R.string.shizuku_permission_expired) }
         val service = remote ?: error(tr(R.string.shizuku_is_not_connected)); val id = UUID.randomUUID().toString()
-        return withTimeout(timeout + 5000) {
+        return withOptionalTimeout(replyTimeout(timeout)) {
             suspendCancellableCoroutine { continuation ->
                 thread(isDaemon = true, name = "codex-shizuku-call") {
                     try { val result = service.execute(id, command, timeout); if (continuation.isActive) continuation.resume(result) }
@@ -146,7 +146,8 @@ class AndroidShell(private val context: Context, private val wireless: WirelessD
         }
     }
     suspend fun execute(command: String, timeout: Long, expected: ShellBackend): JSONObject = mutex.withLock {
-        require(command.isNotBlank() && command.length <= 16_000)
+        require(command.isNotBlank())
+        require(timeout >= 0)
         check(expected == selected && connected) { tr(R.string.shell_backend_changed_retry_using_the_current_connection) }
         if (selected == ShellBackend.Wireless) return@withLock wireless.executeShell(command, timeout)
         val result = JSONObject(when (selected) {

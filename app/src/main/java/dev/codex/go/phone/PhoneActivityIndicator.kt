@@ -8,6 +8,7 @@ import android.provider.Settings
 import android.util.TypedValue
 import android.view.*
 import dev.codex.go.R
+import dev.codex.go.ui.GlassSurface
 import kotlinx.coroutines.*
 import kotlin.coroutines.resume
 import kotlin.math.max
@@ -77,6 +78,7 @@ class PhoneActivityIndicator(private val context: Context, private val accessibi
         private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         private val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.create("sans-serif", Typeface.NORMAL); color = Color.rgb(242, 244, 247) }
         private val mark = context.getDrawable(R.drawable.ic_codex_mark)?.mutate()
+        private val capsule = GlassSurface(true, 0f, pill = true).apply { fillOpacity = 246 }
         private var safe = Rect()
         private var corners = 8f
         private var drawn = false
@@ -140,15 +142,16 @@ class PhoneActivityIndicator(private val context: Context, private val accessibi
             val icon = dp(16f)
             val leading = dp(16f) + icon + dp(8f)
             val trailing = dp(16f)
-            val label = android.text.TextUtils.ellipsize(context.getString(activity.labelId), android.text.TextPaint(text), (available - leading - trailing).coerceAtLeast(1f), android.text.TextUtils.TruncateAt.END).toString()
+            val brand = if (context.getSharedPreferences("codex_go", 0).getString("agentEngine", "codex") == "antigravity") "Antigravity" else "Codex"
+            val label = android.text.TextUtils.ellipsize(context.getString(activity.labelId).replace("Codex", brand), android.text.TextPaint(text), (available - leading - trailing).coerceAtLeast(1f), android.text.TextUtils.TruncateAt.END).toString()
             val badgeWidth = min(available, text.measureText(label) + leading + trailing)
             val metrics = text.fontMetrics
             val badgeHeight = max(dp(32f), metrics.descent - metrics.ascent + dp(12f))
             val left = safe.left + (width - safe.left - safe.right - badgeWidth) / 2
             val top = (safe.top + dp(8f)).coerceAtMost((height - safe.bottom - badgeHeight).coerceAtLeast(0f))
             // A passive status capsule, kept below the system bar and camera safe area.
-            paint.shader = null; paint.style = Paint.Style.FILL; paint.color = Color.rgb(17, 19, 22)
-            canvas.drawRoundRect(left, top, left + badgeWidth, top + badgeHeight, badgeHeight / 2, badgeHeight / 2, paint)
+            capsule.setBounds(left.toInt(), top.toInt(), (left + badgeWidth).toInt(), (top + badgeHeight).toInt())
+            capsule.draw(canvas)
             val iconTop = top + (badgeHeight - icon) / 2
             mark?.let { it.setBounds((left + dp(16f)).toInt(), iconTop.toInt(), (left + dp(16f) + icon).toInt(), (iconTop + icon).toInt()); it.draw(canvas) }
             canvas.drawText(label, left + leading, top + (badgeHeight - metrics.descent - metrics.ascent) / 2, text)

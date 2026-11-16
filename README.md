@@ -4,7 +4,9 @@
 
 首版专注本机。没有远程主机管理。
 
-[下载 0.17.0 预览版（ARM64 APK）](https://github.com/HyacineFengJin/Codex-Go/releases/download/v0.17.0/codex-go.apk) · [所有 Release](https://github.com/HyacineFengJin/Codex-Go/releases) · [版本说明](docs/release.md)
+[下载 0.21.0 预览版（ARM64 APK）](https://github.com/HyacineFengJin/Codex-Go/releases/download/v0.21.0/codex-go.apk) · [所有 Release](https://github.com/HyacineFengJin/Codex-Go/releases) · [版本说明](docs/release.md)
+
+0.21.0 修复跨引擎分享 / 快速消息的草稿恢复、重复合并和文件编辑器旋转丢稿；验证升级安装、退回桌面、进程终止、强制停止及设备重启后继续使用。见 [本轮检查](docs/lifecycle-selfcheck.md) 和 [限制审计](docs/limits.md)。同时发布此前的局部玻璃悬浮窗、[APK 插件系统](docs/plugins.md) 及解除配额后的大内容 / 取消修复。公开 APK 包含 Codex 运行时；[Antigravity 实验适配](docs/antigravity.md) 保留在源码中，未包含 Google CLI。
 
 Android 11 及以上。原创部分使用 [MIT License](LICENSE)，第三方部分保留原许可，见 [NOTICE](NOTICE) 和 [第三方组件](docs/third-party.md)。
 
@@ -28,24 +30,24 @@ Android 11 及以上。原创部分使用 [MIT License](LICENSE)，第三方部�
 - 后台跨会话浏览：A 的流式任务继续时可查看 B，独立保存 B 的草稿 / 附件与阅读位置；任务栏、通知和审批回到 A，任务结束后显式进入 B 再发送。
 - Codex 原生历史会话；优先分页接口，对尚未实现该接口的 0.165.0 本机服务回退到 `thread/read`。单条 RPC 返回上限提高至 128 Mi 字符，可恢复积累大量截图的对话；列表读取错误可单独重试。
 - 可选历史图片压缩：后续模型请求里的旧图使用最长边 768 的 JPEG 预览，最新一次观察保持原样。原图按会话保存，Codex 可用内置的历史图片工具列出 / 重读；重启后仍可引用，读取历史原图会清除实时原图缓存。原始会话文件不改写。
-- 系统文件 / 图片导入、发送前预览与移除、工作区引用。PNG / JPEG / WebP / GIF 作为图片输入；其他文件交给工作区工具读取。单条消息最多 8 个附件，单个不超过 64 MB。
+- 系统文件 / 图片导入、发送前预览与移除、工作区引用。PNG / JPEG / WebP / GIF 作为图片输入；其他文件交给工作区工具读取。客户端不另设附件数量或文件大小配额；具体图片支持由当前引擎决定。
 - 工作区浏览、文本新建 / 编辑、产物卡片、图片与小文本预览、导出和系统打开 / 分享。编辑器会检查文件是否被 Codex 同时修改。
 - 无障碍服务与本机无线调试可以同时连接：无障碍主要承担 Computer Use，无线调试提供 Android Shell 与屏幕操作补充。系统授权并连接后，手机操作和 Android Shell 直接向 AI 可用，无需额外开关。Android Shell 可另外选择有线 ADB、Shizuku 授权或 root；四种连接独立保留，记住所选方式，已连接方式切换后直接可用。无线配对可使用通知输入或常驻配对小窗；配对端口与连接端口分别发现。
 - 屏幕观察、点击、滑动、导航、打开应用和输入。Unicode 输入使用无障碍服务；仅连接 ADB 时支持可打印 ASCII。Android Shell 的命令、输出与退出码以独立工具返回，并逐条展示执行确认。
 - 点击、滑动、输入和导航不因屏幕内容变化、30 秒观察期限或旧 frameId 被拒绝。无障碍与 ADB 均使用当前屏幕范围校验坐标，frameId 仅作为动作的可选兼容字段；同一帧原图读取仍校验缓存。
 - 可选屏幕预读取：无障碍先提供文字、提示、错误、滑杆数值和像素位置，支持 WebView 暴露的网页语义；Codex 可请求同一帧原图或重新截图。检测到节点缺失、截断、较大图形、键盘或未覆盖窗口时附图；图片的标签不能代替画面。默认关闭，旧对话仍带图，新建对话使用新工具。可选在语义不足时使用 Codex 账号中的图像模型辅助预读，候选为 gpt-6-luna；只读取截图与节点，返回有界事实，预读层不规划、不操作。当前未内置手机本地推理、独立 OCR 或完整 DOM。
 - 控屏时显示柔和蓝色边缘辉光与顶部深色状态胶囊；观察、结构预读、操作分别显示 “Codex is viewing your screen”、“Codex is reading your screen”、“Codex is using your phone”；实际观察 / 动作结束即撤下，不在模型思考、缓存原图读取或纯 Shell 工作时常亮。提示层不抢焦点、不拦触摸，复用已有系统权限。
-- 手机操作暂停 / 继续、人工接管、熄屏 / 锁屏暂停和闲置超时；App 外悬浮控制或通知控制，任务完成与待确认提醒。恢复后旧画面失效，需重新观察。
+- 手机操作暂停 / 继续、人工接管、熄屏 / 锁屏暂停；App 外悬浮控制或通知控制，任务完成与待确认提醒。恢复后旧画面失效，需重新观察。
 - 账户级配置备份与恢复：默认配置、上次成功启动配置、前一份配置；原生配置检查阻止静默回退被误当作正常启动。
 - 系统分享接收文字、链接、图片和多文件，先保存至分享收件箱，明确选择当前 / 新对话草稿后再编辑发送；保留已有草稿。
 - 保留账户、历史、草稿和工作区的运行环境修复；白名单诊断导出、退出账户与系统后台设置入口。
 - 对话重命名、归档与恢复；跨全部分页的标题 / 摘要搜索，区分最近与已归档历史。
 - 账户 / 连接 / 额度 / 模型错误的持续恢复入口；失败暂停队列、离线保留草稿，手动重试保留不同的新草稿，待检查任务可在重新启动后恢复。
-- 从原生能力目录选择模型和思考深度，并在恢复会话时使用真实模型配置。文件审批展示路径与改动，差异缺失或超限时要求重新提供 / 拆分。
+- 从原生能力目录选择模型和思考深度，并在恢复会话时使用真实模型配置。文件审批展示路径与改动，长差异可分页查看、搜索和导出；差异缺失时要求重新提供。
 
 ## 使用
 
-从 [GitHub Release](https://github.com/HyacineFengJin/Codex-Go/releases/tag/v0.17.0) 下载 `codex-go.apk`。本机构建输出固定为 `artifacts/codex-go.apk`，构建时覆盖更新，不保留一排历史 APK。
+从 [GitHub Release](https://github.com/HyacineFengJin/Codex-Go/releases/tag/v0.21.0) 下载 `codex-go.apk`。本机构建输出固定为 `artifacts/codex-go.apk`，构建时覆盖更新，不保留一排历史 APK。
 
 1. 在聊天页直接启动，或点闪电打开「快捷控制」。首次启动检查空间并解包内置环境；以后打开 App 默认自动准备。
 2. 选择设备码登录，复制验证码到浏览器完成验证。返回对话后，点顶部“模型 · …”选择模型，旁边“思考 · …”可调整思考深度。
@@ -56,7 +58,7 @@ Android 11 及以上。原创部分使用 [MIT License](LICENSE)，第三方部�
 
 其他 App 的文字、网页、图片和文件可通过系统“分享 → Codex Go”送入收件箱，加入草稿后再发送。引擎无需提前启动。
 
-历史图片开关位于「本机环境 → 历史图片 · 实验 → 压缩旧图片」，默认关闭，切换时重启已就绪的引擎。支持普通 Responses 服务，使用当前登录和模型，需要模型支持图片。原图与预览缓存最多 512 MiB；旧会话若只剩模型缩图，会明确标为最高可用副本，不伪造高清细节。读取存档不需要开启手机操作或 Android Shell。可发送“列出这段对话的历史图片，读取上一张原图；不要操作手机”手动验证。
+历史图片开关位于「本机环境 → 历史图片 · 实验 → 压缩旧图片」，默认关闭，切换时重启已就绪的引擎。支持普通 Responses 服务，使用当前登录和模型，需要模型支持图片。图片归档不设总容量配额，单张解码保留内存保护；旧会话若只剩模型缩图，会明确标为最高可用副本，不伪造高清细节。读取存档不需要开启手机操作或 Android Shell。可发送“列出这段对话的历史图片，读取上一张原图；不要操作手机”手动验证。
 
 配置错误时，在“本机环境 → 配置恢复”选择恢复方式。恢复会先保留本机副本，重新启动并进入新对话；项目配置需要单独检查。
 
@@ -70,6 +72,15 @@ Android 11 及以上。原创部分使用 [MIT License](LICENSE)，第三方部�
 bash tools/build_apk.sh
 bash tools/build_apk.sh x86_64   # 完整模拟器运行包
 python tools/check_protocol.py
+```
+
+部分旧的 Termux / Alpine 包已从下载站下架。重建本版 ARM64 运行时可以从已发布、已核验哈希的 0.17.0 APK 提取相同依赖；只提取清单引用的运行时文件，不复制旧应用代码：
+
+```sh
+# 先从 v0.17.0 Release 下载 codex-go.apk，保存为 /path/to/codex-go-0.17.0.apk
+CODEX_GO_RUNTIME_APK=/path/to/codex-go-0.17.0.apk \
+CODEX_GO_RUNTIME_APK_SHA256=1bebe795929d5e7d67ea8521cf1b8d6b57fa074109cd460b034819f2be8f2fa1 \
+bash tools/build_apk.sh arm64-v8a
 ```
 
 `tools/runtime*.lock.json` 与 `tools/toolchain-*.lock.json` 固定下载地址和 SHA256；不要无意删除锁文件。运行时二进制和生成的资产不进入 Git。固定工具集之外的新 ELF 或原生扩展仍受 Android 执行限制，不承诺任意原生依赖安装可用。
@@ -114,7 +125,7 @@ python3 tools/clean_project.py
 - [设计参考](docs/design.md)
 - [OpenMinis：工作区、分享、任务与扩展经验](docs/openminis-reference.md)
 - [当前功能盘点与优先级](docs/roadmap.md)
-- [0.17.0 中英界面与当前交付](docs/release.md)
+- [0.21.0 发布与验证范围](docs/release.md)
 - [第三方组件](docs/third-party.md)
 
 这是独立的社区客户端，与 OpenAI 没有隶属关系。当前项目的业务代码和前端均重新实现，排错与设计经验保存在 `docs/experience.md`。

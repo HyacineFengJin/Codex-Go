@@ -48,8 +48,6 @@ class WorkspaceFiles(val root: File) {
         .mapNotNull { resolve(it.groupValues[1]) }.distinctBy(File::getPath).toList()
 
     companion object {
-        const val MAX_FILES = 8
-        const val MAX_FILE_BYTES = 64L * 1024 * 1024
         fun safeName(name: String) = name.substringAfterLast('/').substringAfterLast('\\')
             .replace(Regex("[\\p{Cntrl}]"), "_").take(160).trim().takeUnless { it.isBlank() || it == "." || it == ".." } ?: "attachment"
         fun link(guest: String) = "sandbox:" + guest.split('/').joinToString("/") { URLEncoder.encode(it, "UTF-8").replace("+", "%20") }

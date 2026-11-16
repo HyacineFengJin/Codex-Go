@@ -52,7 +52,7 @@ def replace(text,label=None):
  if label:d.tap(d.find(label))
  else:d.tap(d.find(classname='android.widget.EditText'))
  result=d.shell('am','instrument','-w','-e','setTextBase64',base64.b64encode(text.encode()).decode(),'dev.codex.go.testdriver/.UiDriver');assert 'textSet=true' in result,result
-def quick():d.click('更多');d.click('快捷对话');d.find('随时，聊两句。')
+def quick():d.click('更多');d.click('快捷对话');d.find('悬浮对话')
 def scroll_find(label):
  height=int(re.findall(r'(\d+)x(\d+)',d.shell('wm','size'))[-1][1])
  for _ in range(10):
@@ -99,7 +99,7 @@ supports_websockets = false
  subprocess.run(d.adb+['reverse',f'tcp:{port}',f'tcp:{port}'],check=True,stdout=subprocess.DEVNULL)
  d.shell('cmd','appops','set','dev.codex.go','SYSTEM_ALERT_WINDOW','allow');d.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS')
  d.shell('settings','put','secure','enabled_accessibility_services','null');d.shell('settings','put','secure','accessibility_enabled','0')
- d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=90);d.click('返回对话');d.click('新建对话');replace('MAIN_DRAFT_KEEP');hide_keyboard();quick()
+ d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=90);d.click('返回对话');d.click('新建对话');replace('MAIN_DRAFT_KEEP');hide_keyboard();quick()
  d.set_switch('悬浮对话气泡',True);d.capture(out/'settings.png');d.shell('input','keyevent','3');bubble=d.find('打开悬浮对话');before=bubble.get('bounds')
  x1,y1,x2,y2=map(int,re.findall(r'\d+',before));cx=(x1+x2)//2;cy=(y1+y2)//2
  d.shell('input','swipe',str(cx),str(cy),str(max(30,cx-150)),str(cy+100),'300');assert d.find('打开悬浮对话').get('bounds')!=before

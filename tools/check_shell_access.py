@@ -29,7 +29,7 @@ def test_id(provider):
 try:
     assert d.shell('pm','path','moe.shizuku.privileged.api').strip(),'Install official Shizuku before this check'
     d.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS')
-    d.start();d.click('快捷控制');d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=100);d.click('关闭快捷控制');d.find('打开侧栏');d.click('打开侧栏');d.find('手机操作');d.click('手机操作');d.find('手机能力')
+    d.start();d.click('快捷控制');d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=100);d.click('关闭快捷控制');d.find('打开侧栏');d.click('打开侧栏');d.find('手机操作');d.click('手机操作');d.find('手机能力')
     click('选择 有线 ADB');click('电脑 ADB 启动指南');d.find('从电脑启动 Shell')
     command=next(n.get('text') for n in nodes() if n.get('text','').startswith('adb shell '))
     assert command.startswith("adb shell '") and command.endswith("'")

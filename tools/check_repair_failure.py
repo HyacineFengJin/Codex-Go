@@ -49,7 +49,7 @@ supports_websockets = false
     driver.private_write(config_path,fixture)
     driver.private_write('files/workspace/repair-failure-keep.txt',b'WORK_MUST_SURVIVE_FAILED_START')
     driver.private_write(bindings_path,b'{BROKEN_BY_DISPOSABLE_TEST')
-    driver.start();driver.click('打开侧栏');driver.click('本机环境');driver.click('启动本机 Codex')
+    driver.start();driver.click('打开侧栏');driver.click('本机环境');driver.click('启动 Codex')
     driver.find('启动失败',timeout=60);driver.capture(out/'failed-start.png')
     found=False
     for _ in range(7):

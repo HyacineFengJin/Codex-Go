@@ -17,10 +17,19 @@ if [[ -z "$codex_go_jdk" ]]; then
     printf '%s\n' 'JDK 21 is required. Set CODEX_GO_JAVA_HOME to its installation directory.' >&2
     exit 1
 fi
-python3 tools/prepare_runtime.py --abi "$codex_go_abi"
-JAVA_HOME="$codex_go_jdk" ./gradlew "-PruntimeAbi=$codex_go_abi" :app:assembleDebug :app:testDebugUnitTest :app:lintDebug --console=plain
+if [[ -n "${CODEX_GO_RUNTIME_APK:-}" ]]; then
+    python3 tools/prepare_runtime.py --abi "$codex_go_abi" --from-apk "$CODEX_GO_RUNTIME_APK" --apk-sha256 "${CODEX_GO_RUNTIME_APK_SHA256:?Set the published source APK SHA256}"
+else
+    python3 tools/prepare_runtime.py --abi "$codex_go_abi"
+fi
+codex_go_extra_args=()
+if [[ "${CODEX_GO_ANTIGRAVITY:-0}" == 1 ]]; then
+    python3 tools/prepare_antigravity.py --abi "$codex_go_abi"
+    codex_go_extra_args+=('-Pantigravity')
+fi
+JAVA_HOME="$codex_go_jdk" ./gradlew "-PruntimeAbi=$codex_go_abi" "${codex_go_extra_args[@]}" :app:assembleDebug :app:testDebugUnitTest :app:lintDebug --console=plain
 python3 - "$codex_go_abi" <<'PY'
-import hashlib, json, shutil, sys
+import hashlib, json, shutil, sys, zipfile
 from pathlib import Path
 from xml.etree import ElementTree as E
 abi = sys.argv[1]
@@ -36,6 +45,16 @@ for report in Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'
     tests += int(attrs['tests']); failures += int(attrs['failures']) + int(attrs['errors'])
 assert failures == 0
 result = dict(version=version, abi=abi, apkBytes=destination.stat().st_size, sha256=hashlib.sha256(destination.read_bytes()).hexdigest(), unitTests=tests, unitFailures=failures)
+with zipfile.ZipFile(destination) as apk:
+    manifest = json.loads(apk.read('assets/runtime/manifest.json'))
+    assert manifest['abi'] == abi, 'Distributed APK must contain its complete runtime'
+    assert ('assets/antigravity/manifest.json' in apk.namelist()) == (f'lib/{abi}/libguest_agy.so' in apk.namelist()), 'Optional CLI manifest and binary disagree'
+    result.update(versionCode=metadata['versionCode'], uiSmoke=False, runtimeIncluded=True,
+                  antigravityRuntimeIncluded='assets/antigravity/manifest.json' in apk.namelist(),
+                  runtimeManifestSha256=hashlib.sha256(apk.read('assets/runtime/manifest.json')).hexdigest())
+
+provenance = Path('.gradle/runtime-bundles') / abi / 'source-apk.json'
+if provenance.exists(): result['runtimeSourceApkSha256'] = json.loads(provenance.read_text())['sha256']
 destination.with_suffix('.json').write_text(json.dumps(result, indent=2) + '\n')
 verification = Path('artifacts/verification.json')
 if abi == 'arm64-v8a' and verification.exists():

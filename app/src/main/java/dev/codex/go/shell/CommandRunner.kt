@@ -22,8 +22,8 @@ class CommandRunner(private val shell: String = "/system/bin/sh") {
         @Synchronized fun text() = bytes.toString("UTF-8")
     }
     fun execute(id: String, command: String, timeoutMs: Long, root: Boolean = false): String {
-        require(command.isNotBlank() && command.length <= 16_000) { "命令无效或超过长度限制" }
-        require(timeoutMs in 1000..120_000) { "命令超时范围无效" }
+        require(command.isNotBlank()) { "命令不能为空" }
+        require(timeoutMs >= 0) { "命令超时不能为负数" }
         check(cancelled.remove(id) == null) { "命令已取消" }
         val process = ProcessBuilder(if (root) listOf("su", "-c", command) else listOf(shell, "-c", command)).start()
         if (processes.putIfAbsent(id, process) != null) { process.destroyForcibly(); error("重复命令") }
@@ -35,7 +35,7 @@ class CommandRunner(private val shell: String = "/system/bin/sh") {
         val stdout = read(process.inputStream, out); val stderr = read(process.errorStream, err)
         try {
             process.outputStream.close()
-            val complete = process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)
+            val complete = if (timeoutMs == 0L) { process.waitFor(); true } else process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)
             if (!complete) process.destroyForcibly()
             stdout.join(500); stderr.join(500)
             return JSONObject().put("stdout", out.text()).put("stderr", err.text()).put("exitCode", if (complete) process.exitValue() else 124)

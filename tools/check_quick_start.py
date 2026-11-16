@@ -93,12 +93,12 @@ supports_websockets=false
 '''.encode())
     d.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS');d.shell('appops','set','dev.codex.go','SYSTEM_ALERT_WINDOW','allow')
     d.shell('settings','put','secure','accessibility_enabled','0')
-    d.start(auto_prepare=None);controls();d.click('启动本机 Codex');wait('已就绪',100);facts['startWithoutSettingsPage']=True
+    d.start(auto_prepare=None);controls();d.click('启动 Codex');wait('已就绪',100);facts['startWithoutSettingsPage']=True
     d.shell('settings','put','secure','enabled_accessibility_services','dev.codex.go/.phone.PhoneAccessService');d.shell('settings','put','secure','accessibility_enabled','1')
     wait('已就绪 · 无障碍');assert '允许 Codex 操作手机' not in labels();facts['systemGrantImmediatelyEnablesAI']=True
     d.capture(out/'controls-light.png');close();send('INITIAL')
     d.shell('input','keyevent','3');wait('打开悬浮对话');facts['systemOverlayGrantNeedsNoExtraSwitch']=True
-    d.shell('am','start','-n','dev.codex.go/.MainActivity');controls();d.click('连接详情');d.scroll_click('手动端口');d.set_text('5555');d.click('连接');wait('无线调试已连接',35)
+    d.shell('am','start','-n','dev.codex.go/.MainActivity');controls();d.click('连接详情');d.scroll_click('手动端口');d.set_text('5555');d.click('连接');wait_pref('lastWirelessPort','5555')
     d.capability('shell');assert prefs().get('lastWirelessPort')=='5555';facts['wirelessConnectionImmediatelyEnablesShell']=True
     d.scroll_click('选择 有线 ADB');wait_pref('shellBackend','Wired');d.click('返回对话')
     # OS force-stop interrupts accessibility; the already granted ADB connection must recover instead.
@@ -115,11 +115,11 @@ supports_websockets=false
     close();d.shell('appops','set','dev.codex.go','SYSTEM_ALERT_WINDOW','allow');d.shell('input','keyevent','3');d.shell('am','start','-n','dev.codex.go/.MainActivity');d.shell('input','keyevent','3');wait('打开悬浮对话');facts['overlayReturnsAfterPermissionRestored']=True
     d.shell('am','start','-n','dev.codex.go/.MainActivity');controls();d.set_switch('下次打开自动准备',False);close();d.start(auto_prepare=None);controls();wait('未启动')
     assert '已就绪' not in labels();facts['autoPrepareCanBeDisabled']=True
-    d.set_switch('下次打开自动准备',True);d.click('启动本机 Codex');wait('已就绪',100);wait('已就绪 · ADB',45);d.capture(out/'controls-ready.png')
+    d.set_switch('下次打开自动准备',True);d.click('启动 Codex');wait('已就绪',100);wait('已就绪 · ADB',45);d.capture(out/'controls-ready.png')
     d.shell('cmd','uimode','night','yes');d.shell('wm','density','480');d.shell('settings','put','system','font_scale','1.3');time.sleep(.6);wait('关闭快捷控制');d.capture(out/'controls-dark-360-large.png');facts['darkAndLargeFontControlsRemainAccessible']=True
     close();d.shell('cmd','uimode','night','no');d.shell('wm','density','reset');d.shell('settings','put','system','font_scale','1.0')
     # The direct OS settings link is an optional first-grant path, never a daily gate.
-    d.shell('settings','put','secure','accessibility_enabled','0');controls();d.scroll_click('连接无障碍');wait('Codex Go 手机操作');d.capture(out/'accessibility-details.png');facts['accessibilitySettingsEntryWithFallback']=True
+    d.shell('settings','put','secure','accessibility_enabled','0');controls();d.scroll_click('连接无障碍');wait('Codex Go phone control');d.capture(out/'accessibility-details.png');facts['accessibilitySettingsEntryWithFallback']=True
     (out/'result.json').write_text(json.dumps(dict(version=d.version(),**facts,requestCount=sum(counts.values()),externalInference=False,realAccountLogin=False),indent=2)+'\n')
     print('PASS: system-grant AI access, automatic startup/ADB reconnect, persistent backend, overlay recovery and direct controls',flush=True)
 except Exception:

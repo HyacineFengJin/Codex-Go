@@ -97,12 +97,12 @@ supports_websockets = false
     driver.private_write('files/codex/config.toml', config.encode())
     driver.shell('pm', 'grant', 'dev.codex.go', 'android.permission.POST_NOTIFICATIONS')
     driver.start()
-    driver.click('打开侧栏'); driver.click('本机环境'); driver.click('启动本机 Codex')
+    driver.click('打开侧栏'); driver.click('本机环境'); driver.click('启动 Codex')
     until = time.monotonic() + 80
     ready = False
     while time.monotonic() < until:
         text = '\n'.join(n.get('text', '') for n in driver.xml().iter('node'))
-        if '本机 Codex 已就绪' in text: ready = True; break
+        if '已就绪' in text: ready = True; break
         if '启动失败' in text or '本机环境已断开' in text: break
     driver.capture(artifacts/'startup.png')
     if not ready:
@@ -181,7 +181,7 @@ supports_websockets = false
     driver.find('本机环境已停止')
     names = driver.shell('ps', '-A', '-o', 'NAME').splitlines()
     assert 'codex' not in [name.strip() for name in names], 'Codex process survived Stop'
-    driver.click('启动本机 Codex'); driver.find('本机 Codex 已就绪', timeout=60)
+    driver.click('启动 Codex'); driver.find('本机 Codex 已就绪', timeout=60)
     driver.click('返回对话'); driver.find('WORKSPACE_TOOL_OK', timeout=30)
     device_result = None
     if args.device_code:

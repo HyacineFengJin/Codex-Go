@@ -1,0 +1,12 @@
+Optional Google Antigravity CLI runtime
+
+Publisher: Google
+Pinned version: 1.5.9
+Official source distribution URLs and SHA512 digests: tools/antigravity.lock.json
+Official installation reference: https://antigravity.google/cli/install.sh
+Applicable upstream terms: https://antigravity.google/terms
+
+The unmodified optional Google CLI binary is not covered by this repository's
+MIT License. The original adapter and build integration are MIT-licensed.
+Default builds omit this optional binary. No broader redistribution permission
+is asserted here; the upstream terms continue to apply.

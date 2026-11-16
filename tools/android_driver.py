@@ -50,10 +50,14 @@ class AndroidDriver:
                 if classname and node.get('class') == classname: return node
         raise AssertionError('UI element missing: ' + str(label or classname))
     def set_text(self, text):
-        self.tap(self.find(classname='android.widget.EditText'))
         change=['setTextBase64',base64.b64encode(text.encode()).decode()] if text else ['clearText','true']
-        result=self.shell('am','instrument','-w','-e',*change,'dev.codex.go.testdriver/.UiDriver')
-        if 'textSet=true' not in result:raise RuntimeError('Android set-text failed: '+result[-500:])
+        for attempt in range(3):
+            self.tap(self.find(classname='android.widget.EditText'))
+            result=self.shell('am','instrument','-w','-e',*change,'dev.codex.go.testdriver/.UiDriver')
+            if 'textSet=true' in result:break
+            if 'No visible editable field' not in result:raise RuntimeError('Android set-text failed: '+result[-500:])
+            time.sleep(.2) # An IME/window transition may briefly own the active accessibility root.
+        else:raise RuntimeError('Android set-text failed: '+result[-500:])
         until=time.monotonic()+5
         while time.monotonic()<until:
             if self.find(classname='android.widget.EditText').get('text','')==text:return
@@ -78,6 +82,7 @@ class AndroidDriver:
     def click(self, label): self.tap(self.find(label=label))
     def scroll_click(self, label):
         self.expand_for(label)
+        self.scroll_to(label);time.sleep(.25)
         self.tap(self.scroll_to(label));time.sleep(.2)
     def scroll_to(self, label):
         width,height=map(int,re.findall(r'(\d+)x(\d+)',self.shell('wm','size'))[-1])

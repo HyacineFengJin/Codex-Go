@@ -70,3 +70,19 @@ Android Shell 使用两列 Bento 选项，展示无线、有线、Shizuku 和 ro
 外形与信息密度参考 [Apple 灵动岛 / 实时活动设计](https://developer.apple.com/design/human-interface-guidelines/live-activities)。这是 Android 上的被动状态提示，保持触摸穿透与立即清理。也对照了官方 [Windows 演示（约 45 秒）](https://www.youtube.com/watch?v=MPIAB-8VmCo&t=45) 与 [Mac 演示](https://www.youtube.com/watch?v=D_FCYsshMI4)，最终按本项目的手机屏幕使用胶囊形式。
 
 实际模拟器截图：[英文首页](assets/ui-0.17-home-en.png)、[中文设置](assets/ui-0.17-settings-zh.png)、[语言选择](assets/ui-0.17-language.png)、[英文深色 / 大字号](assets/ui-0.17-settings-en-large.png)、[观察提示](assets/phone-indicator-0.17-viewing.png)。
+
+## 0.18.0：轻量玻璃悬浮窗
+
+参考 Apple [Meet Liquid Glass](https://developer.apple.com/videos/play/wwdc2025/219/) 对浮动控件与正文的区分：玻璃仅用于悬浮外壳，消息和输入仍用稳定的实色表面。入口改为 56dp 单色 Codex 圆形按钮；展开后使用简洁标题、无底色工具图标、浅薄荷用户消息和上箭头发送按钮。正常状态不显示重复说明。
+
+聊天面板使用 Android 的局部窗口背景模糊，只覆盖圆角窗口范围，不模糊整屏或正文。Android 11、系统禁用模糊、节电导致模糊不可用或高对比度模式时，自动回退到实色底；不增加效果开关。顶部状态胶囊只加轻微透色与高光，保留单一被动覆盖层，避免叠加窗口影响触摸穿透。没有使用截图伪造玻璃，也未引入 Apple 素材。
+
+键盘空间不足时隐藏次要信息；横屏大字号进一步切换成输入、发送、收起与关闭同行的紧凑布局，避免键盘全屏编辑遮住操作。草稿、原目标对话与模型信息保留；切换语言或显示配置不会把未发送输入转向新对话。AI 观察时连同窗口背景一起隐藏。
+
+实际模拟器截图：[浅色](assets/floating-0.18-light.png)、[深色](assets/floating-0.18-dark.png)、[横屏键盘](assets/floating-0.18-keyboard.png)、[顶部胶囊](assets/phone-indicator-0.18-viewing.png)。
+
+## 0.19.0：插件管理
+
+「更多」与侧栏增加插件入口。管理页使用淡紫入口卡与独立插件卡，优先展示名称、版本、启用开关、工具数量和连接测试；插件自己的名称、描述与工具名保留原文。启用无需启动引擎，工具进入新对话，关闭立即生效。安装、权限与卸载交给 Android 系统处理。
+
+实际模拟器截图：[中文](assets/plugins-0.19-zh.png)、[英文](assets/plugins-0.19-en.png)、[深色 / 大字号](assets/plugins-0.19-dark-large.png)。图中的 Text Tools 是独立构建安装的示例，不预装在主包中。

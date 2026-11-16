@@ -6,6 +6,8 @@ import dev.codex.go.R
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -23,15 +25,21 @@ import dev.codex.go.protocol.*
 import dev.codex.go.runtime.*
 import org.json.JSONObject
 
-@Composable fun DeviceLoginDialog(login: DeviceLogin, cancel: () -> Unit) {
+@Composable fun DeviceLoginDialog(login: DeviceLogin, submitCode: (String) -> Unit, cancel: () -> Unit) {
     val context = LocalContext.current
-    AlertDialog(onDismissRequest = cancel, title = { Text(tr(R.string.sign_in_to_chatgpt)) }, text = {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text(tr(R.string.copy_the_device_code_and_enter_it_in_your_browser_after_signing_i))
-            Text(login.code, fontFamily = FontFamily.Monospace, fontSize = 30.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
-            Text(login.url, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    var code by remember(login.id) { mutableStateOf("") }
+    AlertDialog(onDismissRequest = cancel, title = { Text(if (login.provider == "Google") tr(R.string.sign_in_google) else tr(R.string.sign_in_to_chatgpt)) }, text = {
+        Column(Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            if (login.code.isNotBlank()) Text(tr(R.string.copy_the_device_code_and_enter_it_in_your_browser_after_signing_i))
+            if (login.code.isNotBlank()) Text(login.code, fontFamily = FontFamily.Monospace, fontSize = 30.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
+            if (login.requiresCode) {
+                Text(tr(R.string.agent_paste_auth_code), style = MaterialTheme.typography.bodySmall)
+                OutlinedTextField(code, { code = it.take(8192) }, label = { Text(tr(R.string.agent_auth_code)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), visualTransformation = PasswordVisualTransformation(), modifier = Modifier.fillMaxWidth())
+                TextButton(onClick = { submitCode(code); code = "" }, enabled = code.isNotBlank()) { Text(tr(R.string.agent_submit_auth_code)) }
+            }
+            Text(if (login.requiresCode) Uri.parse(login.url).host.orEmpty() else login.url, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-    }, confirmButton = { Button(onClick = { copy(context, login.code); runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(login.url))) } }) { Text(tr(R.string.copy_open_verification_page)) } }, dismissButton = { TextButton(onClick = cancel) { Text(tr(R.string.cancel_sign_in)) } })
+    }, confirmButton = { Button(onClick = { if (login.code.isNotBlank()) copy(context, login.code); runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(login.url))) } }) { Text(if (login.code.isBlank()) tr(R.string.open_sign_in) else tr(R.string.copy_open_verification_page)) } }, dismissButton = { TextButton(onClick = cancel) { Text(tr(R.string.cancel_sign_in)) } })
 }
 
 @Composable fun PromptDialog(prompt: ClientPrompt, changes: ChatItem? = null, answer: (JSONObject) -> Unit) {
@@ -61,19 +69,21 @@ import org.json.JSONObject
     } else {
         val params = prompt.params
         val network = params.optJSONObject("networkApprovalContext")
+        val acp = prompt.method == "antigravity/requestPermission"
         val androidShell = prompt.method == "android_shell"
         val fileChange = prompt.method.contains("fileChange")
-        val canApprove = !fileChange || (changes != null && changes.reviewComplete && changes.text.isNotBlank())
-        val title = if (androidShell) tr(R.string.run_a_command_on_android) else if (network != null) tr(R.string.allow_network_access) else if (prompt.method.contains("fileChange")) tr(R.string.allow_file_changes) else tr(R.string.allow_command_execution)
+        val canApprove = (!acp || !params.optBoolean("truncated")) && (!fileChange || (changes != null && changes.reviewComplete && changes.text.isNotBlank()))
+        val title = if (acp) tr(R.string.agent_permission) else if (androidShell) tr(R.string.run_a_command_on_android) else if (network != null) tr(R.string.allow_network_access) else if (prompt.method.contains("fileChange")) tr(R.string.allow_file_changes) else tr(R.string.allow_command_execution)
         val body = if (androidShell) params.optJSONObject("arguments")?.optString("command").orEmpty() else if (network != null) "${network.optString("protocol")}://${network.optString("host")}" else params.optString("command").ifBlank { params.optString("grantRoot", tr(R.string.codex_requests_a_file_operation)) }
         AlertDialog(onDismissRequest = { answer(obj("decision" to "decline")) }, title = { Text(title) }, text = {
             Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (acp) { ReadableText(params.optString("command")); ReadableText(params.optString("details"), style = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace)); if (!canApprove) Text(tr(R.string.agent_incomplete_review), color = MaterialTheme.colorScheme.error) }
                 if (androidShell) Text(tr(R.string.runs_on_this_phone_s_android_shell_arg , metadata(params.optString("_shellLabel", tr(R.string.wireless_debugging)))), style = MaterialTheme.typography.bodySmall)
                 if (prompt.method.contains("fileChange")) {
-                    if (!canApprove) Text(if (changes != null && changes.text.length >= 64_000) tr(R.string.the_diff_exceeds_the_display_limit_and_is_incomplete_decline_and) else tr(R.string.the_complete_diff_has_not_arrived_decline_and_ask_codex_to_provid), color = MaterialTheme.colorScheme.error)
+                    if (!canApprove) Text(tr(R.string.the_complete_diff_has_not_arrived_decline_and_ask_codex_to_provid), color = MaterialTheme.colorScheme.error)
                     if (changes != null && changes.text.isNotBlank()) DiffText(changes.text)
                     params.stringOrNull("grantRoot")?.let { Text(tr(R.string.requested_directory_arg , it), fontFamily = FontFamily.Monospace) }
-                } else Text(body, fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.bodyMedium)
+                } else if (!acp) ReadableText(body, style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace))
                 params.stringOrNull("cwd")?.let { Text(tr(R.string.directory_arg , it), style = MaterialTheme.typography.bodySmall) }
                 params.stringOrNull("reason")?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) }
             }
@@ -82,6 +92,10 @@ import org.json.JSONObject
 }
 
 @Composable private fun DiffText(text: String) {
+    if (dev.codex.go.protocol.TextPages.needsReader(text)) {
+        ReadableText(text, style = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace, fontSize = 12.sp, lineHeight = 19.sp))
+        return
+    }
     val color = MaterialTheme.colorScheme.onSurface
     val annotated = buildAnnotatedString {
         text.lineSequence().forEach { line ->

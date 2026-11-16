@@ -86,19 +86,7 @@ animations=driver.disable_animations()
 original_os=None
 
 def labels(): return [n.get('text','') for n in driver.xml().iter('node')]
-def click_scroll(label):
-    height=int(re.findall(r'(\d+)x(\d+)',driver.shell('wm','size'))[-1][1])
-    for _ in range(10):
-        node=next((n for n in driver.xml().iter('node') if n.get('text','').strip()==label or n.get('content-desc')==label),None)
-        center=None
-        if node is not None:
-            bounds=list(map(int,re.findall(r'\d+',node.get('bounds'))));center=(bounds[1]+bounds[3])//2
-            if 350<center<height-180:
-                driver.tap(node); return
-        if center is not None and center<=350:driver.shell('input','swipe','530','700','530','1700','400')
-        else:driver.shell('input','swipe','530','1970','530','700','400')
-        time.sleep(.25)
-    raise AssertionError('Missing scroll target: '+label)
+def click_scroll(label):driver.scroll_click(label)
 def text_input(value, select=False):
     driver.set_text(value)
 def settings():
@@ -142,7 +130,7 @@ supports_websockets = false
     driver.private_write('files/codex/config.toml',config.encode())
     driver.private_write('files/codex/auth.json',json.dumps({'OPENAI_API_KEY':fake_key}).encode())
     driver.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS')
-    driver.start(); settings(); driver.click('启动本机 Codex'); driver.find('本机 Codex 已就绪',timeout=90)
+    driver.start(); settings(); driver.click('启动 Codex'); driver.find('本机 Codex 已就绪',timeout=90)
     driver.find('已登录 apiKey')
     driver.capture(artifacts/'ready.png'); print('Ready with isolated fake account',flush=True)
     driver.click('返回对话'); driver.click('新建对话'); text_input(prompt); driver.click('发送消息'); wait_reply(); hide_keyboard()
@@ -173,7 +161,7 @@ supports_websockets = false
     driver.click('更多'); driver.click('整理当前对话'); driver.click('重命名')
     text_input(managed_title,select=True); driver.click('保存名称'); driver.find(managed_title)
     driver.click('更多'); driver.click('整理当前对话'); driver.click('归档对话'); driver.click('确认归档')
-    driver.find('有什么想做的？',timeout=30)
+    driver.find('想做什么？',timeout=30)
     driver.click('打开侧栏'); driver.click('已归档'); driver.find(managed_title,timeout=30)
     driver.capture(artifacts/'archived.png')
     driver.click(managed_title); driver.click('恢复并打开')
@@ -215,7 +203,12 @@ supports_websockets = false
     (artifacts/'diagnostic.json').write_text(json.dumps(report,indent=2,ensure_ascii=False))
     # The only account here is the test's deliberately fake API key; no real sign-in occurs.
     for _ in range(4): driver.shell('input','swipe','530','700','530','1970','300')
-    click_scroll('退出 ChatGPT'); driver.click('退出账户'); driver.find('未登录 ChatGPT',timeout=30)
+    for _ in range(3):
+        click_scroll('退出 ChatGPT')
+        try:confirm=driver.find('退出账户',timeout=3);break
+        except AssertionError:continue
+    else:raise AssertionError('Logout confirmation unavailable')
+    driver.tap(confirm);driver.find('使用设备码登录',timeout=30)
     auth=subprocess.run(driver.adb+['shell','run-as','dev.codex.go','cat','files/codex/auth.json'],capture_output=True).stdout
     assert fake_key.encode() not in auth
     driver.capture(artifacts/'logged-out.png')

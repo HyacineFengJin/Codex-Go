@@ -1,0 +1,12 @@
+{
+  "arm64-v8a": {
+    "version": "1.5.9",
+    "url": "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.9-4515810895593472/linux-arm-musl/cli_linux_arm64_musl.tar.gz",
+    "sha512": "9ca280f6175b25e8b764548a683c540edec29d2c63232cf96b2c6242bc67eda0b064b7068d579ff2243632317d3b1ec38438accca56f6fccde9ea6a9ec07b044"
+  },
+  "x86_64": {
+    "version": "1.5.9",
+    "url": "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.9-4515810895593472/linux-x64-musl/cli_linux_x64_musl.tar.gz",
+    "sha512": "ab668614b675fb371a597275641aab49ac1fec87e90b546a75e804a766c49a99fe06b2e5188a7629f6eac7874a6d742302735c64b731070cdd35a5484d589cd6"
+  }
+}

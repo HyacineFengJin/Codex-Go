@@ -41,7 +41,7 @@ def prefs():return ET.fromstring(read('shared_prefs/codex_go.xml'))
 def value(key,default='{}'):return next((n.text for n in prefs() if n.get('name')==key),default)
 def inbox():return json.loads(value('shareInbox','[]'))
 def draft(owner='new'):return json.loads(value('draft:'+owner))
-def launch_shares():d.shell('am','start','-a','OPEN_SHARES','-n','dev.codex.go/.MainActivity'); d.find('来自其他 App 的分享')
+def launch_shares():d.shell('am','start','-a','OPEN_SHARES','-n','dev.codex.go/.MainActivity'); d.find('分享收件箱')
 def dispatch(kind='text',text=None,chooser=False,clip=False):
     argv=['am','start','-n','dev.codex.go.sharefixture/dev.codex.go.testdriver.ShareSourceActivity','--es','kind',kind]
     if text is not None:argv+=['--es','text',text]
@@ -55,7 +55,7 @@ def send(kind='text',text=None,chooser=False,clip=False):
         d.find('Codex Go')
         target=next(p for p in d.xml().iter('node') if any(n.get('text')=='Codex Go' for n in p))
         d.tap(target)
-    d.find('来自其他 App 的分享',timeout=25)
+    d.find('分享收件箱',timeout=25)
 def set_pref(entries):
     values=prefs()
     for node in list(values):
@@ -91,29 +91,31 @@ try:
         for key,item in [('user_rotation',rotation),('accelerometer_rotation',accelerometer)]:
             if item=='null':d.shell('settings','delete','system',key)
             else:d.shell('settings','put','system',key,item)
-    launch_shares();d.find('收件箱是空的。在其他 App 中点“分享”，选择 Codex Go 即可。')
+    launch_shares();d.find('在其他 App 中分享至 Codex Go')
     # URI grants, duplicate names, mixed image/text files and dedup of EXTRA_STREAM+ClipData.
     send('multiple','FILES_PENDING')
     entries=inbox();assert len(entries)==1 and len(entries[0]['draft']['attachments'])==3
     files=entries[0]['draft']['attachments'];assert files[0]['name']==files[1]['name'] and files[0]['path']!=files[1]['path']
     for index,file in enumerate(files[:2]):assert read('files/share-staging/'+file['path'].removeprefix('/workspace/'))==('independent-source-'+['one','two'][index]).encode()
     assert all(read('files/workspace/'+file['path'].removeprefix('/workspace/')) is None for file in files)
-    d.click('文件 · same-name.txt · 0 KB');d.find('independent-source-one');d.click('关闭预览')
+    d.tap(next(n for n in d.xml().iter('node') if 'same-name.txt' in n.get('text','')));d.find('independent-source-one');d.click('关闭预览')
     print('PASS: unconfirmed URI copies private, with duplicate names and mixed image/files',flush=True)
     d.start();launch_shares();assert inbox()[0]['draft']['attachments']==files
     d.click('加入新对话草稿');assert len(draft()['attachments'])==3 and 'UNFINISHED' in draft()['text'] and not inbox()
     send('one','CLIP_ONLY',clip=True);d.click('加入当前草稿');assert len(draft()['attachments'])==4
-    # Oversized metadata rejects the entire batch while preserving existing drafts and inbox entries.
-    before=draft();dispatch('oversized')
-    d.find('单个文件最多 64 MB');assert draft()==before and not inbox();d.capture(out/'oversized-rejected.png');d.click('返回')
-    # Full attachment draft refuses a merge without losing either side.
+    # Provider-reported length is only metadata: copy and retain the actual file bytes.
+    before=draft();send('oversized');assert draft()==before and len(inbox())==1
+    reported=inbox()[0]['draft']['attachments'][0]
+    assert read('files/share-staging/'+reported['path'].removeprefix('/workspace/'))==b'independent-source-oversized'
+    d.click('加入当前草稿');assert not inbox() and len(draft()['attachments'])==len(before['attachments'])+1
+    # A draft with eight existing files accepts three more without truncation or a quota.
     send('multiple','OVERFLOW_PENDING');pending=inbox()[0]
     d.shell('am','force-stop','dev.codex.go')
     full=dict(text='FULL_DRAFT',attachments=[dict(files[0],path='/workspace/share-limit-'+str(i)+'.txt') for i in range(8)])
     for i in range(8):d.private_write('files/workspace/share-limit-'+str(i)+'.txt',b'keep')
     set_pref({'draft:new':json.dumps(full)})
-    d.start();launch_shares();d.click('加入当前草稿');d.find('合并后超过 8 个附件，请先处理当前草稿。分享仍在收件箱。')
-    assert draft()==full and inbox()[0]['id']==pending['id']
+    d.start();launch_shares();d.click('加入当前草稿');d.find('FULL_DRAFT\n\nOVERFLOW_PENDING')
+    assert len(draft()['attachments'])==11 and draft()['attachments'][:8]==full['attachments'] and not inbox()
     # Prepare a native task; incoming shares must never steer, queue or start a turn automatically.
     d.shell('am','force-stop','dev.codex.go');set_pref({'draft:new':json.dumps(dict(text='SHARE_WORKING',attachments=[])),'shareInbox':'[]'})
     fixture=f'''model="codex-go-test"
@@ -129,7 +131,7 @@ requires_openai_auth=false
 supports_websockets=false
 '''.encode();write('files/codex/config.toml',fixture)
     subprocess.run(d.adb+['reverse',f'tcp:{port}',f'tcp:{port}'],check=True,stdout=subprocess.DEVNULL)
-    d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=70);d.click('返回对话');d.click('发送消息');d.find('SHARE_BUSY',timeout=35)
+    d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=70);d.click('返回对话');d.click('发送消息');d.find('SHARE_BUSY',timeout=35)
     owner=value('thread',None);assert owner and len(requests)==1
     queue=value('queue:'+owner,'[]');retry=value('retry:'+owner)
     send('multiple','BUSY_SHARE');d.capture(out/'busy-review.png')
@@ -141,7 +143,7 @@ supports_websockets=false
     d.click('发送消息');d.find('SHARED_IMAGE_OK',timeout=30)
     assert len(requests)==2
     assert any(c.get('type')=='input_image' and c.get('image_url','').startswith('data:image/') for item in requests[-1].get('input',[]) for c in item.get('content',[]) if isinstance(c,dict))
-    result=dict(version=d.version(),systemChooserTarget=True,appliedShareRotationKeepsConversation=True,unconfirmedFilesOutsideNativeWorkspace=True,coldTextLinkShare=True,existingDraftPreservedUntilConfirmation=True,processRestartKeepsInbox=True,applyRemovesInboxExactlyOnce=True,multipleContentUriGrants=True,privateFilePreview=True,duplicateNamesKeepDistinctBytes=True,streamClipDataDeduplicated=True,clipOnlySupported=True,newDraftMergePreservesExisting=True,oversizedBatchRejected=True,attachmentOverflowPreservesBothSides=True,busyShareNeverSteersQueuesOrSends=True,disabledNewChatCannotSwitchBusyTask=True,confirmedImageForwardedByNativeCodex=True,externalInference=False,realAccountLogin=False)
+    result=dict(version=d.version(),systemChooserTarget=True,appliedShareRotationKeepsConversation=True,unconfirmedFilesOutsideNativeWorkspace=True,coldTextLinkShare=True,existingDraftPreservedUntilConfirmation=True,processRestartKeepsInbox=True,applyRemovesInboxExactlyOnce=True,multipleContentUriGrants=True,privateFilePreview=True,duplicateNamesKeepDistinctBytes=True,streamClipDataDeduplicated=True,clipOnlySupported=True,newDraftMergePreservesExisting=True,providerSizeMetadataDoesNotRejectActualFile=True,moreThanEightAttachmentsMergeWithoutLoss=True,busyShareNeverSteersQueuesOrSends=True,disabledNewChatCannotSwitchBusyTask=True,confirmedImageForwardedByNativeCodex=True,externalInference=False,realAccountLogin=False)
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print('PASS: inbound sharing and native image handoff',flush=True)
 finally:
     release.set();d.capture(out/'last-screen.png');d.shell('am','force-stop','dev.codex.go')

@@ -145,8 +145,15 @@ try:
     small = capture('small-large-font-cutout'); blue_edges(small)
     rotated(True)
     landscape = capture('landscape-large-font-cutout'); blue_edges(landscape)
+    # Serialize display reconfiguration: emulator 37's renderer can crash when
+    # cutout, density and rotation surfaces are destroyed in the same frame.
+    rotated(False)
     d.shell('cmd', 'overlay', 'disable', 'com.android.internal.display.cutout.emulation.tall')
-    d.shell('settings', 'put', 'system', 'font_scale', '1.0'); d.shell('wm', 'density', '420')
+    time.sleep(.5)
+    d.shell('settings', 'put', 'system', 'font_scale', '1.0')
+    time.sleep(.5)
+    d.shell('wm', 'density', '420')
+    time.sleep(.5)
     rotated(False)
     advance()
     if a.backend == 'accessibility':

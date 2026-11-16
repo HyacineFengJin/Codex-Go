@@ -216,7 +216,7 @@ enabled=false
         d.private_write('files/codex/auth.json',json.dumps({'OPENAI_API_KEY':'history-fixture-key'}).encode())
     d.private_write('files/codex/config.toml',config)
     d.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS')
-    d.start();settings();d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=100)
+    d.start();settings();d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=100)
     d.shell('settings','put','secure','enabled_accessibility_services','dev.codex.go/.phone.PhoneAccessService');d.shell('settings','put','secure','accessibility_enabled','1')
     enable_phone();send('LEGACY')
     legacy_thread=selected_thread();original_bytes,legacy_path,legacy_prefix=read_legacy_original(legacy_thread)
@@ -229,7 +229,7 @@ enabled=false
     checks['legacyOriginalImportedWithoutChangingConfig']=True
     enable_phone();send('OLD');send('LIVE');send('AFTER')
     d.capture(out/'restored-original.png')
-    d.start();settings();d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=100);d.click('返回对话');send('RESTART')
+    d.start();settings();d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=100);d.click('返回对话');send('RESTART')
     d.click('新建对话');send('SCOPE')
     helper=read_private('files/runtime-helpers/history_mcp.py')
     d.private_write('files/runtime-helpers/history_mcp.py',b'raise RuntimeError("Owned emulator failure fixture")\n')

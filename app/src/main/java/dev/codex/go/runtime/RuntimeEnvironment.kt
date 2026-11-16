@@ -16,6 +16,7 @@ class RuntimeEnvironment(private val context: Context) {
     val workspace = File(context.filesDir, "workspace").apply { mkdirs() }
     private val projects = File(context.filesDir, "projects").apply { mkdirs() }
     private val account = File(context.filesDir, "codex").apply { mkdirs() }
+    private val antigravity = File(context.filesDir, "antigravity").apply { mkdirs() }
     private val helpers = File(context.filesDir, "runtime-helpers").apply { mkdirs() }
 
     fun install(force: Boolean = false, progress: (String) -> Unit) {
@@ -25,6 +26,9 @@ class RuntimeEnvironment(private val context: Context) {
         val version = manifest.getString("version")
         ensureAccountConfig()
         context.assets.open("history_mcp.py").use { input -> File(helpers, "history_mcp.py").outputStream().use { input.copyTo(it) } }
+        listOf("antigravity_bridge.py", "agent_mcp.py").forEach { name ->
+            context.assets.open(name).use { input -> File(helpers, name).outputStream().use { input.copyTo(it) } }
+        }
         RuntimeInstallation.recover(root)
         if (!force && File(root, ".version").takeIf { it.exists() }?.readText() == version) { File(root, "projects").mkdirs(); File(root, "codex-go").mkdirs(); refreshDns(); return }
         val required = manifest.optLong("unpackedBytes", 200L * 1024 * 1024) + 64L * 1024 * 1024
@@ -67,21 +71,29 @@ class RuntimeEnvironment(private val context: Context) {
         val servers = connectivity.getLinkProperties(connectivity.activeNetwork)?.dnsServers.orEmpty()
         File(root, "etc/resolv.conf").writeText(servers.joinToString("\n", postfix = "\n") { "nameserver ${it.hostAddress}" })
     }
-    fun launch(proxy: String, overrides: List<String> = emptyList(), guestCwd: String = "/workspace"): Process {
+    fun launch(proxy: String, overrides: List<String> = emptyList(), guestCwd: String = "/workspace", engine: AgentEngine = AgentEngine.Codex): Process {
         val native = context.applicationInfo.nativeLibraryDir
         val command = mutableListOf("$native/libproot.so", "-0", "--link2symlink", "-r", root.path, "-w", guestCwd)
-        listOf("/dev", "/proc", "/sys", "${workspace.path}:/workspace", "${projects.path}:/projects", "${account.path}:/root/.codex", "${helpers.path}:/codex-go").forEach { command += listOf("-b", it) }
+        listOf("/dev", "/proc", "/sys", "${workspace.path}:/workspace", "${projects.path}:/projects", "${helpers.path}:/codex-go").forEach { command += listOf("-b", it) }
         val bindings = JSONObject(File(root, ".bindings.json").readText())
         bindings.keys().forEach { guest -> command += listOf("-b", "$native/${bindings.getString(guest)}:$guest") }
-        command += listOf("/usr/local/bin/codex", "app-server", "--listen", "stdio://")
-        overrides.forEach { command += listOf("-c", it) }
+        if (engine == AgentEngine.Antigravity) {
+            check(File(native, "libguest_agy.so").isFile) { "This build does not include Antigravity CLI. Build with -Pantigravity after preparing its official runtime." }
+            command += listOf("-b", "$native/libguest_agy.so:/usr/local/bin/agy", "-b", "${antigravity.path}:/root")
+            command += listOf("/usr/bin/python3", "/codex-go/antigravity_bridge.py", "/usr/local/bin/agy", "acp", "--disable-telemetry", "--app-data-dir", "codex-go")
+        } else {
+            command += listOf("-b", "${account.path}:/root/.codex")
+            command += listOf("/usr/local/bin/codex", "app-server", "--listen", "stdio://")
+            overrides.forEach { command += listOf("-c", it) }
+        }
         return ProcessBuilder(command).apply {
             environment().apply {
                 put("PROOT_TMP_DIR", context.cacheDir.path); put("PROOT_LOADER", "$native/libloader.so")
                 put("PROOT_LOADER_32", "$native/libloader32.so"); remove("PROOT_NO_SECCOMP"); put("LD_LIBRARY_PATH", native)
-                put("HOME", "/root"); put("CODEX_HOME", "/root/.codex"); put("TMPDIR", "/tmp")
+                put("HOME", "/root"); if (engine == AgentEngine.Codex) put("CODEX_HOME", "/root/.codex") else remove("CODEX_HOME"); put("TMPDIR", "/tmp")
                 put("PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"); put("SHELL", "/bin/sh"); put("LANG", "C.UTF-8")
                 put("HTTPS_PROXY", proxy); put("https_proxy", proxy); put("NO_PROXY", "127.0.0.1,localhost,::1"); put("no_proxy", "127.0.0.1,localhost,::1")
+                if (engine == AgentEngine.Antigravity) { put("CODEX_GO_ACP_STATE", "/root/.gemini/codex-go-sessions.json") }
                 put("SSL_CERT_FILE", "/etc/ssl/certs/ca-certificates.crt")
             }
         }.start()

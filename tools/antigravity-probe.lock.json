@@ -1,0 +1,29 @@
+{
+  "rootfs": {
+    "name": "alpine",
+    "kind": "rootfs",
+    "url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/x86_64/alpine-minirootfs-3.22.1-x86_64.tar.gz",
+    "file": "alpine-3.22.1-x86_64.tar.gz",
+    "sha256": "0e5cc5702ad72a4e151f219976ba946d50161c3acce210ef3b122a529aba1270"
+  },
+  "termux": [
+    {
+      "Package": "libandroid-shmem",
+      "Version": "0.7",
+      "Filename": "pool/main/liba/libandroid-shmem/libandroid-shmem_0.7_x86_64.deb",
+      "SHA256": "ffa9e4c87467b158b148d0ff92dda796aa038276c2075af3269cdcdb06f25797"
+    },
+    {
+      "Package": "libtalloc",
+      "Version": "2.5.0",
+      "Filename": "pool/main/libt/libtalloc/libtalloc_2.5.0_x86_64.deb",
+      "SHA256": "b8c6d95f20075dc1f9ec6573575b2444e8d526e48e0d8d6d5cf4e071e6e06530"
+    },
+    {
+      "Package": "proot",
+      "Version": "5.1.107.102",
+      "Filename": "pool/main/p/proot/proot_5.1.107.102_x86_64.deb",
+      "SHA256": "2497064226c15971be8131c7facead94a06c225347796326a383c832dca57758"
+    }
+  ]
+}

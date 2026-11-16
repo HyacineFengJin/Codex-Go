@@ -20,10 +20,9 @@ class QuickChatTest {
         assertEquals(QuickAction.Send, decide())
         assertEquals(QuickAction.Queue, decide(ready.copy(busy = true)))
     }
-    @Test fun fullQueueHoldsInsteadOfDroppingOrInterruptingInput() {
-        val queue = List(10) { PendingMessage(draft = Draft("message $it")) }
-        assertEquals(QuickAction.Hold, decide(ready.copy(busy = true, queue = queue)))
-        assertEquals(QuickAction.Queue, decide(ready.copy(busy = true, queue = queue.dropLast(1))))
+    @Test fun busyQueueKeepsAcceptingWithoutInterruptingInput() {
+        val queue = List(25) { PendingMessage(draft = Draft("message $it")) }
+        assertEquals(QuickAction.Queue, decide(ready.copy(busy = true, queue = queue)))
     }
     @Test fun offlineLockedAndMaintenanceStatesRequireReview() {
         assertEquals(QuickAction.Hold, decide(unlocked = false))
@@ -34,7 +33,7 @@ class QuickChatTest {
         assertEquals(QuickAction.Send, decide(ready.copy(quickReplyEnabled = false), notification = false))
     }
     @Test fun rescuedInputKeepsItsTextAndDestinationAcrossSerialization() {
-        val message = QuickMessage(text = "你好\ncode `x`", destination = "A · 对话", source = "通知")
+        val message = QuickMessage(text = "你好\ncode `x`".repeat(20000), destination = "A · 对话", source = "通知")
         assertEquals(message, QuickMessage.fromJson(message.json()))
     }
 }

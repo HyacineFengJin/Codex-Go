@@ -1,35 +1,226 @@
 {
-  "version": "0.17.0",
-  "scope": "ui",
+  "version": "0.21.0",
+  "scope": "targeted",
   "distributionFile": "codex-go.apk",
-  "installedEmulatorApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660",
+  "installedEmulatorApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6",
   "builds": {
     "arm64-v8a": {
-      "version": "0.17.0",
+      "version": "0.21.0",
       "abi": "arm64-v8a",
-      "apkBytes": 290310629,
-      "sha256": "1bebe795929d5e7d67ea8521cf1b8d6b57fa074109cd460b034819f2be8f2fa1",
-      "unitTests": 115,
+      "apkBytes": 290622828,
+      "sha256": "35b80ba5bbf9267440ff85b66f82eddbd15a3dcae89ded5430c81ce1f42d685c",
+      "unitTests": 146,
       "unitFailures": 0,
+      "versionCode": 27,
       "uiSmoke": false,
       "runtimeIncluded": true,
-      "runtimeSourceApkSha256": "bc3397b104129776aba6e9eaff213dab878c189863ec78c5b174650cbbc7bf16"
+      "antigravityRuntimeIncluded": false,
+      "runtimeManifestSha256": "7f86f9e23bfcc1257f29af42981f2a3306d9db5c463a617f9fe1e71a82475e18",
+      "runtimeSourceApkSha256": "1bebe795929d5e7d67ea8521cf1b8d6b57fa074109cd460b034819f2be8f2fa1"
     },
     "x86_64": {
-      "version": "0.17.0",
+      "version": "0.21.0",
       "abi": "x86_64",
-      "apkBytes": 72881761,
-      "sha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660",
-      "unitTests": 115,
+      "apkBytes": 306230205,
+      "sha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6",
+      "unitTests": 146,
       "unitFailures": 0,
-      "uiSmoke": true,
-      "runtimeIncluded": false
+      "versionCode": 27,
+      "uiSmoke": false,
+      "runtimeIncluded": true,
+      "antigravityRuntimeIncluded": false,
+      "runtimeManifestSha256": "27db279a9d8244a9040bcef7ea37e1c35f2026c1166cc43827638ae25771628a",
+      "runtimeSourceApkSha256": "76692de14686805edcf2d513f5a5396730ceb478f704fe70e72bd168cb0418c3"
     }
   },
   "android15_x86_64": {
+    "background-flow": {
+      "result": {
+        "version": "0.21.0",
+        "nativeBackgroundThreadRead": true,
+        "executionOwnerNeverChangesDuringBrowsing": true,
+        "bDraftShareAndDisabledSend": true,
+        "perConversationDraftsSurviveRotation": true,
+        "approvalsBelongToRunningTask": true,
+        "ownerQueueContinuesWhileViewingB": true,
+        "completionDoesNotReplaceViewedConversation": true,
+        "failureDoesNotReplaceViewedConversation": true,
+        "viewedSelectionAndDraftSurviveRestart": true,
+        "taskTokenSurvivesRecovery": true,
+        "explicitActivationDoesNotSend": true,
+        "staleActionsIgnored": true,
+        "notificationReturnsToExecutingThread": true,
+        "stopTargetsExecutingThread": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "configuration": {
+      "result": {
+        "version": "0.21.0",
+        "malformedConfigPreventsNativeStartup": true,
+        "lastSuccessfulConfigRestartsNativeEngine": true,
+        "exactOriginalBytesBackedUp": true,
+        "previousConfigUndoRestoresInvalidBytes": true,
+        "defaultsRecoverNativeEngine": true,
+        "secondFailureRecoverable": true,
+        "credentialHistoryDraftWorkspacePreserved": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "editor-recovery": {
+      "result": {
+        "version": "0.21.0",
+        "unsavedEditorSurvivesRotation": true,
+        "homeResume": true,
+        "atomicSave": true,
+        "externalWriteConflictPreserved": true,
+        "explicitDiscard": true,
+        "coldOpenSavedFile": true
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "expressive-ui": {
+      "result": {
+        "version": "0.21.0",
+        "conciseHomeActions": true,
+        "modelPickerAccessible": true,
+        "bentoActionsCreateDrafts": true,
+        "draftSurvivesLandscape": true,
+        "drawerHidesComposerKeyboard": true,
+        "projectGridActions": true,
+        "twoColumnGridAt360dp": true,
+        "advancedSettingsExpandAndCollapse": true,
+        "preReadSettingRetained": true,
+        "quickChatControlsAccessible": true,
+        "lightAndDarkThemes": true,
+        "largeFontComposerAndModelSheetUsable": true,
+        "largeFontControlsAndSettingsUsable": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "file-flow": {
+      "result": {
+        "importViaSystemPicker": true,
+        "imageForwardedByNativeCodex": true,
+        "attachmentRemoval": true,
+        "python": true,
+        "node": true,
+        "npm": true,
+        "pip": true,
+        "gitDiff": true,
+        "filePreview": true,
+        "exportedBytesMatch": true,
+        "systemShare": true,
+        "steering": true,
+        "queueAndWithdraw": true,
+        "interruptAndSend": true,
+        "externalInference": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "floating-ui": {
+      "result": {
+        "version": "0.21.0",
+        "bubbleDragAndSnap": true,
+        "lightAndDark": true,
+        "keyboardControls": true,
+        "largeFontAndLandscape": true,
+        "blankSendDisabled": true,
+        "independentPersistentDraft": true,
+        "nestedToolHiding": true,
+        "changedTargetHeldForReview": true,
+        "localeAndConfigurationRetainTarget": true,
+        "busyQueueLabel": true,
+        "opaqueBlurFallback": true,
+        "closeCleanup": true,
+        "noNativeEngineStarted": true,
+        "blurPath": "native window blur",
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "history-images": {
+      "result": {
+        "version": "0.21.0",
+        "legacyNativeContextContainsScreenshot": true,
+        "legacyOriginalImportedWithoutChangingConfig": true,
+        "oldImagesActuallyReducedInModelRequests": true,
+        "fullOriginalRestoredAfterNativeImagePreparation": true,
+        "currentObservationKeepsNativeImageAndCoordinates": true,
+        "reReadImageBecomesCompactOnFollowingTurn": true,
+        "historicalReadClearsLiveImageCache": true,
+        "originalAndReferenceSurviveRestart": true,
+        "otherThreadCannotReadOriginal": true,
+        "missingReaderFallsBackToFullNativeImages": true,
+        "disableRestoresNativeRequestAndTools": true,
+        "nativeOriginalTranscriptPrefixPreserved": true,
+        "noExternalModelOrRealAccountUsed": true,
+        "requestCount": 17,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "history-images-openai": {
+      "result": {
+        "version": "0.21.0",
+        "builtinOpenaiNativeAuthPreserved": true,
+        "legacyNativeContextContainsScreenshot": true,
+        "legacyOriginalImportedWithoutChangingConfig": true,
+        "oldImagesActuallyReducedInModelRequests": true,
+        "fullOriginalRestoredAfterNativeImagePreparation": true,
+        "currentObservationKeepsNativeImageAndCoordinates": true,
+        "reReadImageBecomesCompactOnFollowingTurn": true,
+        "historicalReadClearsLiveImageCache": true,
+        "originalAndReferenceSurviveRestart": true,
+        "otherThreadCannotReadOriginal": true,
+        "missingReaderFallsBackToFullNativeImages": true,
+        "disableRestoresNativeRequestAndTools": true,
+        "nativeOriginalTranscriptPrefixPreserved": true,
+        "noExternalModelOrRealAccountUsed": true,
+        "builtinOpenaiStartResumeAndHttpFallback": true,
+        "requestCount": 17,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "lifecycle-recovery": {
+      "result": {
+        "version": "0.21.0",
+        "realNativeCodexRuntime": true,
+        "localResponsesOnly": true,
+        "homeAndBackReopen": true,
+        "completedNativeFileSurvives": true,
+        "abruptProcessDeathRecovery": true,
+        "forceStopReopen": true,
+        "deviceRebootReopen": true,
+        "projectThreadAndDraftRestored": true,
+        "fakeCredentialPreserved": true,
+        "queuePausedWithoutReplay": true,
+        "unconfirmedToolNeverExecuted": true,
+        "newTaskAfterRebootWorks": true,
+        "requestCounts": {
+          "LIFE_SIMPLE": 1,
+          "LIFE_FILE": 2,
+          "LIFE_HOLD": 1,
+          "LIFE_AFTER_REBOOT": 1
+        },
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
     "localization": {
       "result": {
-        "version": "0.17.0",
+        "version": "0.21.0",
         "notificationAndChannelRefresh": true,
         "formattedResources": 725,
         "englishFallback": true,
@@ -47,32 +238,99 @@
         "externalInference": false,
         "realAccountLogin": false
       },
-      "testedApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660"
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
     },
-    "expressive-ui": {
+    "maintenance": {
       "result": {
-        "version": "0.17.0",
-        "conciseHomeActions": true,
-        "modelPickerAccessible": true,
-        "bentoActionsCreateDrafts": true,
-        "draftSurvivesLandscape": true,
-        "drawerHidesComposerKeyboard": true,
-        "projectGridActions": true,
-        "twoColumnGridAt360dp": true,
-        "advancedSettingsExpandAndCollapse": true,
-        "preReadSettingRetained": true,
-        "quickChatControlsAccessible": true,
-        "lightAndDarkThemes": true,
-        "largeFontComposerAndModelSheetUsable": true,
-        "largeFontControlsAndSettingsUsable": true,
+        "version": "0.21.0",
+        "nativeEngine": true,
+        "historySearchAcrossPages": true,
+        "searchResultsVisibleWithKeyboard": true,
+        "drawerNavigationAfterSearch": true,
+        "scannedThreads": 56,
+        "staleSearchIgnored": true,
+        "nativeRename": true,
+        "nativeArchiveAndRestore": true,
+        "perThreadDraftSurvivesArchive": true,
+        "forcedEnvironmentRepair": true,
+        "repairPreservesAccountHistoryDraftWorkspace": true,
+        "systemDiagnosticExport": true,
+        "diagnosticsExcludePrivateData": true,
+        "nativeLogoutRemovesCredential": true,
+        "logoutPreservesHistoryDraftWorkspace": true,
         "externalInference": false,
         "realAccountLogin": false
       },
-      "testedApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660"
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "model-pre-read": {
+      "result": {
+        "version": "0.21.0",
+        "helperHasNoTools": true,
+        "helperReceivesOnlyCurrentFrame": true,
+        "helperPreviewShowsFactsAndModel": true,
+        "modelFactsReachMainCodex": true,
+        "mainCanReadExactSameOriginal": true,
+        "completeStructureSkipsModel": true,
+        "explicitImageBypassesHelper": true,
+        "invalidFallsBackToOriginal": true,
+        "toolFallsBackToOriginal": true,
+        "unavailableFallsBackToOriginal": true,
+        "timeoutFallsBackToOriginal": true,
+        "staleModelResultDiscarded": true,
+        "uncertainReadingIncludesOriginal": true,
+        "temporaryPauseCancelsHelper": true,
+        "preReaderNeverExecutesCommands": true,
+        "mainModelSelectionUnchanged": true,
+        "helperCallCount": 9,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "phone-actions": {
+      "result": {
+        "version": "0.21.0",
+        "backend": "accessibility",
+        "actionWithoutObservation": true,
+        "tapAfterContinuousContentChanges": true,
+        "sameTokenCanPerformMultipleActions": true,
+        "typingAfterFocusChange": true,
+        "navigationWithOldToken": true,
+        "swipeAfterWindowChange": true,
+        "outOfBoundsStillRejected": true,
+        "staleSameFrameImageStillRejected": true,
+        "tapAfterThirtySecondExpiry": true,
+        "actualUiClickCountAndInputVerified": true,
+        "requestCount": 12,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "phone-actions-adb": {
+      "result": {
+        "version": "0.21.0",
+        "backend": "adb",
+        "actionWithoutObservation": true,
+        "tapAfterContinuousContentChanges": true,
+        "sameTokenCanPerformMultipleActions": true,
+        "typingAfterFocusChange": true,
+        "navigationWithOldToken": true,
+        "swipeAfterWindowChange": true,
+        "outOfBoundsStillRejected": true,
+        "staleSameFrameImageStillRejected": true,
+        "tapAfterThirtySecondExpiry": true,
+        "actualUiClickCountAndInputVerified": true,
+        "requestCount": 12,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
     },
     "phone-indicator-accessibility": {
       "result": {
-        "version": "0.17.0",
+        "version": "0.21.0",
         "backend": "accessibility",
         "viewingReadingAndControlLabels": true,
         "badgeTouchPassesThrough": true,
@@ -82,7 +340,7 @@
         "cachedImagesHandoffsAndShellStayDark": true,
         "exceptionCleanup": true,
         "cancellationCleanup": true,
-        "cancelToRemovalMs": 3,
+        "cancelToRemovalMs": 12,
         "actualAccessibilityGestureCancellation": true,
         "actualObservationCleanup": true,
         "actualBackendFailureCleanup": true,
@@ -98,11 +356,11 @@
         "externalInference": false,
         "realAccountLogin": false
       },
-      "testedApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660"
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
     },
     "phone-indicator-adb": {
       "result": {
-        "version": "0.17.0",
+        "version": "0.21.0",
         "backend": "adb",
         "viewingReadingAndControlLabels": true,
         "badgeTouchPassesThrough": true,
@@ -112,7 +370,7 @@
         "cachedImagesHandoffsAndShellStayDark": true,
         "exceptionCleanup": true,
         "cancellationCleanup": true,
-        "cancelToRemovalMs": 3,
+        "cancelToRemovalMs": 15,
         "fourBlueEdges": true,
         "portrait": true,
         "smallScreenAndLargeFont": true,
@@ -123,15 +381,301 @@
         "externalInference": false,
         "realAccountLogin": false
       },
-      "testedApkSha256": "f61cfe0a1777557ce84a8145efe1bc3b8011087aa9b95c61e81d18f5ee543660"
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "plugin-system": {
+      "result": {
+        "version": "0.21.0",
+        "discoveryOptInRealBinderAndPing": true,
+        "invalidInputTimeoutCrashAndOutputBounds": true,
+        "disableCancelsInFlight": true,
+        "staleApprovalRejected": true,
+        "productionDispatchWithoutPhoneGrant": true,
+        "oldTurnAndRevokedToolRejected": true,
+        "enablePersistsAcrossManagerRestart": true,
+        "noNativeEngineOrInference": true,
+        "managerEnableAndPingUI": true,
+        "englishChineseAndDarkLarge": true,
+        "coldRestartEnabledState": true,
+        "reinstallRequiresOptIn": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "pre-read": {
+      "result": {
+        "version": "0.21.0",
+        "localObservationMetricsPresent": true,
+        "webSemanticPreReadWithoutImage": true,
+        "rawFactsAndDisabledStatePreserved": true,
+        "onDemandOriginalReachesCodex": true,
+        "repeatedReadPreservesOriginal": true,
+        "ownOverlayRestorationKeepsEvidence": true,
+        "changedPageRejectsOldOriginal": true,
+        "explicitImageModeCapturesFreshFrame": true,
+        "visualContentAutomaticallyIncludesImage": true,
+        "placeholderErrorHeadingStateAndRangePreserved": true,
+        "labelledImageStillIncludesPixels": true,
+        "keyboardWindowForcesImage": true,
+        "windowLayoutChangeInvalidatesOriginal": true,
+        "measurements": [
+          {
+            "captureMs": 105,
+            "structureMs": 43,
+            "encodeMs": 75,
+            "attemptMs": 223,
+            "totalMs": 223,
+            "attempts": 1,
+            "nodeCount": 6,
+            "structureBytes": 2159,
+            "originalPngBytes": 91471
+          },
+          {
+            "captureMs": 51,
+            "structureMs": 1,
+            "encodeMs": 62,
+            "attemptMs": 114,
+            "totalMs": 114,
+            "attempts": 1,
+            "nodeCount": 5,
+            "structureBytes": 1891,
+            "originalPngBytes": 90471
+          },
+          {
+            "captureMs": 41,
+            "structureMs": 3,
+            "encodeMs": 65,
+            "attemptMs": 109,
+            "totalMs": 109,
+            "attempts": 1,
+            "nodeCount": 5,
+            "structureBytes": 1891,
+            "originalPngBytes": 90210
+          },
+          {
+            "captureMs": 38,
+            "structureMs": 2,
+            "encodeMs": 57,
+            "attemptMs": 97,
+            "totalMs": 97,
+            "attempts": 1,
+            "nodeCount": 5,
+            "structureBytes": 1981,
+            "originalPngBytes": 95683
+          },
+          {
+            "captureMs": 41,
+            "structureMs": 3,
+            "encodeMs": 75,
+            "attemptMs": 119,
+            "totalMs": 119,
+            "attempts": 1,
+            "nodeCount": 7,
+            "structureBytes": 2639,
+            "originalPngBytes": 102239
+          },
+          {
+            "captureMs": 54,
+            "structureMs": 4,
+            "encodeMs": 63,
+            "attemptMs": 121,
+            "totalMs": 121,
+            "attempts": 1,
+            "nodeCount": 6,
+            "structureBytes": 2278,
+            "originalPngBytes": 90730
+          },
+          {
+            "captureMs": 95,
+            "structureMs": 3,
+            "encodeMs": 82,
+            "attemptMs": 180,
+            "totalMs": 180,
+            "attempts": 1,
+            "nodeCount": 6,
+            "structureBytes": 2357,
+            "originalPngBytes": 178227
+          }
+        ],
+        "preReadOnlyNeverPlansOrActs": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "project-flow": {
+      "result": {
+        "version": "0.21.0",
+        "legacyWorkspaceHistoryDraftsPreserved": true,
+        "perProjectNewDrafts": true,
+        "renameKeepsStableDirectory": true,
+        "confirmedSharesUseProjectPaths": true,
+        "nativeProjectCwdAndGit": true,
+        "sameNamedNativeOutputsStaySeparate": true,
+        "projectPreviewExportShare": true,
+        "historyFilteredByNativeCwd": true,
+        "perThreadDraftsPreserved": true,
+        "busyProjectBrowsingKeepsExecutionOwner": true,
+        "busyShareDoesNotSendOrQueue": true,
+        "selectedProjectThreadAndDraftSurviveRestart": true,
+        "injectedInterruptedShareDestinationRecovered": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "quick-chat": {
+      "result": {
+        "version": "0.21.0",
+        "officialCodexIconBundled": true,
+        "applicationOverlayIndependentOfAccessibility": true,
+        "draggableBubble": true,
+        "bubbleHiddenWhileSleeping": true,
+        "overlayNativeReply": true,
+        "overlayStreamsPartialReply": true,
+        "firstNativeIdKeepsTarget": true,
+        "busyInputQueuesAndRuns": true,
+        "mainDraftNeverOverwritten": true,
+        "openAppReturnsToConversation": true,
+        "systemUiRemoteInputReachesNativeCodex": true,
+        "assistantReplyVisibleInNotification": true,
+        "offlineInputDurable": true,
+        "networkReturnNeverAutoSends": true,
+        "processRestartKeepsPendingInput": true,
+        "explicitReviewMergesDraft": true,
+        "notificationReplySwitchWorks": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "quick-start": {
+      "result": {
+        "version": "0.21.0",
+        "startWithoutSettingsPage": true,
+        "systemGrantImmediatelyEnablesAI": true,
+        "nativePhoneWithoutSecondGrant": true,
+        "systemOverlayGrantNeedsNoExtraSwitch": true,
+        "wirelessConnectionImmediatelyEnablesShell": true,
+        "selectedShellBackendSurvivesRestart": true,
+        "engineAndWirelessReconnectWithoutSettings": true,
+        "nativeShellWithoutSecondGrant": true,
+        "nativePhoneAfterReconnect": true,
+        "explicitPrepareResumesTemporaryPause": true,
+        "explicitOverlayOffIsRemembered": true,
+        "missingOverlayPermissionKeepsChoice": true,
+        "overlayReturnsAfterPermissionRestored": true,
+        "autoPrepareCanBeDisabled": true,
+        "darkAndLargeFontControlsRemainAccessible": true,
+        "accessibilitySettingsEntryWithFallback": true,
+        "requestCount": 5,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "recovery-flow": {
+      "result": {
+        "version": "0.21.0",
+        "nativeModelSearch": true,
+        "busyModelSelectionLocked": true,
+        "nativeModelAndEffort": true,
+        "restoredModelAndEffort": true,
+        "nativeUnauthorizedRecovery": true,
+        "failedQueuePaused": true,
+        "retryPreservesDifferentDraft": true,
+        "nativeStreamDisconnectRecovery": true,
+        "retrySurvivesAppRestart": true,
+        "offlineDraftPreserved": true,
+        "networkReturnNeedsExplicitSend": true,
+        "nativeFileChangeApproval": true,
+        "fileChangeDeclinePreventsWrite": true,
+        "fileChangeAcceptWritesExpectedBytes": true,
+        "largeCompleteDiffReviewAndApproval": true,
+        "lateFileCardKeepsLatestReplyVisible": true,
+        "manualHistoryScrollPreserved": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "selfcheck": {
+      "result": {
+        "version": "0.21.0",
+        "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6",
+        "messageCharacters": 1440031,
+        "queueItems": 500,
+        "fullTextReader": true,
+        "endSearch": true,
+        "pageControlsAboveIme": true,
+        "fullSafExportSha256": "4af034432979ba23957aa9bedcd0eee80e691613a6eddf56cfa8813ff42fa042",
+        "fullSafExportBytes": 1440031,
+        "noFatalOrOom": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "share-flow": {
+      "result": {
+        "version": "0.21.0",
+        "systemChooserTarget": true,
+        "appliedShareRotationKeepsConversation": true,
+        "unconfirmedFilesOutsideNativeWorkspace": true,
+        "coldTextLinkShare": true,
+        "existingDraftPreservedUntilConfirmation": true,
+        "processRestartKeepsInbox": true,
+        "applyRemovesInboxExactlyOnce": true,
+        "multipleContentUriGrants": true,
+        "privateFilePreview": true,
+        "duplicateNamesKeepDistinctBytes": true,
+        "streamClipDataDeduplicated": true,
+        "clipOnlySupported": true,
+        "newDraftMergePreservesExisting": true,
+        "providerSizeMetadataDoesNotRejectActualFile": true,
+        "moreThanEightAttachmentsMergeWithoutLoss": true,
+        "busyShareNeverSteersQueuesOrSends": true,
+        "disabledNewChatCannotSwitchBusyTask": true,
+        "confirmedImageForwardedByNativeCodex": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "storage-recovery": {
+      "result": {
+        "version": "0.21.0",
+        "shareAndQuickUseSelectedEngine": true,
+        "noCodexDraftOverwrite": true,
+        "repeatedColdOpenPreservesAntigravityDraft": true,
+        "switchBackPreservesCodexDraft": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
+    },
+    "upgrade-recovery": {
+      "result": {
+        "version": "0.21.0",
+        "sourceVersion": "0.17.0",
+        "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6",
+        "upgradeInstallWithoutClear": true,
+        "projectSelectionPreserved": true,
+        "unsentDraftPreserved": true,
+        "workspaceFilePreserved": true,
+        "secondColdStartPreserved": true,
+        "externalInference": false,
+        "realAccountLogin": false
+      },
+      "testedApkSha256": "f584a0cf2936f98f03e274f2061d2ba414599faccfb026ab65e0683e304f5dc6"
     }
   },
   "lintErrors": [],
   "externalInference": false,
   "realAccountLogin": false,
   "pending": [
-    "Android 11 / 12 app-language compatibility and OEM per-app locale behavior; this run uses Android 15",
-    "0.17.0 native engine end-to-end checks; this emulator run uses UI_SMOKE",
+    "real model plugin tool selection and third-party/OEM plugin compatibility",
     "complete DOM, independent OCR and embedded on-device model inference",
     "real Luna/account pre-read accuracy, image escalation and token/time savings",
     "physical-device history gateway with real ChatGPT auth, workspace routing and token/time measurements",
@@ -145,19 +689,38 @@
     "physical-device background/network recovery",
     "OEM floating-window and notification-input compatibility",
     "dedicated gallery picker",
-    "native move/delete/binary/empty-file edge cases",
+    "native move/delete/binary edge cases",
     "share import killed before inbox commit",
     "receiver rotation during an active copy",
     "more source apps and OEM share sheets",
     "project-level configuration recovery",
-    "long content/diff navigation",
     "plans/context/quota display",
     "Android stress test for first-thread creation during attachment import"
   ],
-  "nativeRuntimeEndToEnd": false,
-  "runtimeByteComparison": {
-    "entries": 177,
-    "identical": true,
-    "sourceApkSha256": "bc3397b104129776aba6e9eaff213dab878c189863ec78c5b174650cbbc7bf16"
-  }
+  "runtimeProvenance": {
+    "sourceRelease": "v0.17.0",
+    "sourceApkSha256": "1bebe795929d5e7d67ea8521cf1b8d6b57fa074109cd460b034819f2be8f2fa1",
+    "runtimeEntries": 177,
+    "allRuntimeBytesIdentical": true,
+    "googleCliIncluded": false,
+    "sourceArchive": "codex-go-0.17.0-third-party-sources.tar.gz",
+    "sourceArchiveSha256": "4158a9b5dc435237c57cd04824d756c63773f998b6b664f0e0be67a835edf073",
+    "signingCertificateSha256": "99e29244ab95c5ee11c29f4019baa198ee265832633885f42fc095007ad20d47",
+    "distributedApkSha256": "35b80ba5bbf9267440ff85b66f82eddbd15a3dcae89ded5430c81ce1f42d685c"
+  },
+  "wiredDaemon": {
+    "actualAndroidShellUid2000": true,
+    "apkAppProcessDaemon": true,
+    "v2Utf8CommandBytes": 66017,
+    "rapidCommands": 20,
+    "cancelAndImmediateRetry": true,
+    "pingAfterRetry": true
+  },
+  "hostChecks": {
+    "acpFixtures": 13,
+    "runtimeReuse": 2,
+    "localizedStrings": 777
+  },
+  "pluginApiVersion": 1,
+  "testedExamplePluginSha256": "bf0ac01f6a273312930f2f1bdcec84a2f919922849632afd31666cc3c9556212"
 }

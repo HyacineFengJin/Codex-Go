@@ -39,8 +39,8 @@ import dev.codex.go.runtime.*
             if (state.phase != EnginePhase.Ready) {
                 Surface(shape = RoundedCornerShape(24.dp), color = colors.primaryContainer) {
                     Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(tr(R.string.start_codex_to_choose_a_model), style = MaterialTheme.typography.bodyMedium)
-                        Button(onClick = { close(); start() }, enabled = state.phase != EnginePhase.Preparing) { Text(if (state.phase == EnginePhase.Preparing) tr(R.string.preparing) else tr(R.string.start_local_codex)) }
+                        Text(tr(R.string.start_codex_to_choose_a_model).replace("Codex", state.engine.label), style = MaterialTheme.typography.bodyMedium)
+                        Button(onClick = { close(); start() }, enabled = state.phase != EnginePhase.Preparing) { Text(if (state.phase == EnginePhase.Preparing) tr(R.string.preparing) else tr(R.string.agent_start_arg, state.engine.label)) }
                     }
                 }
             }

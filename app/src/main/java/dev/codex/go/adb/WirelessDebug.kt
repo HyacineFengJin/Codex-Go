@@ -10,6 +10,7 @@ import android.os.Build
 import dev.codex.go.R
 import dev.codex.go.phone.FrameGuard
 import dev.codex.go.phone.requireScreenCoordinates
+import dev.codex.go.protocol.withOptionalTimeout
 import dev.codex.go.phone.FrameEvidence
 import dev.codex.go.phone.PhoneAccessService
 import dev.codex.go.phone.PhoneActivityIndicator
@@ -205,7 +206,7 @@ class WirelessDebug(private val service: EngineService, private val onStatus: (S
             finally { connecting = false }
         }
     }
-    private suspend fun commandResult(command: String, timeout: Long = 15_000): ShellPackets.Result = withTimeout(timeout) {
+    private suspend fun commandResult(command: String, timeout: Long = 15_000): ShellPackets.Result = withOptionalTimeout(timeout) {
         runInterruptible(Dispatchers.IO) {
             val manager = identity ?: error(tr(R.string.wireless_debugging_is_not_connected))
             manager.openStream("shell,v2,raw:$command").use { stream -> ShellPackets.read { bytes, offset, count -> stream.read(bytes, offset, count) } }
@@ -217,11 +218,11 @@ class WirelessDebug(private val service: EngineService, private val onStatus: (S
         return result.stdout
     }
     suspend fun executeShell(command: String, timeout: Long): JSONObject = mutex.withLock {
-        require(command.isNotBlank() && command.length <= 16_000) { tr(R.string.android_shell_command_is_invalid_or_too_long) }
+        require(command.isNotBlank()) { tr(R.string.write_a_message_first) }
         check(connected) { tr(R.string.connect_wireless_debugging_first) }
         invalidateFrame()
         val result = commandResult(command, timeout)
-        val output = "stdout:\n${result.stdout.toString(Charsets.UTF_8).take(48_000)}\nstderr:\n${result.stderr.take(12_000)}\nexitCode=${result.exit}"
+        val output = "stdout:\n${result.stdout.toString(Charsets.UTF_8)}\nstderr:\n${result.stderr}\nexitCode=${result.exit}"
         obj("success" to (result.exit == 0), "contentItems" to array(obj("type" to "inputText", "text" to output)))
     }
     suspend fun foregroundPackage(): String? = mutex.withLock {

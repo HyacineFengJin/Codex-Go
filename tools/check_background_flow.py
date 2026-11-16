@@ -43,7 +43,7 @@ def choose(name):projects();scroll_click('进入项目 '+name);d.find('更多')
 def browse_b():
  choose(project_name);d.click('打开侧栏');d.find('BG_B_'+token);d.click('BG_B_'+token);d.find('BG_B_DONE')
 def start_engine():
- d.click('打开侧栏');d.click('本机环境');d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=90);d.click('返回对话')
+ d.click('打开侧栏');d.click('本机环境');d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=90);d.click('返回对话')
 def last_user(request):
  for i in reversed(request.get('input',[])):
   if i.get('role')=='user':return '\n'.join(c.get('text','') for c in i.get('content',[]) if isinstance(c,dict))
@@ -83,7 +83,8 @@ original={p:read(p) for p in ['shared_prefs/codex_go.xml','files/codex/config.to
 try:
  subprocess.run(d.adb+['reverse',f'tcp:{port}',f'tcp:{port}'],check=True,stdout=subprocess.DEVNULL)
  d.shell('am','force-stop','dev.codex.go');patch({'project':'default','thread':None,'reading':None,'taskRecord':None,'draft:new':None,'queue:new':None,'retry:new':None,'shareInbox':'[]'})
- config=f'''model="codex-go-test"
+ # The bundled catalog model advertises the native custom apply_patch tool used below.
+ config=f'''model="gpt-6.1-sol"
 model_provider="codex_go_test"
 cli_auth_credentials_store="file"
 [analytics]
@@ -103,14 +104,14 @@ stream_idle_timeout_ms=300000
  project=next(p['id'] for p in json.loads(value('projects')) if p['name']==project_name);created.append(project)
  send('BG_B');d.find('BG_B_DONE',timeout=45);d.find('发送消息');b=value('thread');text('B_DRAFT_'+token)
  choose('默认项目');send('BG_A');d.find('BG_A_WORKING',timeout=45);a=value('thread');old=json.loads(value('taskRecord'))['token']
- text('BG_QUEUE_'+token);d.click('插话 · 选择发送方式 ▾');d.click('排队，本轮结束后发送');text('A_NEXT_'+token)
+ text('BG_QUEUE_'+token);d.click('发送方式 ▾');d.click('排队，本轮结束后发送');text('A_NEXT_'+token)
  before=len(requests);browse_b();assert value('thread')==a and value('project')=='default'
  text('B_CHANGED_'+token);assert draft(b)['text']=='B_CHANGED_'+token
- assert '停止任务' not in labels() and '插话' not in labels() and '插话 · 选择发送方式 ▾' not in labels()
+ assert '停止任务' not in labels() and '插话' not in labels() and '发送方式 ▾' not in labels()
  d.click('发送消息');assert len(requests)==before and json.loads(value('reading'))['thread']==b
  print('Cross-project browsing keeps A running and B send disabled',flush=True)
  d.shell('am','start','-n','dev.codex.go.sharefixture/dev.codex.go.testdriver.ShareSourceActivity','--es','kind','one','--es','text','B_SHARED')
- d.find('来自其他 App 的分享');d.click('加入当前草稿');assert draft(b)['attachments'][0]['path'].startswith('/projects/'+project+'/imports/')
+ d.find('分享收件箱');d.click('加入当前草稿');assert draft(b)['attachments'][0]['path'].startswith('/projects/'+project+'/imports/')
  assert value('thread')==a and len(requests)==before
  rotation=d.shell('settings','get','system','user_rotation').strip();accelerometer=d.shell('settings','get','system','accelerometer_rotation').strip()
  try:
@@ -143,7 +144,9 @@ stream_idle_timeout_ms=300000
  d.shell('am','start','-a','OPEN_TASK','-n','dev.codex.go/.MainActivity','--es','taskToken',old)
  d.find('BG_B_DONE');d.find('任务正在运行');assert json.loads(value('reading'))['thread']==b
  # Actual foreground notification must route back to A, even while the activity remembers B.
- d.shell('input','keyevent','3');d.shell('cmd','statusbar','expand-notifications');d.find('Codex 正在处理…');d.click('Codex 正在处理…');d.find('BG_STOP_WORKING');d.find('停止任务')
+ d.shell('input','keyevent','3');d.shell('cmd','statusbar','expand-notifications');d.find('Codex Go')
+ notification=next(n for n in d.xml().iter('node') if n.get('resource-id')=='android:id/title' and n.get('text')=='Codex Go')
+ d.tap(notification);d.find('BG_STOP_WORKING');d.find('停止任务')
  assert value('reading') is None;d.click('停止任务');d.find('任务已停止，可以继续对话。',timeout=30)
  assert draft(b)['text']=='B_CHANGED_'+token+'\n\nB_SHARED';d.capture(out/'notification-return-and-stop.png')
  print('Failure isolation, durable B selection/draft, task token recovery, stale action rejection and notification return/stop verified',flush=True)

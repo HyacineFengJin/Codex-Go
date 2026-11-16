@@ -111,8 +111,8 @@ def import_file(name):
         tree=driver.xml()
         roots=next((n for n in tree.iter('node') if n.get('resource-id','').endswith('/roots_list')),None)
         if roots is not None:
-            download=next(n for n in roots.iter('node') if n.get('text')=='Downloads')
-            driver.tap(download)
+            download=next((n for n in roots.iter('node') if n.get('text')=='Downloads'),None)
+            if download is not None:driver.tap(download)
             continue
         breadcrumb=next((n.get('text') for n in tree.iter('node') if n.get('resource-id','').endswith('/breadcrumb_text')),None)
         if breadcrumb!='Downloads':
@@ -161,7 +161,7 @@ supports_websockets=false
         csv=Path(temporary)/'codex-go-flow.csv';csv.write_text('item,amount\na,10\nb,32\n')
         picture=Path(temporary)/'codex-go-flow.png';picture.write_bytes(png)
         for file in [csv,picture]: subprocess.run(driver.adb+['push',str(file),'/sdcard/Download/'+file.name],check=True,stdout=subprocess.DEVNULL)
-    driver.start();driver.click('打开侧栏');driver.click('本机环境');driver.click('启动本机 Codex');driver.find('本机 Codex 已就绪',timeout=80)
+    driver.start();driver.click('打开侧栏');driver.click('本机环境');driver.click('启动 Codex');driver.find('本机 Codex 已就绪',timeout=80)
     driver.click('返回对话');driver.click('新建对话')
     for node in list(driver.xml().iter('node')):
         if node.get('content-desc','').startswith('移除附件 '): driver.click(node.get('content-desc'))
@@ -182,13 +182,13 @@ supports_websockets=false
     driver.capture(artifacts/'share.png');driver.shell('input','keyevent','4');driver.click('关闭预览')
     set_text('FLOW_STEER');driver.click('发送消息');driver.find('WORKING_STEER')
     set_text('ADD_STEER');driver.click('插话')
-    set_text('FLOW_WITHDRAW');driver.click('插话 · 选择发送方式 ▾');driver.click('排队，本轮结束后发送');driver.click('撤回')
+    set_text('FLOW_WITHDRAW');driver.click('发送方式 ▾');driver.click('排队，本轮结束后发送');driver.click('撤回')
     assert 'FLOW_WITHDRAW' in driver.find(classname='android.widget.EditText').get('text','')
-    set_text('FLOW_QUEUE');driver.click('插话 · 选择发送方式 ▾');driver.click('排队，本轮结束后发送')
+    set_text('FLOW_QUEUE');driver.click('发送方式 ▾');driver.click('排队，本轮结束后发送')
     driver.capture(artifacts/'queue.png');release.set();complete('QUEUE_OK')
     assert any('ADD_STEER' in user_text(request) for request in requests), 'Steering never reached the model fixture'
     set_text('FLOW_INTERRUPT');driver.click('发送消息');driver.find('WORKING_INTERRUPT')
-    set_text('FLOW_NEW');driver.click('插话 · 选择发送方式 ▾');driver.click('中断并发送');complete('INTERRUPT_OK');interrupted.set()
+    set_text('FLOW_NEW');driver.click('发送方式 ▾');driver.click('中断并发送');complete('INTERRUPT_OK');interrupted.set()
     driver.capture(artifacts/'interrupt.png')
     result=dict(importViaSystemPicker=True,imageForwardedByNativeCodex=True,attachmentRemoval=True,python=True,node=True,npm=True,pip=True,gitDiff=True,filePreview=True,exportedBytesMatch=True,systemShare=True,steering=True,queueAndWithdraw=True,interruptAndSend=True,externalInference=False)
     (artifacts/'result.json').write_text(json.dumps(result,indent=2)+'\n')

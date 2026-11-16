@@ -11,6 +11,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
@@ -57,8 +59,8 @@ private fun sizeLabel(bytes: Long) = if (bytes < 1024) "$bytes B" else if (bytes
 
 @Composable fun AttachmentStrip(attachments: List<Attachment>, root: File, remove: (String) -> Unit, preview: (File) -> Unit) {
     if (attachments.isEmpty()) return
-    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        attachments.forEach { attachment ->
+    LazyRow(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(attachments) { attachment ->
             val file = WorkspaceFiles(root).resolve(attachment.path)
             Surface(shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.width(178.dp)) {
                 Row(Modifier.clickable(enabled = file != null) { file?.let(preview) }.padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -119,9 +121,8 @@ private fun sizeLabel(bytes: Long) = if (bytes < 1024) "$bytes B" else if (bytes
     }
     LaunchedEffect(file.path, file.lastModified()) {
         if (!mime.startsWith("image/")) text = withContext(Dispatchers.IO) {
-            if (file.length() > 256 * 1024) null else runCatching {
-                val value = Charsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(file.readBytes())).toString()
-                value.takeUnless { it.contains('\u0000') }
+            runCatching { dev.codex.go.files.TextFiles.read(file) }.onFailure {
+                if (it is dev.codex.go.files.TextFileMemoryException) error = tr(R.string.text_editor_memory_budget)
             }.getOrNull()
         }
     }
@@ -145,7 +146,7 @@ private fun sizeLabel(bytes: Long) = if (bytes < 1024) "$bytes B" else if (bytes
                 Box(Modifier.weight(1f).fillMaxWidth().padding(20.dp)) {
                     if (mime.startsWith("image/")) FileThumbnail(file, Modifier.fillMaxSize())
                     else if (text != null) androidx.compose.foundation.text.selection.SelectionContainer {
-                        Text(text!!, Modifier.fillMaxSize().verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState()), fontFamily = FontFamily.Monospace, fontSize = 13.sp, lineHeight = 21.sp)
+                        ReadableText(text!!, Modifier.fillMaxSize().verticalScroll(rememberScrollState()), style = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace, fontSize = 13.sp, lineHeight = 21.sp))
                     } else Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Outlined.Description, null, Modifier.size(56.dp))
                         Text(tr(R.string.view_this_file_in_another_app), Modifier.padding(top = 16.dp))

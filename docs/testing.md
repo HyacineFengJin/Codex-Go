@@ -11,6 +11,25 @@ bash tools/build_apk.sh x86_64      # .gradle/validation/codex-go-x86_64-debug.a
 
 运行时缓存位于 `.gradle/runtime-bundles/<abi>/`，两个 ABI 独立生成。`-PuiSmoke` 只生成无引擎的界面检查包，不可交付为完整应用。运行时与工具链锁文件是构建输入，必须保留。
 
+旧下载地址下架时可使用 `CODEX_GO_RUNTIME_APK` 和 `CODEX_GO_RUNTIME_APK_SHA256` 复用公开 APK 中完全相同的依赖，示例见 [README](../README.md#构建)。复用先验证整个 APK 哈希、ABI 和输入清单，再仅提取运行时载荷；运行时不通过验证时保留原有生成目录。
+
+## 退出、重建与重启回归
+
+本轮记录见 [0.21.0 恢复自检](lifecycle-selfcheck.md)。新检查脚本：
+
+```sh
+python3 tools/check_runtime_reuse.py
+python3 tools/check_editor_recovery.py --serial emulator-5570
+python3 tools/check_storage_recovery.py --serial emulator-5570
+python3 tools/check_lifecycle_recovery.py --serial emulator-5570
+# 安装 v0.17.0 源码的界面测试包后再运行；保留数据升级到当前完整 x86_64 包。
+python3 tools/check_upgrade_recovery.py --serial emulator-5570
+```
+
+生命周期检查使用完整原生 Codex 与本机 Responses 事件，区别普通 Home / Back 返回、主进程 SIGKILL、应用强制停止和模拟器设备重启；检查草稿 / 项目 / 历史 / 已保存文件恢复、队列暂停且无旧任务重放，以及重启后的新任务。它不会访问用户手机。
+
+编辑器缓冲使用 Activity ViewModel 跨旋转保留，大文本不写入 saved-instance Bundle。硬杀进程或重启不会保存尚未点击“保存”的文件编辑；聊天草稿则持续写入存储。退出编辑器会提示放弃未保存内容。
+
 ## 隔离验证
 
 `python3 tools/check_protocol.py` 使用独立临时 CODEX_HOME 检查桌面 app-server，不读取用户账户或启动模型推理。
@@ -26,6 +45,8 @@ adb -s emulator-5560 shell cmd locale set-app-locales dev.codex.go --locales zh-
 python3 tools/check_localization_resources.py
 python3 tools/check_localization.py
 python3 tools/check_expressive_ui.py
+python3 tools/check_floating_ui.py
+python3 tools/check_plugins.py
 python3 tools/check_quick_chat.py
 python3 tools/check_quick_start.py
 python3 tools/check_maintenance.py
@@ -52,7 +73,7 @@ python3 tools/check_shell_access.py
 python3 tools/check_wireless_debugging.py --overlay
 python3 tools/check_android_engine.py --with-android-shell --shell-backend wired
 
-python3 tools/verify_release.py 0.16.0
+python3 tools/verify_release.py 0.19.0
 ```
 
 无线配对检查应先于 Android Shell 检查。`check_shell_access.py` 需要测试设备安装并启动官方 Shizuku 13.6.0，验证有线桥接令牌、真实 Shizuku UserService、切换许可、服务死亡与无 root 情况；测试会停止 Shizuku，继续验证时需重新启动。root 成功授权和 su 管理器兼容仍需真实已 root 设备。
@@ -125,3 +146,47 @@ python3 tools/verify_release.py 0.17.0 --groups localization expressive-ui phone
 ```
 
 当前手机包的运行时来自校验过的 0.16.0 APK，177 个运行时条目逐字节比对，来源哈希见交付元数据。Android 11 / 12 兼容分支只完成编译，本轮运行环境为 Android 15。
+
+## 0.18.0 悬浮窗定向检查
+
+`check_floating_ui.py` 在独占模拟器中绑定真实 EngineService，用测试状态展示生产悬浮窗，不启动 Codex 进程。检查拖动吸边、空白输入、独立持久草稿、嵌套观察隐藏、忙碌排队提示、对话切换后保留输入、配置 / 语言变更、深浅色、模糊关闭回退、360dp / 160% 字号与横屏键盘。键盘检查使用实际 IME 区域边界，防止控件虽存在于节点树却被键盘遮住。两类顶部提示覆盖层仍单独检查触摸穿透与生命周期。
+
+```sh
+python3 tools/verify_release.py 0.18.0 --groups floating-ui phone-indicator-accessibility phone-indicator-adb
+```
+
+这一轮为 UI_SMOKE 定向回归，不代表实际账号、模型推理或 OEM 兼容性已验证。真机 ARM64 包包含原有运行时；模拟器 UI 包仅用于隔离检查。
+
+## 0.19.0 插件检查
+
+先构建 `:text-tools-plugin:assembleDebug`，在独占模拟器安装 Text Tools 示例 APK，再运行 `build_ui_driver.sh` 和 `check_plugins.py`。测试驱动另带故障服务，仅存在于测试 APK。检查实际 Binder / UID、连接测试、Unicode 输出、错误输入、坏 JSON、超量回复、超时、服务进程死亡、关闭取消、旧授权拒绝、启用持久化、主程序 `item/tool/call` 分发、旧 turn 拒绝及不依赖手机授权。管理页检查中英、深浅色、大字号、冷启动与宿主停用期间卸载重装后的重新启用要求。
+
+该组使用内存 JSON-RPC 管道检查主程序分发，不启动原生引擎、不调用真实模型。它支持 UI_SMOKE：`python3 tools/verify_release.py 0.19.0 --groups plugin-system`。真实模型自主选择插件、第三方厂商 APK 与 OEM 长期兼容性仍需后续验证。
+
+## 0.20.0 Antigravity
+
+```sh
+python3 tools/check_antigravity_protocol.py
+python3 tools/prepare_antigravity.py --abi x86_64
+python3 tools/prepare_antigravity_probe.py
+JAVA_HOME=/path/to/jdk21 ./gradlew -PuiSmoke -Pantigravity :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+# 将 UI 包安装到独占模拟器，并准备 build_ui_driver.sh 后：
+python3 tools/check_antigravity_ui.py
+python3 tools/verify_release.py 0.20.0 --groups antigravity
+```
+
+模拟器专用最小 Alpine / PRoot 探针验证应用 UID 下执行官方 CLI 的生产启动方式；不能用 ADB shell 的执行权限代替。直接从应用进程启动 Linux CLI 会受到 Android seccomp 限制（SIGSYS）；生产启动与探针均通过 PRoot。最小探针不包含完整开发环境、不调用模型、不登录真实账号，也不进入 ARM64 分发包。真实 Google 终端授权链接已在隔离桌面环境生成并取消，未完成账号授权。
+
+手机手动验证：选择 Antigravity → 启动 → 使用 Google 登录 → 打开链接并回填授权码 / 最终页面地址 → 选择实际可用模型 → 新建对话发送一个只读任务，再检查取消、审批与模型输出。无需清除 Codex 数据。Google CLI 的不同客户端可能拥有不同模型目录，以实际返回为准。
+
+## 0.20.1 限制清理
+
+ARM64 完整构建执行 `:app:assembleDebug :app:testDebugUnitTest :app:lintDebug`：128 项 JVM 测试通过，lint 无错误；`python3 tools/check_antigravity_protocol.py` 的 8 项 ACP 夹具与本地化资源检查通过。179 个基础运行时与可选 Google CLI 载荷条目，与已校验的 0.20.0 本地包逐项 SHA256 一致。没有沿用旧版模拟器结果作为本版实测；精确范围见 `artifacts/verification.json`。
+
+定向回归覆盖 40 个附件合并、65 MiB 分享文件完整移入、25 条待发送队列、长消息持久化、长流式回复首尾、完整长 diff 审核、40 张历史图原图关联、超过旧期限的任务等待 / 取消、长 Shell 命令、大插件目录、超过 256 KiB 的 UTF-8 源码，以及 ACP 官方历史游标分页和循环游标错误。
+
+手机手动检查：安装 0.20.1 后发送超过 8 个文件；任务运行时排队超过 10 条；让手机任务停留思考超过 3 分钟后继续操作。USB 后端需用设置中重新生成的命令启动 V2 桥，再验证显式长期限 / `timeoutMs=0` 与停止按钮。保留边界见 [限制审计](limits.md)。本轮不操作用户手机，不完成真实账号授权或模型调用。
+
+## 0.20.2 边界自检
+
+140 项 JVM 测试、13 项 ACP 本地夹具、本地化资源检查和 lint 通过。新增真实 socket 阻塞取消、UTF-8 USB V2 管道 / 串行执行 / 排队取消、续期保活和原文分页往返等回归。Android 15 x86_64 192 MiB 堆上先复现长回复布局 OOM，再验证修复后 1,440,031 字符回复与 500 条队列可用，全文搜索能到末尾，输入法不遮翻页操作，系统 SAF 导出的文本逐字节等于输入。实际 APK daemon 在 Shell UID 2000 下验证超过 64 KiB 的中文命令帧、连续命令和取消后重试。见 [复现与范围](limit-selfcheck.md)；真实账号、模型、ARM64 / OEM 和 Shizuku / root 长任务未据此宣称通过。

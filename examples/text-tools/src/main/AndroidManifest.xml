@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries><package android:name="dev.codex.go" /></queries>
+    <application android:label="Text Tools · Codex Go Plugin" android:allowBackup="false">
+        <service android:name="dev.codex.go.example.TextToolsService" android:exported="true">
+            <intent-filter><action android:name="dev.codex.go.action.PLUGIN" /></intent-filter>
+            <meta-data android:name="dev.codex.go.PLUGIN_MANIFEST" android:resource="@raw/plugin" />
+        </service>
+    </application>
+</manifest>

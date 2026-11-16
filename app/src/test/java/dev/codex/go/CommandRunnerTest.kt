@@ -9,6 +9,11 @@ import java.util.concurrent.TimeUnit
 import java.nio.file.Files
 
 class CommandRunnerTest {
+    @Test fun longCommandAndCallerChosenDeadlineAreAccepted() {
+        val command = "printf finished #" + "x".repeat(20000)
+        val result = JSONObject(CommandRunner("/bin/sh").execute("long", command, 180_000))
+        assertEquals("finished", result.getString("stdout")); assertEquals(0, result.getInt("exitCode"))
+    }
     @Test fun preservesStreamsAndExitStatus() {
         val result = JSONObject(CommandRunner("/bin/sh").execute("streams", "printf '你好'; printf 'failed' >&2; exit 7", 5000))
         assertEquals("你好", result.getString("stdout")); assertEquals("failed", result.getString("stderr")); assertEquals(7, result.getInt("exitCode"))
@@ -25,7 +30,7 @@ class CommandRunnerTest {
         val runner = CommandRunner("/bin/sh"); val executor = Executors.newSingleThreadExecutor()
         val marker = Files.createTempDirectory("codex-go-cancel-").resolve("started")
         try {
-            val result = executor.submit<String> { runner.execute("cancel", "printf started > '$marker'; exec sleep 30", 10_000) }
+            val result = executor.submit<String> { runner.execute("cancel", "printf started > '$marker'; exec sleep 30", 0) }
             val until = System.nanoTime() + TimeUnit.SECONDS.toNanos(3)
             while (!Files.exists(marker) && System.nanoTime() < until) Thread.sleep(10)
             assertTrue(Files.exists(marker)); runner.cancel("cancel")

@@ -5,6 +5,28 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class TimelineTest {
+    @Test fun longStreamingReplyKeepsItsBeginningAndEnd() {
+        val timeline = Timeline()
+        val start = "first paragraph\n" + "a".repeat(70000)
+        val end = "b".repeat(70000) + "\nlast paragraph"
+        timeline.event("item/agentMessage/delta", obj("itemId" to "long", "delta" to start))
+        timeline.event("item/agentMessage/delta", obj("itemId" to "long", "delta" to end))
+        assertEquals(start + end, timeline.snapshot().single().text)
+    }
+    @Test fun longToolOutputAndCompleteDiffRemainReviewableAfterHistoryRestore() {
+        val output = "first\n" + "line\n".repeat(16000) + "last"
+        val diff = "+first\n" + "+line\n".repeat(16000) + "+last"
+        val timeline = Timeline()
+        timeline.restore(listOf(
+            obj("id" to "cmd", "type" to "commandExecution", "command" to "cat report", "aggregatedOutput" to output),
+            obj("id" to "diff", "type" to "fileChange", "changes" to array(obj("path" to "report", "kind" to "update", "diff" to diff))),
+            obj("id" to "tool", "type" to "dynamicToolCall", "tool" to "read", "contentItems" to array(obj("type" to "inputText", "text" to output)))
+        ))
+        val items = timeline.snapshot()
+        assertTrue(items[0].text.endsWith(output))
+        assertTrue(items[1].text.endsWith(diff)); assertTrue(items[1].reviewComplete)
+        assertEquals(output, items[2].text)
+    }
     @Test fun completionReplacesStreamingAndIgnoresLateDelta() {
         val timeline = Timeline()
         timeline.event("item/agentMessage/delta", obj("itemId" to "a", "delta" to "Hel"))

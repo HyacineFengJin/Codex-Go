@@ -8,6 +8,19 @@ import java.nio.file.Files
 import java.util.UUID
 
 class ShareMaterialsTest {
+    @Test fun largeFileIsPublishedIntactWithoutReadingItIntoMemory() = temporary { stage, work ->
+        val id = UUID.randomUUID().toString()
+        val source = File(stage, "imports/$id/0/large.bin").apply { parentFile!!.mkdirs() }
+        val length = 65L * 1024 * 1024
+        java.io.RandomAccessFile(source, "rw").use { it.setLength(length); it.seek(length - 1); it.write(37) }
+        val attachment = Attachment("/workspace/imports/$id/0/large.bin", "large.bin", "application/octet-stream", length)
+        val materials = ShareMaterials(stage, work)
+        materials.publish(Draft(attachments = listOf(attachment)))
+        val published = materials.resolve(attachment)!!
+        assertEquals(length, published.length())
+        java.io.RandomAccessFile(published, "r").use { it.seek(length - 1); assertEquals(37, it.read()) }
+        assertFalse(source.exists())
+    }
     @Test fun unconfirmedFilesStayPrivateAndConfirmedMoveCanResumeAfterRestart() = temporary { stage, work ->
         val materials = ShareMaterials(stage, work)
         val id = UUID.randomUUID().toString()

@@ -11,7 +11,8 @@ codex_go_out='.gradle/ui-driver'
 mkdir -p "$codex_go_out/classes" "$codex_go_out/dex"
 "$codex_go_jdk/bin/javac" --release 17 -classpath "$codex_go_jar" -d "$codex_go_out/classes" tools/android-ui-driver/*.java
 JAVA_HOME="$codex_go_jdk" "$codex_go_bt/d8" --min-api 30 --lib "$codex_go_jar" --output "$codex_go_out/dex" "$codex_go_out"/classes/dev/codex/go/testdriver/*.class
-"$codex_go_bt/aapt2" link -I "$codex_go_jar" --manifest tools/android-ui-driver/AndroidManifest.xml -o "$codex_go_out/driver-unsigned.apk"
+"$codex_go_bt/aapt2" compile --dir tools/android-ui-driver/res -o "$codex_go_out/resources.zip"
+"$codex_go_bt/aapt2" link "$codex_go_out/resources.zip" -I "$codex_go_jar" --manifest tools/android-ui-driver/AndroidManifest.xml -o "$codex_go_out/driver-unsigned.apk"
 python3 - "$codex_go_out" <<'PY'
 import sys,zipfile
 from pathlib import Path

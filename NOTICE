@@ -16,3 +16,7 @@ OpenAI and Codex names, logos and official icon assets remain the property of
 their respective owner; the project MIT License grants no trademark rights or
 additional license to those assets. Icon provenance is recorded separately in
 docs/assets/codex-icon-source.json.
+
+Optional Google Antigravity CLI 1.5.9 is a Google-provided binary subject to its
+upstream terms, not this project's MIT grant. Default builds omit it. See
+licenses/antigravity-CLI-NOTICE.txt and tools/antigravity.lock.json.

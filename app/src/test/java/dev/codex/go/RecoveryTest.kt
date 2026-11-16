@@ -32,14 +32,14 @@ class RecoveryTest {
         assertEquals("medium", model.effort(null))
         assertNull(Model.fromJson(obj("id" to "legacy", "defaultReasoningEffort" to "high")).effort("high"))
     }
-    @Test fun missingAndOversizedDiffsCannotBeMarkedComplete() {
+    @Test fun reviewDependsOnCompleteContentRatherThanDiffLength() {
         fun review(diff: String?) = Timeline().apply {
             event("item/started", obj("item" to obj("id" to "patch", "type" to "fileChange", "changes" to array(obj("path" to "/workspace/file.txt", "diff" to diff)))))
         }.snapshot().single()
         assertTrue(review("+hello").reviewComplete)
         assertFalse(review(null).reviewComplete)
         assertFalse(review("").reviewComplete)
-        assertFalse(review("+".repeat(64_001)).reviewComplete)
+        assertTrue(review("+".repeat(64_001)).reviewComplete)
         val empty = Timeline().apply { event("item/started", obj("item" to obj("id" to "empty", "type" to "fileChange", "changes" to array(obj("path" to "/workspace/empty.txt", "kind" to obj("type" to "add"), "diff" to ""))))) }.snapshot().single()
         assertTrue(empty.reviewComplete)
         assertTrue(empty.text.contains("新增空文件"))

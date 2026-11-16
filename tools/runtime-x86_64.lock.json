@@ -30,8 +30,8 @@
   {
     "name": "proot",
     "kind": "deb",
-    "url": "https://packages.termux.dev/apt/termux-main/pool/main/p/proot/proot_5.1.107.101_x86_64.deb",
-    "file": "proot_5.1.107.101_x86_64.deb",
-    "sha256": "85adb8d0d2e1edc6c56e60c17136adf05e54ce75f69407ec7116a4c5997eaed5"
+    "url": "https://packages.termux.dev/apt/termux-main/pool/main/p/proot/proot_5.1.107.102_x86_64.deb",
+    "file": "proot_5.1.107.102_x86_64.deb",
+    "sha256": "2497064226c15971be8131c7facead94a06c225347796326a383c832dca57758"
   }
 ]

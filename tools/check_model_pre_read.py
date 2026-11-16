@@ -171,7 +171,7 @@ requires_openai_auth=false
 supports_websockets=false
 '''.encode())
     d.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS')
-    d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=100)
+    d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=100)
     d.shell('settings','put','secure','enabled_accessibility_services','dev.codex.go/.phone.PhoneAccessService');d.shell('settings','put','secure','accessibility_enabled','1')
     d.click('返回对话');d.click('打开侧栏');d.click('手机操作');d.set_switch('预读优先',True)
     d.scroll_click('选择预读模型');d.find('选择预读模型');d.set_text('gpt-6-luna');d.click('使用 gpt-6-luna 预读')

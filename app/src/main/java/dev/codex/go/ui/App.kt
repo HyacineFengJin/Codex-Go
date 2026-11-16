@@ -121,6 +121,7 @@ import java.io.File
                     DrawerLink(Icons.Outlined.Terminal, tr(R.string.local_environment), { navigate(3) })
                     DrawerLink(Icons.Outlined.Inbox, tr(R.string.share_inbox_arg , state.shares.size), { navigate(4) })
                     DrawerLink(Icons.Outlined.ChatBubbleOutline, tr(R.string.quick_chat), { navigate(6) })
+                    DrawerLink(Icons.Outlined.Extension, tr(R.string.plugins), { navigate(7) })
                 }
             }
             Row(Modifier.padding(start = 16.dp, top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -160,7 +161,7 @@ import java.io.File
                         IconButton(onClick = { moreMenu = true }) { Icon(Icons.Outlined.MoreHoriz, tr(R.string.more), Modifier.size(22.dp)) }
                         DropdownMenu(expanded = moreMenu, onDismissRequest = { moreMenu = false }) {
                             state.threadId?.let { id -> DropdownMenuItem(text = { Text(tr(R.string.manage_this_chat)) }, enabled = !state.browsing && !state.busy && !state.importing && !state.loadingHistory && state.sessionMutation == null, onClick = { moreMenu = false; managing = Session(id, state.title, "", 0) }) }
-                            listOf(tr(R.string.projects) to 5, tr(R.string.workspace) to 1, tr(R.string.phone_control) to 2, tr(R.string.quick_chat) to 6, tr(R.string.settings) to 3, tr(R.string.share_inbox_arg , state.shares.size) to 4).forEach { (label, target) -> DropdownMenuItem(text = { Text(label) }, onClick = { page = target; moreMenu = false }) }
+                            listOf(tr(R.string.projects) to 5, tr(R.string.workspace) to 1, tr(R.string.phone_control) to 2, tr(R.string.quick_chat) to 6, tr(R.string.plugins) to 7, tr(R.string.settings) to 3, tr(R.string.share_inbox_arg , state.shares.size) to 4).forEach { (label, target) -> DropdownMenuItem(text = { Text(label) }, onClick = { page = target; moreMenu = false }) }
                         }
                     }
                 }
@@ -175,6 +176,7 @@ import java.io.File
                     3 -> SettingsScreen(state, start, engine) { page = 6 }
                     4 -> ShareInboxScreen(state, engine) { page = 0 }
                     5 -> ProjectsScreen(state, engine) { page = 0 }
+                    7 -> PluginsScreen(engine.plugins)
                     6 -> QuickChatScreen(state, engine, start) { page = 0 }
                 } }
             }
@@ -185,14 +187,14 @@ import java.io.File
     if (actions) ModalBottomSheet(onDismissRequest = { actions = false }, containerColor = colors.surface) {
         Column(Modifier.padding(bottom = 26.dp)) {
             DrawerLink(Icons.Outlined.Image, tr(R.string.add_image), { actions = false; photos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }, tr(R.string.preview_or_remove_before_sending))
-            DrawerLink(Icons.Outlined.AttachFile, tr(R.string.add_file), { actions = false; documents.launch(arrayOf("*/*")) }, tr(R.string.up_to_8_attachments_64_mb_each))
+            DrawerLink(Icons.Outlined.AttachFile, tr(R.string.add_file), { actions = false; documents.launch(arrayOf("*/*")) }, tr(R.string.preview_or_remove_before_sending))
             DrawerLink(Icons.Outlined.FolderOpen, tr(R.string.workspace_files), { actions = false; page = 1 }, tr(R.string.view_and_edit_files_created_by_codex))
             DrawerLink(Icons.Outlined.TouchApp, tr(R.string.phone_control), { actions = false; page = 2 }, tr(R.string.accessibility_wireless_debugging))
             DrawerLink(Icons.Outlined.Terminal, tr(R.string.local_codex), { actions = false; page = 3 }, metadata(state.status))
         }
     }
     if (modelMenu) ModelPicker(state, engine, start) { modelMenu = false }
-    state.login?.let { DeviceLoginDialog(it, engine::cancelLogin) }
+    state.login?.let { DeviceLoginDialog(it, engine::submitAgentLoginCode, engine::cancelLogin) }
     managing?.let { session -> SessionActions(session, state.archivedSessions && state.threadId != session.id, { managing = null }, engine::renameSession, engine::archiveSession) { id -> engine.restoreSession(id); managing = null; navigate(0) } }
     preview?.let { path -> WorkspaceFiles(engine.workspace).resolve(path)?.let { FilePreview(it, engine.workspace, { preview = null }, engine::referenceFile) } }
     state.prompts.firstOrNull()?.let { prompt -> key(prompt.id.toString(), prompt.method) { PromptDialog(prompt, state.feed.firstOrNull { it.id == prompt.params.optString("itemId") }) { engine.answer(prompt, it) } } }
@@ -205,7 +207,7 @@ import java.io.File
         Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
             FilledTonalIconButton(onClick = navigation, colors = IconButtonDefaults.filledTonalIconButtonColors(containerColor = colors.surfaceContainerLowest)) { Icon(if (page == 0) Icons.Outlined.Menu else Icons.AutoMirrored.Outlined.ArrowBack, if (page == 0) tr(R.string.open_sidebar) else tr(R.string.back_to_chat), Modifier.size(22.dp)) }
             Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
-                Text(when (page) { 1 -> tr(R.string.workspace); 2 -> tr(R.string.phone_control); 3 -> tr(R.string.local_environment); 4 -> tr(R.string.share_inbox); 5 -> tr(R.string.projects); 6 -> tr(R.string.quick_chat); else -> if (state.threadId == null) "Codex Go" else state.title }, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
+                Text(when (page) { 1 -> tr(R.string.workspace); 2 -> tr(R.string.phone_control); 3 -> tr(R.string.local_environment); 4 -> tr(R.string.share_inbox); 5 -> tr(R.string.projects); 6 -> tr(R.string.quick_chat); 7 -> tr(R.string.plugins); else -> if (state.threadId == null) "Codex Go" else state.title }, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
                 if (page == 0 && state.project.id != dev.codex.go.files.Project.DEFAULT_ID) Text(state.project.displayName, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
             }
             actions()
@@ -262,12 +264,12 @@ import java.io.File
 }
 private data class FeedGroup(val id: String, val messages: List<ChatItem>, val tools: Boolean = false)
 private fun groups(feed: List<ChatItem>): List<FeedGroup> {
-    val result = mutableListOf<FeedGroup>()
+    val buckets = mutableListOf<MutableList<ChatItem>>()
     feed.forEach { item ->
-        if (item.kind == "tool" && result.lastOrNull()?.tools == true) { val previous = result.removeAt(result.lastIndex); result += previous.copy(messages = previous.messages + item) }
-        else result += FeedGroup(item.id, listOf(item), item.kind == "tool")
+        if (item.kind == "tool" && buckets.lastOrNull()?.firstOrNull()?.kind == "tool") buckets.last() += item
+        else buckets += mutableListOf(item)
     }
-    return result
+    return buckets.map { FeedGroup(it.first().id, it.toList(), it.first().kind == "tool") }
 }
 @Composable private fun ConversationFeed(state: EngineState, root: File, preview: (File) -> Unit, changeDraft: (String) -> Unit, engine: EngineService, models: () -> Unit, modifier: Modifier) {
     val list = rememberLazyListState()
@@ -348,7 +350,7 @@ private fun groups(feed: List<ChatItem>): List<FeedGroup> {
         if (!state.browsing) RecoveryPanel(state, engine, settings, models)
         if (!state.browsing && state.failedSubmission != null && state.failure == null && !state.busy) TextButton(onClick = engine::retrySubmission, Modifier.align(Alignment.CenterHorizontally)) { Text(tr(R.string.retry_last_message)) }
         if (state.phase != EnginePhase.Ready) FilledTonalButton(onClick = start, enabled = state.phase != EnginePhase.Preparing, modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).heightIn(min = 48.dp)) {
-            Icon(Icons.Outlined.Terminal, null, Modifier.size(15.dp)); Text(if (state.phase == EnginePhase.Preparing) tr(R.string.preparing_local_codex) else tr(R.string.start_local_codex_66eecc), fontSize = 12.sp)
+            Icon(Icons.Outlined.Terminal, null, Modifier.size(15.dp)); Text(if (state.phase == EnginePhase.Preparing) tr(R.string.preparing_local_codex) else tr(R.string.agent_start_arg, state.engine.label), fontSize = 12.sp)
         }
         if (state.browsing) Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             if (!compact) Text(if (state.busy) tr(R.string.a_task_is_running_you_can_prepare_a_draft) else tr(R.string.enter_this_chat_to_send), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
@@ -359,7 +361,7 @@ private fun groups(feed: List<ChatItem>): List<FeedGroup> {
         if (!state.browsing && state.busy && !state.draft.empty) Box(Modifier.padding(horizontal = 20.dp)) {
             TextButton(onClick = { sendModes = true }, enabled = !state.steering && !state.importing) { Text(if (state.steering) tr(R.string.steering) else tr(R.string.send_options), fontSize = 12.sp) }
             DropdownMenu(expanded = sendModes, onDismissRequest = { sendModes = false }) {
-                listOf(tr(R.string.steer_without_interrupting) to SendMode.Steer, tr(R.string.queue_after_this_turn) to SendMode.Queue, tr(R.string.interrupt_send) to SendMode.Interrupt).forEach { (label, mode) ->
+                listOf(tr(R.string.steer_without_interrupting) to SendMode.Steer, tr(R.string.queue_after_this_turn) to SendMode.Queue, tr(R.string.interrupt_send) to SendMode.Interrupt).filter { it.second != SendMode.Steer || state.engine == AgentEngine.Codex }.forEach { (label, mode) ->
                     DropdownMenuItem(text = { Text(label) }, onClick = { sendModes = false; engine.submit(mode) })
                 }
             }
@@ -402,10 +404,16 @@ private fun groups(feed: List<ChatItem>): List<FeedGroup> {
             Icon(if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, null, Modifier.size(17.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         AnimatedVisibility(expanded) {
-            Column(Modifier.padding(start = 22.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                messages.forEach { item -> Column { Text(metadata(item.title), fontSize = 12.sp, fontWeight = FontWeight.Medium); Text(item.text, Modifier.padding(top = 6.dp), fontFamily = FontFamily.Monospace, fontSize = 11.sp, lineHeight = 18.sp, color = MaterialTheme.colorScheme.onSurfaceVariant) } }
-            }
+            if (messages.size > 10) LazyColumn(Modifier.padding(start = 22.dp).heightIn(max = 360.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                items(messages, key = ChatItem::id) { WorkItem(it) }
+            } else Column(Modifier.padding(start = 22.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) { messages.forEach { WorkItem(it) } }
         }
+    }
+}
+@Composable private fun WorkItem(item: ChatItem) {
+    Column {
+        Text(metadata(item.title), fontSize = 12.sp, fontWeight = FontWeight.Medium)
+        ReadableText(item.text, Modifier.padding(top = 6.dp), style = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace, fontSize = 11.sp, lineHeight = 18.sp, color = MaterialTheme.colorScheme.onSurfaceVariant))
     }
 }
 @Composable private fun Message(item: ChatItem, root: File, revision: Int, preview: (File) -> Unit, edit: (ChatItem) -> Unit) {
@@ -414,14 +422,14 @@ private fun groups(feed: List<ChatItem>): List<FeedGroup> {
     when (item.kind) {
         "user" -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             Column(horizontalAlignment = Alignment.End) {
-                Surface(shape = RoundedCornerShape(topStart = 26.dp, topEnd = 26.dp, bottomEnd = 8.dp, bottomStart = 26.dp), color = colors.secondaryContainer, modifier = Modifier.widthIn(max = 330.dp)) { Column(Modifier.padding(horizontal = 17.dp, vertical = 12.dp)) { Markdown(item.text.substringBefore(tr(R.string.attached_workspace_files))) { WorkspaceFiles(root).resolve(it)?.let(preview) }; Deliverables(item, root, revision, preview) } }
+                Surface(shape = RoundedCornerShape(topStart = 26.dp, topEnd = 26.dp, bottomEnd = 8.dp, bottomStart = 26.dp), color = colors.secondaryContainer, modifier = Modifier.widthIn(max = 330.dp)) { Column(Modifier.padding(horizontal = 17.dp, vertical = 12.dp)) { ReadableText(item.text.substringBefore(tr(R.string.attached_workspace_files)), markdown = true) { WorkspaceFiles(root).resolve(it)?.let(preview) }; Deliverables(item, root, revision, preview) } }
                 TextButton(onClick = { edit(item) }) { Text(tr(R.string.edit_resend), fontSize = 11.sp, color = colors.onSurfaceVariant) }
             }
         }
         "error" -> Text(item.text, color = colors.error, style = MaterialTheme.typography.bodyMedium)
         "notice" -> Text(item.text, color = colors.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
         else -> Column {
-            Markdown(item.text) { WorkspaceFiles(root).resolve(it)?.let(preview) }
+            ReadableText(item.text, markdown = true) { WorkspaceFiles(root).resolve(it)?.let(preview) }
             Deliverables(item, root, revision, preview)
             if (!item.running) IconButton(onClick = { copy(context, item.text) }, Modifier.padding(top = 8.dp).size(30.dp)) { Icon(Icons.Outlined.ContentCopy, tr(R.string.copy_reply), Modifier.size(16.dp), tint = colors.onSurfaceVariant) }
         }

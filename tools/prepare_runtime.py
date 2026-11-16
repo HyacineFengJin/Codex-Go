@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / '.gradle/runtime-downloads'
 parser = argparse.ArgumentParser()
 parser.add_argument('--abi', choices=['arm64-v8a', 'x86_64'], default='arm64-v8a')
+parser.add_argument('--from-apk', type=Path, help='Recover a runtime from a trusted previous APK, without fetching retired packages')
+parser.add_argument('--apk-sha256', help='Required published SHA256 for --from-apk')
 args = parser.parse_args()
 ARCH = 'aarch64' if args.abi == 'arm64-v8a' else 'x86_64'
 BUNDLE = ROOT / '.gradle/runtime-bundles' / args.abi
@@ -26,6 +28,14 @@ ASSETS = BUNDLE / 'assets/runtime'
 LOCK = ROOT / 'tools' / ('runtime.lock.json' if args.abi == 'arm64-v8a' else 'runtime-x86_64.lock.json')
 for directory in (CACHE, NATIVE, ASSETS):
     directory.mkdir(parents=True, exist_ok=True)
+
+if args.from_apk:
+    if not args.apk_sha256:parser.error('--from-apk requires --apk-sha256')
+    from reuse_runtime import reuse
+    expected=json.loads(LOCK.read_text())+json.loads((ROOT/'tools'/f'toolchain-{args.abi}.lock.json').read_text())['packages']
+    count=reuse(args.from_apk,args.apk_sha256,args.abi,BUNDLE,expected)
+    print('Recovered',count,'verified runtime entries for',args.abi,flush=True)
+    raise SystemExit(0)
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()

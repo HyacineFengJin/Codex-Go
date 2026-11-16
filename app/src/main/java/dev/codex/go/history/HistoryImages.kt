@@ -25,7 +25,7 @@ class HistoryImages(val archive: ImageArchive, private val account: File) {
             if (!text.startsWith(ImageArchive.MARKER)) continue
             val value = runCatching { JSONObject(text.removePrefix(ImageArchive.MARKER)) }.getOrNull() ?: continue
             val ids = value.optJSONArray("ids") ?: continue
-            if (ids.length() !in 1..32) continue
+            if (ids.length() == 0) continue
             val list = (0 until ids.length()).map { ids.optString(it) }
             if (list.all(ImageArchive::validId)) found = list to value.optBoolean("originalRead")
         }

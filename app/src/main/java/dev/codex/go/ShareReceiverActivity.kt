@@ -66,18 +66,15 @@ class ShareReceiverModel(application: Application, saved: SavedStateHandle) : An
                 withContext(Dispatchers.IO) {
                     require(intent.action == Intent.ACTION_SEND || intent.action == Intent.ACTION_SEND_MULTIPLE) { tr(R.string.unsupported_share_action) }
                     val text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)?.toString().orEmpty()
-                    require(text.length <= ShareInbox.MAX_TEXT) { tr(R.string.share_text_is_too_long_share_a_file_instead_128k_characters_maxim) }
                     @Suppress("DEPRECATION")
                     val streams = if (intent.action == Intent.ACTION_SEND_MULTIPLE) intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM).orEmpty()
                         else listOfNotNull(intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM))
                     val clip = intent.clipData
                     val uris = (streams + (0 until (clip?.itemCount ?: 0)).mapNotNull { clip?.getItemAt(it)?.uri }).distinct()
-                    require(uris.size <= WorkspaceFiles.MAX_FILES) { tr(R.string.share_up_to_8_files_at_a_time) }
                     require(uris.all { it.scheme == "content" }) { tr(R.string.share_files_through_a_system_file_provider) }
                     val context = getApplication<Application>()
                     val inbox = ShareInbox(context)
                     if (inbox.received(batchId)) return@withContext
-                    require(inbox.list().size < ShareInbox.MAX_PENDING) { tr(R.string.share_inbox_is_full_process_existing_shares_first) }
                     val root = ShareInbox.staging(context)
                     val files = if (uris.isEmpty()) emptyList() else importFiles(context, root, uris)
                     try { inbox.add(SharedDraft(id = batchId, draft = Draft(text, files))) }

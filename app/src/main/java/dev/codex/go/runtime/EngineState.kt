@@ -17,7 +17,7 @@ data class Session(val id: String, val title: String, val preview: String, val u
         }
     }
 }
-data class DeviceLogin(val id: String, val code: String, val url: String)
+data class DeviceLogin(val id: String, val code: String, val url: String, val provider: String = "ChatGPT", val requiresCode: Boolean = false)
 data class ClientPrompt(val id: Any, val method: String, val params: JSONObject)
 enum class SendMode { Steer, Queue, Interrupt }
 data class PendingMessage(val id: String = UUID.randomUUID().toString(), val draft: Draft) {
@@ -96,6 +96,7 @@ data class EngineState(
     val failedSubmission: Draft? = null,
     val phoneTaskActive: Boolean = false,
     val phonePaused: Boolean = false,
+    val engine: AgentEngine = AgentEngine.Codex,
     val handoffReason: String? = null,
     val phoneAction: String = "准备操作手机",
 )

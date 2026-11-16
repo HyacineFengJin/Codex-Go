@@ -1,5 +1,5 @@
 {
-  "version": "0.17.0",
+  "version": "0.21.0",
   "originalLicense": "MIT",
   "scope": "Original Codex Go contributions only; dependencies and artwork retain upstream terms.",
   "runtimeInputs": [
@@ -1566,6 +1566,18 @@
           "sha256": "a66743f50c7b0bac1913b83bf55e139d679c80a0ca2808eec76432a65640017f"
         }
       ]
+    }
+  ],
+  "runtimeSourceRelease": "v0.17.0",
+  "runtimeSourceArchiveSha256": "4158a9b5dc435237c57cd04824d756c63773f998b6b664f0e0be67a835edf073",
+  "runtimeReuseNote": "All 177 ARM64 runtime entries match the v0.17.0 public APK byte for byte. This release does not include Google Antigravity CLI.",
+  "additionalAndroidComponents": [
+    {
+      "name": "androidx.lifecycle:lifecycle-viewmodel-compose-android",
+      "version": "2.9.0",
+      "license": "Apache-2.0",
+      "aarSha256": "7d7ffc0cc76c9581413ca8a9ae3f67696e49eca80b3643cbad924287911f4e80",
+      "notice": "licenses/notices/maven/androidx.lifecycle/lifecycle-viewmodel-compose-android/2.9.0/META-INF/androidx/lifecycle/lifecycle-viewmodel-compose/LICENSE.txt"
     }
   ]
 }

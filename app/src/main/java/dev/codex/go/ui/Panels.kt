@@ -73,6 +73,7 @@ import java.io.File
         }
     }
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        EngineSetting(state, engine)
         LanguageSetting(engine)
         Panel(tr(R.string.local_engine)) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 12.dp)) {
@@ -81,7 +82,7 @@ import java.io.File
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (state.phase == EnginePhase.Preparing) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp) else Icon(Icons.Outlined.Terminal, null, tint = MaterialTheme.colorScheme.primary)
-                Text(metadata(state.status), Modifier.padding(start = 12.dp), style = MaterialTheme.typography.bodyMedium)
+                Text(metadata(state.status).replace("Codex", state.engine.label), Modifier.padding(start = 12.dp), style = MaterialTheme.typography.bodyMedium)
             }
             if (state.phase == EnginePhase.Failed) Text(when (state.startupStage) {
                 "configuration" -> tr(R.string.configuration_check_or_recovery_failed_your_files_and_backups_wer)
@@ -94,16 +95,16 @@ import java.io.File
             }, Modifier.padding(top = 10.dp), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
             Spacer(Modifier.height(16.dp))
             if (state.phase == EnginePhase.Ready) OutlinedButton(onClick = { confirmStop = true }, Modifier.fillMaxWidth()) { Text(tr(R.string.stop_local_environment)) }
-            else Button(onClick = start, enabled = state.phase != EnginePhase.Preparing, modifier = Modifier.fillMaxWidth()) { Text(if (state.phase == EnginePhase.Failed) tr(R.string.retry_startup) else tr(R.string.start_local_codex)) }
+            else Button(onClick = start, enabled = state.phase != EnginePhase.Preparing, modifier = Modifier.fillMaxWidth()) { Text(if (state.phase == EnginePhase.Failed) tr(R.string.retry_startup) else tr(R.string.agent_start_arg, state.engine.label)) }
         }
-        Panel(tr(R.string.chatgpt_account)) {
+        Panel(if (state.engine == AgentEngine.Antigravity) tr(R.string.google_account) else tr(R.string.chatgpt_account)) {
             Text(metadata(state.account), style = MaterialTheme.typography.bodyMedium)
             if (state.failure?.kind == FailureKind.Authentication) Text(tr(R.string.authentication_failed_refresh_the_account_or_sign_in_again), Modifier.padding(top = 8.dp), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
             Spacer(Modifier.height(12.dp))
             if (state.loginPending) { Text(tr(R.string.waiting_for_device_code_verification), color = MaterialTheme.colorScheme.primary); TextButton(onClick = engine::cancelLogin) { Text(tr(R.string.cancel_sign_in)) } }
             else {
-                Button(onClick = engine::login, enabled = state.phase == EnginePhase.Ready && idle, modifier = Modifier.fillMaxWidth()) { Text(if (state.signedIn) tr(R.string.sign_in_to_chatgpt_again) else tr(R.string.sign_in_with_device_code)) }
-                if (state.signedIn) TextButton(onClick = { confirmLogout = true }, enabled = state.phase == EnginePhase.Ready && idle, modifier = Modifier.fillMaxWidth()) { Text(if (state.accountBusy) tr(R.string.signing_out) else tr(R.string.sign_out_of_chatgpt)) }
+                Button(onClick = engine::login, enabled = state.phase == EnginePhase.Ready && idle, modifier = Modifier.fillMaxWidth()) { Text(if (state.signedIn) if (state.engine == AgentEngine.Antigravity) tr(R.string.sign_in_google) else tr(R.string.sign_in_to_chatgpt_again) else if (state.engine == AgentEngine.Antigravity) tr(R.string.sign_in_google) else tr(R.string.sign_in_with_device_code)) }
+                if (state.signedIn) TextButton(onClick = { confirmLogout = true }, enabled = state.phase == EnginePhase.Ready && idle, modifier = Modifier.fillMaxWidth()) { Text(if (state.accountBusy) tr(R.string.signing_out) else if (state.engine == AgentEngine.Antigravity) tr(R.string.agent_sign_out_google) else tr(R.string.sign_out_of_chatgpt)) }
                 TextButton(onClick = engine::refreshAccount, enabled = state.phase == EnginePhase.Ready && idle && !state.refreshingAccount && state.networkAvailable, modifier = Modifier.fillMaxWidth()) { Text(if (state.refreshingAccount) tr(R.string.refreshing_account) else tr(R.string.refresh_account)) }
             }
         }
@@ -113,7 +114,7 @@ import java.io.File
             Text(tr(R.string.excludes_chats_files_and_sign_in_credentials), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             OutlinedButton(onClick = { confirmRepair = true }, enabled = idle && !state.loginPending && state.phase != EnginePhase.Preparing, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) { Text(tr(R.string.repair_environment)) }
         }
-        ExpandablePanel(tr(R.string.history_images_experimental), summary = if (state.historyCompression) tr(R.string.on) else null) {
+        if (state.engine == AgentEngine.Codex) ExpandablePanel(tr(R.string.history_images_experimental), summary = if (state.historyCompression) tr(R.string.on) else null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(tr(R.string.compress_older_images), style = MaterialTheme.typography.titleMedium)
@@ -125,7 +126,7 @@ import java.io.File
             Text(metadata(state.historyImageStatus), Modifier.padding(top = 8.dp), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
             if (state.historyImageStats.compressed > 0 || state.historyImageStats.restored > 0) Text(tr(R.string.last_request_arg_older_images_arg_kb_previews_arg_original_reads , state.historyImageStats.compressed, state.historyImageStats.previewBytes / 1024, state.historyImageStats.restored), style = MaterialTheme.typography.bodySmall)
         }
-        ExpandablePanel(tr(R.string.restore_configuration), initiallyExpanded = state.configurationWarning != null) {
+        if (state.engine == AgentEngine.Codex) ExpandablePanel(tr(R.string.restore_configuration), initiallyExpanded = state.configurationWarning != null) {
             Text(tr(R.string.back_up_and_restore_then_restart_with_a_new_chat), style = MaterialTheme.typography.bodySmall)
             state.configurationWarning?.let { Text(it, Modifier.heightIn(max = 160.dp).verticalScroll(rememberScrollState()), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
             val available = idle && !state.importing && !state.loginPending && state.phase != EnginePhase.Preparing
@@ -231,9 +232,9 @@ import java.io.File
                     Text(tr(R.string.lightweight_model_pre_read), style = MaterialTheme.typography.titleSmall)
                     Text(tr(R.string.extract_facts_only_the_main_model_decides), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                Switch(state.phoneModelPreRead, setModelPreRead, enabled = state.phase == EnginePhase.Ready && state.phonePreRead && !state.busy && !readingBusy && state.models.any { it.id == state.phonePreReadModel && it.supportsImages }, modifier = Modifier.semantics { contentDescription = tr(R.string.lightweight_model_pre_read) })
+                Switch(state.phoneModelPreRead, setModelPreRead, enabled = state.engine == AgentEngine.Codex && state.phase == EnginePhase.Ready && state.phonePreRead && !state.busy && !readingBusy && state.models.any { it.id == state.phonePreReadModel && it.supportsImages }, modifier = Modifier.semantics { contentDescription = tr(R.string.lightweight_model_pre_read) })
             }
-            OutlinedButton(onClick = { preReadModels = true }, enabled = !state.busy && !readingBusy, modifier = Modifier.fillMaxWidth().padding(top = 10.dp).semantics { contentDescription = tr(R.string.choose_pre_read_model) }) {
+            OutlinedButton(onClick = { preReadModels = true }, enabled = state.engine == AgentEngine.Codex && !state.busy && !readingBusy, modifier = Modifier.fillMaxWidth().padding(top = 10.dp).semantics { contentDescription = tr(R.string.choose_pre_read_model) }) {
                 Text(tr(R.string.pre_read_model) + (state.models.firstOrNull { it.id == state.phonePreReadModel }?.name ?: state.phonePreReadModel))
             }
             Text(tr(R.string.uses_your_current_account_quota_falls_back_to_the_original_image), Modifier.padding(top = 8.dp), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -376,10 +377,12 @@ import java.io.File
 }
 
 @Composable fun WorkspaceScreen(root: File, externalRevision: Int = 0, importFiles: () -> Unit = {}, reference: (File) -> Unit = {}) {
-    var directory by remember { mutableStateOf(root) }
+    var directoryPath by rememberSaveable(root.path) { mutableStateOf(root.path) }
+    val directory = File(directoryPath)
     var revision by remember { mutableIntStateOf(0) }
     var files by remember { mutableStateOf<List<File>>(emptyList()) }
-    var editing by remember { mutableStateOf<File?>(null) }
+    var editingPath by rememberSaveable(root.path) { mutableStateOf<String?>(null) }
+    val editing = editingPath?.let(::File)
     var previewPath by rememberSaveable { mutableStateOf<String?>(null) }
     var creating by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -402,7 +405,7 @@ import java.io.File
             }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            if (directory != root) TextButton(onClick = { directory = directory.parentFile ?: root }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, null, Modifier.size(16.dp)); Text(tr(R.string.up_one_level)) }
+            if (directory != root) TextButton(onClick = { directoryPath = (directory.parentFile ?: root).path }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, null, Modifier.size(16.dp)); Text(tr(R.string.up_one_level)) }
             else Text(tr(R.string.items_arg , files.size), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Row { TextButton(onClick = importFiles) { Text(tr(R.string.import_files)) }; TextButton(onClick = { creating = true }) { Icon(Icons.Outlined.Add, null, Modifier.size(18.dp)); Text(tr(R.string.new_file)) } }
         }
@@ -417,7 +420,7 @@ import java.io.File
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest), modifier = Modifier.clip(RoundedCornerShape(20.dp)).clickable {
                         val canonical = file.canonicalPath
                         if (!canonical.startsWith(root.canonicalPath + File.separator)) error = tr(R.string.this_link_points_outside_the_workspace)
-                        else if (file.isDirectory) directory = file else previewPath = dev.codex.go.files.WorkspaceFiles(root).guest(file)
+                        else if (file.isDirectory) directoryPath = file.path else previewPath = dev.codex.go.files.WorkspaceFiles(root).guest(file)
                     })
             }
         }
@@ -428,44 +431,33 @@ import java.io.File
         var invalid by remember { mutableStateOf<String?>(null) }
         AlertDialog(onDismissRequest = { creating = false }, title = { Text(tr(R.string.new_file)) }, text = { Column { OutlinedTextField(name, { name = it }, singleLine = true, placeholder = { Text(tr(R.string.for_example_idea_md)) }); invalid?.let { Text(it, color = MaterialTheme.colorScheme.error) } } }, confirmButton = { TextButton(onClick = {
             if (name.isBlank() || name in listOf(".", "..") || name.contains('/') || name.contains('\\') || name.contains('\u0000')) invalid = tr(R.string.enter_a_valid_filename)
-            else scope.launch { runCatching { withContext(Dispatchers.IO) { val file = File(directory, name); check(file.createNewFile()) { tr(R.string.a_file_with_this_name_already_exists) }; file } }.onSuccess { creating = false; revision++; editing = it }.onFailure { invalid = it.message } }
+            else scope.launch { runCatching { withContext(Dispatchers.IO) { val file = File(directory, name); check(file.createNewFile()) { tr(R.string.a_file_with_this_name_already_exists) }; file } }.onSuccess { creating = false; revision++; editingPath = it.path }.onFailure { invalid = it.message } }
         }) { Text(tr(R.string.create)) } }, dismissButton = { TextButton(onClick = { creating = false }) { Text(tr(R.string.cancel)) } })
     }
-    editing?.let { file -> FileEditor(file, { editing = null }, { editing = null; revision++ }) }
-    previewPath?.let { path -> dev.codex.go.files.WorkspaceFiles(root).resolve(path)?.let { file -> FilePreview(file, root, { previewPath = null }, reference, { previewPath = null; editing = it }) } }
+    editing?.let { file -> FileEditor(file, { editingPath = null }, { editingPath = null; revision++ }) }
+    previewPath?.let { path -> dev.codex.go.files.WorkspaceFiles(root).resolve(path)?.let { file -> FilePreview(file, root, { previewPath = null }, reference, { previewPath = null; editingPath = it.path }) } }
     if (error != null) AlertDialog(onDismissRequest = { error = null }, title = { Text(tr(R.string.could_not_open)) }, text = { Text(error.orEmpty()) }, confirmButton = { TextButton(onClick = { error = null }) { Text(tr(R.string.close)) } })
 }
 
 @Composable private fun FileEditor(file: File, close: () -> Unit, saved: () -> Unit) {
-    var text by remember(file.path) { mutableStateOf("") }
-    var original by remember(file.path) { mutableStateOf("") }
-    var error by remember { mutableStateOf<String?>(null) }
-    var ready by remember { mutableStateOf(false) }
-    var saving by remember { mutableStateOf(false) }
-    var discard by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-    LaunchedEffect(file) {
-        runCatching { withContext(Dispatchers.IO) { check(file.length() <= 256 * 1024) { tr(R.string.this_file_exceeds_256_kb_use_codex_to_process_it) }; file.readText().also { check(!it.contains('\u0000')) { tr(R.string.this_file_is_not_editable_text) } } } }.onSuccess { text = it; original = it; ready = true }.onFailure { error = it.message }
-    }
-    fun leave() { if (text != original) discard = true else close() }
+    val model: FileEditorModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    var discard by rememberSaveable(file.path) { mutableStateOf(false) }
+    LaunchedEffect(file.path) { model.open(file) }
+    LaunchedEffect(model.saved) { if (model.saved) { model.reset(); saved() } }
+    fun dismiss() { model.reset(); close() }
+    fun leave() { if (!model.saving) { if (model.text != model.original) discard = true else dismiss() } }
     Dialog(onDismissRequest = { leave() }, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
         Scaffold(topBar = { TopAppBar(title = { Text(file.name, maxLines = 1, overflow = TextOverflow.Ellipsis) }, navigationIcon = { IconButton(onClick = { leave() }) { Icon(Icons.Outlined.Close, tr(R.string.close_file)) } }, actions = {
-            TextButton(enabled = ready && !saving, onClick = {
-                saving = true
-                scope.launch { runCatching { withContext(Dispatchers.IO) {
-                    check(file.readText() == original) { tr(R.string.this_file_changed_elsewhere_close_it_and_open_it_again_before_edi) }
-                    val temp = File(file.parentFile, ".${file.name}.saving")
-                    temp.writeText(text)
-                    java.nio.file.Files.move(temp.toPath(), file.toPath(), java.nio.file.StandardCopyOption.ATOMIC_MOVE, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
-                } }.onSuccess { saved() }.onFailure { error = it.message }; saving = false }
-            }) { Text(if (saving) tr(R.string.saving) else tr(R.string.save)) }
+            TextButton(enabled = model.ready && !model.saving, onClick = { model.save(file) }) {
+                Text(if (model.saving) tr(R.string.saving) else tr(R.string.save))
+            }
         }) }) { padding ->
             Column(Modifier.padding(padding).imePadding().fillMaxSize()) {
-                error?.let { Text(it, Modifier.padding(20.dp), color = MaterialTheme.colorScheme.error) }
-                if (ready) TextField(text, { text = it }, Modifier.fillMaxSize(), textStyle = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace, fontSize = 14.sp, lineHeight = 22.sp))
-                else if (error == null) CircularProgressIndicator(Modifier.padding(24.dp))
+                model.error?.let { Text(it, Modifier.padding(20.dp), color = MaterialTheme.colorScheme.error) }
+                if (model.ready) TextField(model.text, { model.text = it }, Modifier.fillMaxSize(), readOnly = model.saving, textStyle = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace, fontSize = 14.sp, lineHeight = 22.sp))
+                else if (model.error == null) CircularProgressIndicator(Modifier.padding(24.dp))
             }
         }
     }
-    if (discard) AlertDialog(onDismissRequest = { discard = false }, title = { Text(tr(R.string.discard_unsaved_changes)) }, confirmButton = { TextButton(onClick = close) { Text(tr(R.string.discard_changes)) } }, dismissButton = { TextButton(onClick = { discard = false }) { Text(tr(R.string.keep_editing)) } })
+    if (discard) AlertDialog(onDismissRequest = { discard = false }, title = { Text(tr(R.string.discard_unsaved_changes)) }, confirmButton = { TextButton(onClick = { dismiss() }) { Text(tr(R.string.discard_changes)) } }, dismissButton = { TextButton(onClick = { discard = false }) { Text(tr(R.string.keep_editing)) } })
 }

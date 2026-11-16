@@ -15,7 +15,7 @@ class ShareMaterials(val staging: File, val workspace: File) {
             val match = Regex("^/workspace/imports/([a-f0-9-]{36})/[0-9]+/[^/]+$").matchEntire(attachment.path)
             requireNotNull(match) { "分享附件路径无效" }
             val file = resolve(attachment)
-            require(file != null && file.length() <= WorkspaceFiles.MAX_FILE_BYTES) { "分享附件已移除或超过 64 MB" }
+            require(file != null) { "分享附件已移除" }
             match.groupValues[1]
         }.distinct()
         batches.forEach { id ->

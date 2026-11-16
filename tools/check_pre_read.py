@@ -72,11 +72,11 @@ class Fixture(BaseHTTPRequestHandler):
                 expected['web']=data['frameId'];facts['webSemanticPreReadWithoutImage']=True;facts['rawFactsAndDisabledStatePreserved']=True
                 tool('phone_read_image',dict(frameId=data['frameId']))
             elif n in (3,4):
-                value=latest_output(body);pictures=images(value);assert pictures,'Requested original image did not reach Codex'
+                value=latest_output(body);pictures=images(value);assert pictures,'Requested original image did not reach Codex: '+str(value)[:1000]
                 digest=hashlib.sha256(pictures[-1].encode()).hexdigest()
                 if n==3:expected['image']=digest;tool('phone_read_image',dict(frameId=expected['web']))
                 else:
-                    assert digest==expected['image'];facts['onDemandOriginalReachesCodex']=True;facts['repeatedReadPreservesOriginal']=True;message('PRE_READ_WEB_OK')
+                    assert digest==expected['image'];facts['onDemandOriginalReachesCodex']=True;facts['repeatedReadPreservesOriginal']=True;facts['ownOverlayRestorationKeepsEvidence']=True;message('PRE_READ_WEB_OK')
             elif n==6:
                 value=latest_output(body);data=report(value);assert not images(value)
                 expected['stale']=data['frameId'];change_ready.set();assert changed.wait(60),'Host did not mutate fixture content'
@@ -129,7 +129,7 @@ access={k:d.shell('settings','get','secure',k).strip() for k in ['enabled_access
 def write(path,data):subprocess.run(d.adb+['shell','run-as','dev.codex.go','sh','-c',"'cat > "+path+"'"],input=data,check=True)
 def fixture(mode):
     d.shell('am','force-stop','dev.codex.go.sharefixture')
-    d.shell('am','start','-n','dev.codex.go.sharefixture/dev.codex.go.testdriver.ReadingFixtureActivity','--es','mode',mode)
+    d.shell('am','start','-f','0x10008000','-n','dev.codex.go.sharefixture/dev.codex.go.testdriver.ReadingFixtureActivity','--es','mode',mode)
     d.find('网页预读测试' if mode=='web' else '结构预读测试');time.sleep(.5)
     if mode=='keyboard':
         until=time.monotonic()+10
@@ -165,7 +165,8 @@ requires_openai_auth=false
 supports_websockets=false
 '''.encode())
     d.shell('pm','grant','dev.codex.go','android.permission.POST_NOTIFICATIONS')
-    d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动本机 Codex');d.find('本机 Codex 已就绪',timeout=90)
+    d.shell('appops','set','dev.codex.go','SYSTEM_ALERT_WINDOW','allow')
+    d.start();d.click('打开侧栏');d.click('本机环境');d.click('启动 Codex');d.find('本机 Codex 已就绪',timeout=90)
     # start() force-stops the app, so bind accessibility only after it has restarted.
     d.shell('settings','put','secure','enabled_accessibility_services','dev.codex.go/.phone.PhoneAccessService');d.shell('settings','put','secure','accessibility_enabled','1')
     d.shell('settings','put','secure','show_ime_with_hard_keyboard','1')

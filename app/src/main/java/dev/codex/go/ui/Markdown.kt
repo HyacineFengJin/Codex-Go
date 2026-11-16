@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 fun copy(context: Context, text: String) {
-    context.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Codex Go", text))
+    runCatching { context.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Codex Go", text)) }
+        .onFailure { android.widget.Toast.makeText(context, tr(R.string.copy_failed_export), android.widget.Toast.LENGTH_LONG).show() }
 }
 @Composable fun Markdown(text: String, openFile: (String) -> Unit = {}) {
     val context = LocalContext.current

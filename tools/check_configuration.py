@@ -19,6 +19,14 @@ class Fixture(BaseHTTPRequestHandler):
     def do_GET(self):
         data=b'{"data":[]}'
         self.send_response(200); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
+    def do_POST(self):
+        self.rfile.read(int(self.headers['Content-Length']))
+        self.send_response(200);self.send_header('Content-Type','text/event-stream');self.end_headers()
+        for event in [dict(type='response.created',response=dict(id='config_history')),
+                      dict(type='response.output_item.done',item=dict(type='message',id='config_keep',role='assistant',content=[dict(type='output_text',text='CONFIG_HISTORY_SAVED')])),
+                      dict(type='response.completed',response=dict(id='config_history',usage=dict(input_tokens=0,output_tokens=0,total_tokens=0)))]:
+            self.wfile.write(('event: '+event['type']+'\ndata: '+json.dumps(event)+'\n\n').encode());self.wfile.flush()
+        self.close_connection=True
 server=ThreadingHTTPServer(('127.0.0.1',0),Fixture); threading.Thread(target=server.serve_forever,daemon=True).start(); port=server.server_port
 
 def read(path):
@@ -30,22 +38,13 @@ def write(path, data):
 
 def scroll(top=False):
     d.shell('input','swipe','530','750' if top else '1970','530','1970' if top else '650','350');time.sleep(.2)
-def button(label):
-    height=int(re.findall(r'(\d+)x(\d+)',d.shell('wm','size'))[-1][1])
-    for _ in range(9):
-        node=next((n for n in d.xml().iter('node') if n.get('text')==label or n.get('content-desc')==label),None)
-        if node is not None:
-            bounds=list(map(int,re.findall(r'\d+',node.get('bounds'))));center=(bounds[1]+bounds[3])//2
-            if 600<center<height-160:d.tap(node);return
-            if center<=600:scroll(True);continue
-        scroll()
-    raise AssertionError('Missing setting: '+label)
+def button(label):d.scroll_click(label)
 def top():
     for _ in range(9): scroll(True)
 def ready():
     top(); d.find('本机 Codex 已就绪',timeout=70)
 def start():
-    d.start(); d.click('打开侧栏'); d.click('本机环境'); d.click('启动本机 Codex')
+    d.start(); d.click('打开侧栏'); d.click('本机环境'); d.click('启动 Codex')
 def recover(label, succeeds=True):
     for _ in range(3):
         button(label)
@@ -86,6 +85,14 @@ supports_websockets=false
     credential=b'{"OPENAI_API_KEY":"sk-local-configuration-fixture-not-real"}'
     write(config,fixture); write(auth,credential)
     d.private_write('files/workspace/configuration-keep.txt',b'KEEP_WORKSPACE')
+    # Create a real native transcript even when this check starts from clean app data.
+    start();ready();d.click('返回对话');d.click('新建对话');d.set_text('CONFIG_HISTORY_SENTINEL');d.click('发送消息');d.find('CONFIG_HISTORY_SAVED',timeout=35)
+    d.click('新建对话');d.shell('am','force-stop','dev.codex.go')
+    values=ET.fromstring(read(prefs))
+    for node in list(values):
+        if node.get('name') in ['thread','draft:new','queue:new','retry:new']:values.remove(node)
+    ET.SubElement(values,'string',name='draft:new').text=draft
+    write(prefs,ET.tostring(values,encoding='utf-8',xml_declaration=True))
     # Existing native history must survive every recovery unchanged.
     history=d.shell('run-as','dev.codex.go','sh','-c',"'find files/codex/sessions -type f | head -5'").splitlines()
     history_bytes={p:read(p) for p in history}

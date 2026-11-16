@@ -20,6 +20,15 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class HistoryImagesTest {
+    @Test fun largeHistoricalImageBatchKeepsEveryOriginalReference() = withArchive { _, archive, images ->
+        val id = archive.save("thread-a", original)!!.getString("id")
+        val content = JSONArray(List(40) { image(second) }).put(obj("type" to "input_text", "text" to HistoryImages.marker(List(40) { id })))
+        val past = obj("type" to "message", "role" to "user", "content" to content)
+        val body = obj("input" to array(past, user("next task")))
+        assertEquals(40, images.transform("thread-a", body).compressed)
+        repeat(40) { assertEquals(archive.url("thread-a", id, false), content.getJSONObject(it).getString("image_url")) }
+        assertArrayEquals(original, archive.bytes("thread-a", id, true))
+    }
     private val original = ByteArray(12_000) { (it % 251).toByte() }
     private val second = ByteArray(13_000) { ((it + 7) % 251).toByte() }
     private val encoder = PreviewEncoder { bytes -> ImagePreview(bytes.take(64).toByteArray(), 350, 768, 1440, 3168, "image/png") }
