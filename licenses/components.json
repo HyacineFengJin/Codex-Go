@@ -1,14 +1,15 @@
 {
-  "version": "0.21.0",
+  "version": "0.23.0",
   "originalLicense": "MIT",
   "scope": "Original Codex Go contributions only; dependencies and artwork retain upstream terms.",
   "runtimeInputs": [
     {
       "name": "codex",
       "kind": "codex",
-      "url": "https://github.com/openai/codex/releases/download/rust-v0.165.0/codex-package-aarch64-unknown-linux-musl.tar.gz",
-      "file": "codex-package-0.165.0.tar.gz",
-      "sha256": "c8b2844fdef57498572db960344aee8c836ce9f75c203379da0a9c3a334fc3b7"
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-aarch64-unknown-linux-musl.tar.gz",
+      "file": "codex-package-0.171.0-aarch64.tar.gz",
+      "sha256": "d8c43bee6cf11b01eb18b95f4d7961092bc40228180808859e70dabb7784c1c9",
+      "version": "0.171.0"
     },
     {
       "name": "alpine",
@@ -1433,7 +1434,7 @@
     {
       "ecosystem": "Codex voice",
       "name": "voice native libraries",
-      "packagingCommit": "360319d8dee62d87e2d59fc0c21805d79519cfed",
+      "packagingCommit": "ccf9be8cc458bd6b8336fe84d68d8893f2691a5e",
       "sources": [
         {
           "name": "ninja",
@@ -1477,11 +1478,11 @@
         },
         {
           "name": "pcre2",
-          "version": "10.47",
+          "version": "10.48",
           "role": "native-library",
-          "upstream": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.47/pcre2-10.47.tar.gz",
-          "sha256": "c08ae2388ef333e8403e670ad70c0a11f1eed021fd88308d7e02f596fcd9dc16",
-          "file": "codex-voice/archives/pcre2-10.47.tar.gz"
+          "upstream": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.48/pcre2-10.48.tar.gz",
+          "sha256": "ebcc25aadf2a51fa1fefa9b8bc9e7a79b3dae86870a0f1152a22e42befd46888",
+          "file": "codex-voice/archives/pcre2-10.48.tar.gz"
         },
         {
           "name": "gstreamer",
@@ -1568,9 +1569,7 @@
       ]
     }
   ],
-  "runtimeSourceRelease": "v0.17.0",
-  "runtimeSourceArchiveSha256": "4158a9b5dc435237c57cd04824d756c63773f998b6b664f0e0be67a835edf073",
-  "runtimeReuseNote": "All 177 ARM64 runtime entries match the v0.17.0 public APK byte for byte. This release does not include Google Antigravity CLI.",
+  "runtimeReuseNote": "The 0.23.0 ARM64 app carries the 0.171.0 Codex package from the 0.22.0 build and the same base dependencies as v0.21.0. The separate CLI APK carries that exact Codex package.",
   "additionalAndroidComponents": [
     {
       "name": "androidx.lifecycle:lifecycle-viewmodel-compose-android",
@@ -1579,5 +1578,12 @@
       "aarSha256": "7d7ffc0cc76c9581413ca8a9ae3f67696e49eca80b3643cbad924287911f4e80",
       "notice": "licenses/notices/maven/androidx.lifecycle/lifecycle-viewmodel-compose-android/2.9.0/META-INF/androidx/lifecycle/lifecycle-viewmodel-compose/LICENSE.txt"
     }
-  ]
+  ],
+  "codexSource": "https://github.com/openai/codex/tree/rust-v0.171.0",
+  "codexSourceArchive": {
+    "file": "codex/archives/codex-rust-v0.171.0.tar.gz",
+    "sha256": "fcd9a05d4e96ba533e81f405333cfab7a845669ed24a709544351ed176f40a2e"
+  },
+  "baseDependenciesSourceRelease": "v0.17.0",
+  "baseDependenciesSourceArchiveSha256": "4158a9b5dc435237c57cd04824d756c63773f998b6b664f0e0be67a835edf073"
 }

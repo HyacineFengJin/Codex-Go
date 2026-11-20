@@ -65,6 +65,7 @@ class EngineService : Service() {
     private var process: java.lang.Process? = null
     private var rpc: JsonRpcClient? = null
     private var proxy: ConnectProxy? = null
+    private var activeEnvironment: RuntimeEnvironment? = null
     private val historyImages by lazy { HistoryImages(ImageArchive(File(filesDir, "history-images"), AndroidPreviewEncoder()), File(filesDir, "codex")) }
     private var historyGateway: HistoryGateway? = null
     private val historyRoutes = mutableMapOf<String, HistoryGateway.Route>()
@@ -72,6 +73,12 @@ class EngineService : Service() {
     private var accountIsChatgpt = false
     private var phoneTemporarilyDisabled = false
     private var shellTemporarilyDisabled = false
+    fun setIndependentCli(enabled: Boolean) {
+        if (state.value.busy || state.value.phase == EnginePhase.Preparing) return
+        preferences.edit().putBoolean("useIndependentCli", enabled).apply()
+        publish { it.copy(useIndependentCli = enabled) }
+    }
+
     fun setAutoPrepare(enabled: Boolean) {
         preferences.edit().putBoolean("autoPrepare", enabled).apply()
         publish { it.copy(autoPrepare = enabled) }
@@ -577,7 +584,7 @@ class EngineService : Service() {
         val project = runCatching { selected.directory(workspaceBase); selected }.getOrElse { report(it); projects.first { it.id == Project.DEFAULT_ID } }
         updates.update { it.copy(engine = engineKind, account = if (engineKind == AgentEngine.Antigravity) tr(R.string.agent_not_signed_in_arg, "Google") else it.account, projects = projects, project = project, selectedModel = conversations.getString("model", "").orEmpty(), selectedEffort = conversations.getString("effort:${conversations.getString("model", "")}", null), draft = readDraft(null, project), queue = readQueue(null, project), failedSubmission = readRetry(null, project)) }
         publish { it.copy(configuration = configuration.status(), autoPrepare = preferences.getBoolean("autoPrepare", true)) }
-        publish { it.copy(chatOverlayEnabled = preferences.getBoolean("chatOverlayEnabled", android.provider.Settings.canDrawOverlays(this)), quickReplyEnabled = preferences.getBoolean("quickReplyEnabled", true), quickMessages = quickMessages.list(), phonePreRead = preferences.getBoolean("phonePreRead", false), phoneModelPreRead = engineKind == AgentEngine.Codex && preferences.getBoolean("phoneModelPreRead", false), phonePreReadModel = preferences.getString("phonePreReadModel", PreReadPolicy.DEFAULT_MODEL).orEmpty()) }
+        publish { it.copy(useIndependentCli = preferences.getBoolean("useIndependentCli", true), chatOverlayEnabled = preferences.getBoolean("chatOverlayEnabled", android.provider.Settings.canDrawOverlays(this)), quickReplyEnabled = preferences.getBoolean("quickReplyEnabled", true), quickMessages = quickMessages.list(), phonePreRead = preferences.getBoolean("phonePreRead", false), phoneModelPreRead = engineKind == AgentEngine.Codex && preferences.getBoolean("phoneModelPreRead", false), phonePreReadModel = preferences.getString("phonePreReadModel", PreReadPolicy.DEFAULT_MODEL).orEmpty()) }
         publish { it.copy(historyCompression = engineKind == AgentEngine.Codex && preferences.getBoolean("historyCompression", false), historyImageStatus = if (preferences.getBoolean("historyCompression", false)) tr(R.string.older_images_will_be_compressed_on_the_next_request) else tr(R.string.history_image_compression_off)) }
         refreshShares()
         setNetwork(connectivity.activeNetwork)
@@ -820,33 +827,58 @@ class EngineService : Service() {
             var configCandidate: ByteArray? = null
             try {
                 check(!BuildConfig.UI_SMOKE) { tr(R.string.this_is_a_ui_test_build_install_the_full_arm64_phone_build_to_run) }
-                val child = withContext(Dispatchers.IO) {
-                    val environment = RuntimeEnvironment(this@EngineService)
-                    environmentMutex.withLock {
-                        ensureActive()
-                        if (recovery != null) {
-                            configuration.restore(recovery)
-                            check(preferences.edit().putBoolean("configFreshStart", true).commit()) { tr(R.string.could_not_save_configuration_recovery_state) }
+                val environment = withContext(Dispatchers.IO) {
+                    RuntimeEnvironment(this@EngineService).also { environment ->
+                        environmentMutex.withLock {
+                            ensureActive()
+                            if (recovery != null) {
+                                configuration.restore(recovery)
+                                check(preferences.edit().putBoolean("configFreshStart", true).commit()) { tr(R.string.could_not_save_configuration_recovery_state) }
+                            }
+                            environment.install(force = repair) { text -> if (origin == generation) updates.update { it.copy(status = text) } }
                         }
-                        environment.install(force = repair) { text -> if (origin == generation) updates.update { it.copy(status = text) } }
+                        if (engineKind == AgentEngine.Codex) configCandidate = runCatching { configuration.snapshot() }.getOrNull()
                     }
-                    if (engineKind == AgentEngine.Codex) configCandidate = runCatching { configuration.snapshot() }.getOrNull()
-                    ensureActive()
-                    if (origin == generation) updates.update { it.copy(startupStage = "launch", status = tr(R.string.starting_local_codex)) }
-                    val network = ConnectProxy().also { gateway = it }
-                    environment.launch(network.url, engine = engineKind).also { candidate = it }
                 }
-                if (origin != generation) { child.destroy(); gateway?.close(); return@launch }
-                process = child
-                proxy = gateway
-                publish { it.copy(startupStage = "handshake", status = tr(R.string.connecting_to_local_codex)) }
-                val client = JsonRpcClient(child.inputStream, child.outputStream,
-                    { message -> incoming.trySend(origin to message) },
-                    { reason -> scope.launch { if (origin == generation) disconnected(reason) } })
-                rpc = client
-                scope.launch(Dispatchers.IO) { RuntimeLogs.consume(child.errorStream, ::log) }
-                client.call("initialize", obj("clientInfo" to obj("name" to "codex_go", "title" to "Codex Go", "version" to BuildConfig.VERSION_NAME), "capabilities" to obj("experimentalApi" to true)))
-                client.notify("initialized")
+                val network = ConnectProxy().also { gateway = it; proxy = it }
+                if (engineKind == AgentEngine.Codex && state.value.useIndependentCli) {
+                    val available = withContext(Dispatchers.IO) { environment.prepareIndependentCli(network.url) }
+                    if (!available) publish { it.copy(notice = tr(R.string.cli_fell_back_to_bundled)) }
+                }
+                suspend fun handshake(): JsonRpcClient {
+                    publish { it.copy(startupStage = "launch", status = tr(R.string.starting_local_codex)) }
+                    val child = withContext(Dispatchers.IO) {
+                        ensureActive()
+                        environment.launch(network.url, engine = engineKind).also { candidate = it }
+                    }
+                    process = child
+                    publish { it.copy(startupStage = "handshake", status = tr(R.string.connecting_to_local_codex)) }
+                    var initialized = false
+                    lateinit var connection: JsonRpcClient
+                    connection = JsonRpcClient(child.inputStream, child.outputStream,
+                        { message -> incoming.trySend(origin to message) },
+                        { reason -> scope.launch { if (origin == generation && rpc === connection && initialized) disconnected(reason) } })
+                    rpc = connection
+                    scope.launch(Dispatchers.IO) { RuntimeLogs.consume(child.errorStream, ::log) }
+                    connection.call("initialize", obj("clientInfo" to obj("name" to "codex_go", "title" to "Codex Go", "version" to BuildConfig.VERSION_NAME), "capabilities" to obj("experimentalApi" to true)))
+                    connection.notify("initialized")
+                    check(!connection.isClosed) { tr(R.string.local_environment_disconnected) }
+                    initialized = true
+                    return connection
+                }
+                val client = try { handshake() } catch (error: Exception) {
+                    if (!currentCoroutineContext().isActive || origin != generation || environment.independentCliVersion == null) throw error
+                    val rejected = rpc
+                    rpc = null
+                    rejected?.close()
+                    process?.destroyForcibly()
+                    process = null
+                    environment.useBundledCli()
+                    publish { it.copy(notice = tr(R.string.cli_fell_back_to_bundled)) }
+                    handshake()
+                }
+                activeEnvironment = environment
+                publish { it.copy(runningIndependentCli = environment.independentCliVersion) }
                 if (origin != generation) return@launch
                 publish { it.copy(status = tr(R.string.checking_account_and_project_configuration), startupStage = "configuration") }
                 client.call("config/read", obj("includeLayers" to false)) // The server can initialize with defaults after a parse error.
@@ -1247,7 +1279,7 @@ class EngineService : Service() {
             image = obj("type" to "inputImage", "imageUrl" to imageUrl)
             val config = (rpc ?: error("unavailable")).call("config/read", obj("includeLayers" to false), timeout = 2000).getJSONObject("config")
             val names = config.optJSONObject("mcp_servers")?.keys()?.asSequence()?.toList().orEmpty()
-            val facts = CodexPreReader(RuntimeEnvironment(this)).read(proxy?.url ?: error("unavailable"), model, names, report, imageUrl)
+            val facts = CodexPreReader(activeEnvironment ?: error("unavailable")).read(proxy?.url ?: error("unavailable"), model, names, report, imageUrl)
             result = ModelPreReadResult(id, SystemClock.elapsedRealtime() - started, facts)
         } catch (error: TimeoutCancellationException) {
             result = ModelPreReadResult(id, SystemClock.elapsedRealtime() - started, failure = "timeout")
@@ -1558,6 +1590,8 @@ class EngineService : Service() {
         process?.destroy(); process = null
         rpc?.close(); rpc = null
         proxy?.close(); proxy = null
+        activeEnvironment = null
+        if (state.value.runningIndependentCli != null) updates.update { it.copy(runningIndependentCli = null) }
         historyGateway?.close(); historyGateway = null
         historyRoutes.clear(); loadedThread = null
         wakeLease.setActive(false)

@@ -27,6 +27,8 @@ data class PendingMessage(val id: String = UUID.randomUUID().toString(), val dra
 data class EngineState(
     val phase: EnginePhase = EnginePhase.Idle,
     val autoPrepare: Boolean = true,
+    val useIndependentCli: Boolean = true,
+    val runningIndependentCli: String? = null,
     val status: String = "尚未启动",
     val account: String = "未登录 ChatGPT",
     val signedIn: Boolean = false,

@@ -63,7 +63,7 @@ wired=Path('.gradle/validation/reports/selfcheck/wired-result.json')
 if wired.exists():
     assert wired.stat().st_mtime>=x86.stat().st_mtime
     result['wiredDaemon']=json.loads(wired.read_text())
-result['hostChecks']={'acpFixtures':13,'runtimeReuse':2,'localizedStrings':777}
+result['hostChecks']={'acpFixtures':13,'runtimeReuse':2,'localizedStrings':len(ET.parse('app/src/main/res/values-zh/strings.xml').getroot())}
 if ui_only:
     result.update(scope='ui',nativeRuntimeEndToEnd=False)
     result['pending'].insert(0,f'{args.version} native engine end-to-end checks; this emulator run uses UI_SMOKE')

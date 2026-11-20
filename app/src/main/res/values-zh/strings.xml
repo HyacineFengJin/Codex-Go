@@ -777,4 +777,18 @@
     <string name="last_page">"末页"</string>
     <string name="copy_failed_export">"复制失败，请将文本导出为文件。"</string>
     <string name="draft_saved_inbox_pending">"草稿已保存，收件箱清理失败；重新打开后可重试。"</string>
+    <string name="about_bundled_codex">"Codex %1$s · %2$s · Android 11+"</string>
+    <string name="check_for_app_updates">"检查更新"</string>
+    <string name="app_update_available">"发现新版 %1$s"</string>
+    <string name="app_update_current">"已是最新版本"</string>
+    <string name="app_update_failed">"检查更新失败"</string>
+    <string name="app_update_releases">"查看 GitHub 发布页"</string>
+    <string name="app_update_checking">"检查中…"</string>
+    <string name="app_update_browser_failed">"无法打开发布页"</string>
+    <string name="use_independent_cli">"独立 CLI"</string>
+    <string name="cli_pack_running">"正在使用 %1$s"</string>
+    <string name="cli_pack_installed">"已安装 %1$s · 重启引擎后切换"</string>
+    <string name="cli_pack_not_installed">"可选运行时安装包"</string>
+    <string name="download_cli_pack">"下载 CLI 安装包"</string>
+    <string name="cli_fell_back_to_bundled">"独立 CLI 启动失败，已切换到内置 Codex。"</string>
 </resources>

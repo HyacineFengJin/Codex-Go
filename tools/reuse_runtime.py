@@ -2,7 +2,7 @@
 import hashlib,json,re,shutil,zipfile
 from pathlib import Path
 
-def reuse(apk, digest, abi, target, expected):
+def reuse(apk, digest, abi, target, expected, refresh_codex=None):
     apk=Path(apk);target=Path(target)
     if not re.fullmatch(r'[a-f0-9]{64}',digest):raise ValueError('Provide the published APK SHA256')
     with apk.open('rb') as stream:
@@ -10,7 +10,7 @@ def reuse(apk, digest, abi, target, expected):
     with zipfile.ZipFile(apk) as source:
         manifest=json.loads(source.read('assets/runtime/manifest.json'))
         if manifest['abi']!=abi:raise ValueError('Runtime ABI mismatch')
-        fields=lambda items:{(p['name'],p['kind'],p['sha256']) for p in items}
+        fields=lambda items:{(p['name'],p['kind'],p['sha256']) for p in items if refresh_codex is None or p['kind']!='codex'}
         if fields(manifest['inputs'])!=fields(expected):raise ValueError('Runtime inputs do not match repository locks')
         import io
         with zipfile.ZipFile(io.BytesIO(source.read('assets/runtime/rootfs.zip'))) as root:
@@ -27,7 +27,8 @@ def reuse(apk, digest, abi, target, expected):
             for name,destination in entries.items():
                 path=staging/destination;path.parent.mkdir(parents=True,exist_ok=True)
                 with source.open(name) as original,path.open('wb') as output:shutil.copyfileobj(original,output)
-            (staging/'source-apk.json').write_text(json.dumps({'sha256':digest,'runtimeEntries':len(entries)},indent=2)+'\n')
+            if refresh_codex is not None:refresh_codex(staging, manifest)
+            (staging/'source-apk.json').write_text(json.dumps({'sha256':digest},indent=2)+'\n')
             if target.exists():shutil.rmtree(target)
             staging.replace(target)
         finally:

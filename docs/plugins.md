@@ -93,6 +93,6 @@ API 1 用 Messenger / Bundle 内联传 JSON，单请求保留 64 KiB、单回复
 
 第一版的 capability 为 `tools`。后续若增加资源、界面入口、事件订阅或能力后端，将定义独立 capability、权限边界和版本协商，不让旧插件自动获得新增权限。暂不提供市场、远程下载、页面注入或插件替换内建手机 / Shell 后端。
 
-Codex 的动态工具接口目前仍属实验功能，宿主锁定的运行时为 0.165.0。工具在 `thread/start` 注册，由 `item/tool/call` 路由；升级引擎时需要重跑协议检查。[OpenAI Docs：App Server](https://developers.openai.com/codex/app-server/)
+Codex 的动态工具接口目前仍属实验功能，宿主锁定的运行时为 0.171.0。工具在 `thread/start` 注册，由 `item/tool/call` 路由；升级引擎时需要重跑协议检查。[OpenAI Docs：App Server](https://developers.openai.com/codex/app-server/)
 
 原创接口、宿主实现与示例继承仓库 MIT License；第三方插件保留各自许可。

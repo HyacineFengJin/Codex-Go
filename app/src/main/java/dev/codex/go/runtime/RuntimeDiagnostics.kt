@@ -55,7 +55,7 @@ object RuntimeDiagnostics {
         }
         return obj(
             "formatVersion" to 1, "createdAtMs" to System.currentTimeMillis(),
-            "app" to obj("version" to BuildConfig.VERSION_NAME, "versionCode" to BuildConfig.VERSION_CODE, "runtimeAbi" to BuildConfig.RUNTIME_ABI, "codex" to "0.165.0"),
+            "app" to obj("version" to BuildConfig.VERSION_NAME, "versionCode" to BuildConfig.VERSION_CODE, "runtimeAbi" to BuildConfig.RUNTIME_ABI, "codex" to (state.runningIndependentCli ?: bundled.getString("codexVersion")), "independentCodex" to (state.runningIndependentCli != null)),
             "device" to obj("manufacturer" to Build.MANUFACTURER, "model" to Build.MODEL, "sdk" to Build.VERSION.SDK_INT, "abis" to JSONArray(Build.SUPPORTED_ABIS.toList())),
             // Compare versions without including the contents of a potentially damaged marker.
             "environment" to obj("installed" to installed.isFile, "matchesBundle" to (installed.isFile && installed.readText().trim() == bundled.getString("version")), "availableBytes" to StatFs(context.filesDir.path).availableBytes),

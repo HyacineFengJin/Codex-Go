@@ -5,11 +5,9 @@ The project's **original contributions** are licensed under the [MIT License](..
 - `*.txt` contains unmodified third-party license and exception texts from the SPDX license-list-data project. A component's own license, copyright notice, and any applicable exception govern that component.
 - `notices/` preserves notices shipped inside the distributed APK/runtime, matching cached Maven artifacts, and the relevant upstream projects. Original paths are retained beneath a component prefix. Files in this directory retain their upstream terms.
 - `components.json` identifies runtime inputs, base-image packages, source archives, source hashes, and packaging commits. A base-image package may have been superseded by the overlays; both source versions are retained where applicable.
-- Each binary Release provides a separate `codex-go-0.17.0-third-party-sources.tar.gz` asset. It contains the dependency source archives, corresponding Alpine/Termux recipes and patches, Codex voice build scripts at its recorded build commit, these notices, and this project's runtime repackaging scripts/lockfiles. This archive is not another APK.
+- The [v0.23.0 source archive](https://github.com/HyacineFengJin/Codex-Go/releases/download/v0.23.0/codex-go-0.23.0-third-party-sources.tar.gz) provides source materials for both APKs. It carries the same locked Alpine / Termux sources as v0.21.0 and the corresponding Codex 0.171.0 source, voice recipes and PCRE2 10.48 materials. The release includes checksums for all assets.
 
-Source archive: [v0.21.0 third-party sources](https://github.com/HyacineFengJin/Codex-Go/releases/download/v0.21.0/codex-go-0.17.0-third-party-sources.tar.gz). Checksums are provided beside the binary in the same Release.
-
-The archive retains its 0.17.0 filename because the distributed ARM64 runtime is unchanged: all 177 runtime entries were compared byte for byte with the public v0.17.0 APK. Its SHA256 is `4158a9b5dc435237c57cd04824d756c63773f998b6b664f0e0be67a835edf073`. Current application code and updated packaging/reuse scripts are in the v0.21.0 source tag. Google Antigravity CLI is not included in the public APK or this archive.
+The official Codex source and its dependency notices remain under the upstream terms. [Codex 0.171.0 source](https://github.com/openai/codex/tree/rust-v0.171.0)
 
 ## Repackaging and replacement
 

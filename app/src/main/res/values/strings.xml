@@ -782,4 +782,18 @@
     <string name="last_page">"Last page"</string>
     <string name="copy_failed_export">"Copy failed. Export the text as a file."</string>
     <string name="draft_saved_inbox_pending">"Draft saved. Inbox cleanup failed; reopen and retry."</string>
+    <string name="about_bundled_codex">"Codex %1$s · %2$s · Android 11+"</string>
+    <string name="check_for_app_updates">"Check for updates"</string>
+    <string name="app_update_available">"Version %1$s is available"</string>
+    <string name="app_update_current">"You’re up to date"</string>
+    <string name="app_update_failed">"Couldn’t check for updates"</string>
+    <string name="app_update_releases">"GitHub Releases"</string>
+    <string name="app_update_checking">"Checking…"</string>
+    <string name="app_update_browser_failed">"Couldn’t open the releases page"</string>
+    <string name="use_independent_cli">"Independent CLI"</string>
+    <string name="cli_pack_running">"Running %1$s"</string>
+    <string name="cli_pack_installed">"Installed %1$s · applies on engine restart"</string>
+    <string name="cli_pack_not_installed">"Optional runtime APK"</string>
+    <string name="download_cli_pack">"Download CLI APK"</string>
+    <string name="cli_fell_back_to_bundled">"Independent CLI could not start. Using bundled Codex."</string>
 </resources>

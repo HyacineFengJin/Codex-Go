@@ -2,9 +2,10 @@
   {
     "name": "codex",
     "kind": "codex",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.165.0/codex-package-aarch64-unknown-linux-musl.tar.gz",
-    "file": "codex-package-0.165.0.tar.gz",
-    "sha256": "c8b2844fdef57498572db960344aee8c836ce9f75c203379da0a9c3a334fc3b7"
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-aarch64-unknown-linux-musl.tar.gz",
+    "file": "codex-package-0.171.0-aarch64.tar.gz",
+    "sha256": "d8c43bee6cf11b01eb18b95f4d7961092bc40228180808859e70dabb7784c1c9",
+    "version": "0.171.0"
   },
   {
     "name": "alpine",

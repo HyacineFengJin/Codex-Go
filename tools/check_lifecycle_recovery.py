@@ -5,7 +5,12 @@ from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 from android_driver import AndroidDriver
 
-p=argparse.ArgumentParser();p.add_argument('--serial',default='emulator-5570');a=p.parse_args();d=AndroidDriver(a.serial)
+p=argparse.ArgumentParser()
+p.add_argument('--serial',default='emulator-5570')
+upgrade=p.add_mutually_exclusive_group()
+upgrade.add_argument('--upgrade-apk',type=Path,help='After creating native history, upgrade the app in place')
+upgrade.add_argument('--cli-apk',type=Path,help='After creating native history, install only the independent 0.171.0 CLI APK')
+a=p.parse_args();d=AndroidDriver(a.serial)
 out=Path('.gradle/validation/reports/lifecycle-recovery');out.mkdir(parents=True,exist_ok=True);(out/'result.json').unlink(missing_ok=True)
 token=uuid.uuid4().hex[:8];requests=[];counts=collections.Counter();release=threading.Event();project=None;thread=None
 filename='life-native-'+token+'.txt';forbidden='life-must-not-run-'+token+'.txt'
@@ -13,7 +18,7 @@ def kind_of(body):
  for message in reversed(body.get('input',[])):
   if message.get('role')!='user':continue
   content=message.get('content',[]);text=content if isinstance(content,str) else '\n'.join(x.get('text','') for x in content if isinstance(x,dict))
-  for kind in ['LIFE_SIMPLE','LIFE_FILE','LIFE_HOLD','LIFE_QUEUED','LIFE_AFTER_REBOOT']:
+  for kind in ['LIFE_SIMPLE','LIFE_FILE','LIFE_MODEL_SOL','LIFE_EXTERNAL_FILE','LIFE_HOLD','LIFE_QUEUED','LIFE_AFTER_REBOOT']:
    if kind+'_'+token in text:return kind
  return 'UNKNOWN'
 class Fixture(BaseHTTPRequestHandler):
@@ -32,8 +37,10 @@ class Fixture(BaseHTTPRequestHandler):
     event({'type':'response.output_item.added','item':{'id':'working','type':'message','role':'assistant','content':[]}})
     event({'type':'response.output_text.delta','delta':'LIFE_HOLD_WORKING'})
     release.wait(150)
-   if kind in ['LIFE_FILE','LIFE_HOLD'] and not has_output:
-    command=('printf LIFE_FILE > '+filename+'; pwd') if kind=='LIFE_FILE' else ('printf MUST_NOT_RUN > '+forbidden)
+   if kind in ['LIFE_FILE','LIFE_EXTERNAL_FILE','LIFE_HOLD'] and not has_output:
+    if kind=='LIFE_HOLD':command='printf MUST_NOT_RUN > '+forbidden
+    elif kind=='LIFE_EXTERNAL_FILE':command='printf CLI_PACK_FILE > cli-'+filename
+    else:command='printf LIFE_FILE > '+filename+'; pwd'
     event({'type':'response.output_item.done','item':{'type':'function_call','id':'fc_'+kind,'call_id':call,'name':'exec_command','arguments':json.dumps({'cmd':command,'max_output_tokens':1000})}})
    else:event({'type':'response.output_item.done','item':{'type':'message','id':'done_'+response,'role':'assistant','content':[{'type':'output_text','text':kind+'_DONE'}]}})
    event({'type':'response.completed','response':{'id':response,'usage':{'input_tokens':0,'output_tokens':0,'total_tokens':0}}})
@@ -47,6 +54,7 @@ def value(key,default=None):return next((n.text if n.tag=='string' else n.get('v
 def labels():return [n.get('text','').strip() or n.get('content-desc','') for n in d.xml().iter('node')]
 def text(message):d.set_text(message)
 def hide_keyboard():
+ subprocess.run(d.adb+['wait-for-device'],check=True,timeout=20)
  if 'mInputShown=true' in d.shell('dumpsys','input_method'):d.shell('input','keyevent','KEYCODE_BACK');time.sleep(.15)
 def current_draft():return d.find(classname='android.widget.EditText').get('text','')
 def assert_draft(expected):assert current_draft()==expected,(current_draft(),expected)
@@ -75,6 +83,25 @@ def send(kind):text(kind+'_'+token);d.click('发送消息')
 def queue_message():
  text('LIFE_QUEUED_'+token)
  mode=next(x for x in labels() if '发送方式' in x);d.click(mode);d.click('排队，本轮结束后发送')
+def choose_model(model):
+ d.click('选择模型');d.find('选择模型');text(model);hide_keyboard()
+ choices=[node for node in d.xml().iter('node') if node.get('text')==model and node.get('class')!='android.widget.EditText']
+ assert choices, f'{model} missing from the native catalog'
+ d.tap(choices[0]);d.click('完成')
+ assert value('model')==model
+
+def app_digest():
+ path=d.shell('pm','path','dev.codex.go').strip().removeprefix('package:')
+ assert re.fullmatch(r'/data/app/[a-zA-Z0-9_./+=~-]+/base\.apk',path)
+ return d.shell('sha256sum',path).split()[0]
+
+def independent_running():
+ d.click('更多');d.click('设置');d.scroll_click('关于')
+ d.scroll_to('正在使用 0.171.0');d.click('返回对话')
+
+def runtime_marker():
+ return d.shell('run-as','dev.codex.go','cat','files/environment/.version')
+
 def booted():
  end=time.monotonic()+55
  while time.monotonic()<end:
@@ -112,6 +139,34 @@ stream_idle_timeout_ms=300000
  send('LIFE_FILE');complete('LIFE_FILE_DONE');hide_keyboard();assert d.shell('run-as','dev.codex.go','cat',folder+'/'+filename)=='LIFE_FILE'
  draft='LIFE_UNSENT_'+token;text(draft);hide_keyboard();d.shell('input','keyevent','KEYCODE_HOME');open_app();assert_draft(draft)
  d.shell('input','keyevent','KEYCODE_BACK');open_app();assert_draft(draft);print('Lifecycle: Home and Back reopen preserve native session and draft',flush=True)
+ upgrade_facts={}
+ if a.upgrade_apk or a.cli_apk:
+  old_app=d.version();old_runtime=runtime_marker();before=len(requests)
+  if a.cli_apk:
+   original_app_digest=app_digest()
+  else:
+   assert old_app=='0.21.0' and old_runtime.startswith('codex-0.165.0-')
+  d.shell('am','force-stop','dev.codex.go')
+  subprocess.run(d.adb+['install','-r',str(a.cli_apk or a.upgrade_apk)],check=True)
+  open_app();wait_ready();assert_draft(draft)
+  assert value('project')==project and value('thread')==thread and len(requests)==before
+  if a.cli_apk:
+   assert d.version()==old_app and app_digest()==original_app_digest
+   assert runtime_marker()==old_runtime
+   independent_running()
+  else:
+   assert runtime_marker().startswith('codex-0.171.0-')
+  d.find('LIFE_FILE_DONE')
+  assert d.shell('run-as','dev.codex.go','cat',folder+'/'+filename)=='LIFE_FILE'
+  choose_model('gpt-6.2-sol');send('LIFE_MODEL_SOL');complete('LIFE_MODEL_SOL_DONE');hide_keyboard()
+  assert requests[-1]['model']=='gpt-6.2-sol'
+  print('Lifecycle: old history restored and GPT-6.2 Sol reached the native request',flush=True)
+  choose_model('gpt-6.2-astra')
+  if a.cli_apk:
+   send('LIFE_EXTERNAL_FILE');complete('LIFE_EXTERNAL_FILE_DONE');hide_keyboard()
+   assert d.shell('run-as','dev.codex.go','cat',folder+'/cli-'+filename)=='CLI_PACK_FILE'
+  upgrade_facts=dict(upgradeFrom=old_app,oldRuntime=old_runtime,upgradedRuntime=runtime_marker(),upgradePreservesNativeHistoryAndDraft=True,solSelectedInNativeRequest=True)
+  print('Lifecycle: GPT-6.2 Astra selected; checking restart persistence',flush=True)
  send('LIFE_HOLD');d.find('LIFE_HOLD_WORKING',timeout=45);queue_message();draft='LIFE_PENDING_'+token;text(draft);hide_keyboard()
  d.shell('input','keyevent','KEYCODE_HOME');open_app();assert_draft(draft);assert counts['LIFE_QUEUED']==0
  d.shell('input','keyevent','KEYCODE_HOME');pid=d.shell('pidof','dev.codex.go').strip();assert re.fullmatch(r'\d+',pid)
@@ -129,8 +184,25 @@ stream_idle_timeout_ms=300000
  assert json.loads(d.shell('run-as','dev.codex.go','cat','files/codex/auth.json'))['OPENAI_API_KEY']=='sk-local-lifecycle-'+token
  print('Lifecycle: device reboot restored project, credentials, draft, native file and paused queue',flush=True)
  send('LIFE_AFTER_REBOOT');complete('LIFE_AFTER_REBOOT_DONE');assert counts['LIFE_AFTER_REBOOT']==1 and counts['LIFE_QUEUED']==0
- result=dict(version=d.version(),realNativeCodexRuntime=True,localResponsesOnly=True,homeAndBackReopen=True,completedNativeFileSurvives=True,abruptProcessDeathRecovery=True,forceStopReopen=True,deviceRebootReopen=True,projectThreadAndDraftRestored=True,fakeCredentialPreserved=True,queuePausedWithoutReplay=True,unconfirmedToolNeverExecuted=True,newTaskAfterRebootWorks=True,requestCounts=dict(counts),externalInference=False,realAccountLogin=False)
+ if a.upgrade_apk or a.cli_apk:
+  assert requests[-1]['model']=='gpt-6.2-astra' and value('model')=='gpt-6.2-astra'
+  upgrade_facts['astraSelectedAndPreservedAfterReboot']=True
+ if a.cli_apk:
+  independent_running()
+  fallback_draft='LIFE_FALLBACK_'+token
+  text(fallback_draft);hide_keyboard();before=len(requests)
+  d.shell('am','force-stop','dev.codex.go')
+  subprocess.run(d.adb+['uninstall','dev.codex.go.cli'],check=True)
+  open_app();wait_ready();assert_draft(fallback_draft)
+  assert len(requests)==before and app_digest()==original_app_digest
+  d.find('LIFE_AFTER_REBOOT_DONE')
+  upgrade_facts['bundledRuntimeAfterIndependentUpdate']=upgrade_facts.pop('upgradedRuntime')
+  upgrade_facts.update(selectedIndependentVersion='0.171.0',independentCliInstalledWithoutAppUpgrade=True,mainApkSha256=original_app_digest,
+                       independentCliPinnedAcrossReboot=True,independentCliShellToolWroteFile=True,removingCliRestoresBundledEngine=True)
+ result=dict(version=d.version(),realNativeCodexRuntime=True,localResponsesOnly=True,homeAndBackReopen=True,completedNativeFileSurvives=True,abruptProcessDeathRecovery=True,forceStopReopen=True,deviceRebootReopen=True,projectThreadAndDraftRestored=True,fakeCredentialPreserved=True,queuePausedWithoutReplay=True,unconfirmedToolNeverExecuted=True,newTaskAfterRebootWorks=True,requestCounts=dict(counts),externalInference=False,realAccountLogin=False,**upgrade_facts)
  (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');d.capture(out/'after-reboot.png');print('PASS: native task/file flow; Home, Back, kill, force-stop, reboot and explicit new task',flush=True)
 finally:
  release.set();(out/'requests.json').write_text(json.dumps(requests,indent=2)+'\n')
- d.shell('am','force-stop','dev.codex.go');subprocess.run(d.adb+['reverse','--remove',f'tcp:{port}'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);server.shutdown()
+ subprocess.run(d.adb+['shell','am','force-stop','dev.codex.go'],check=False)
+ subprocess.run(d.adb+['reverse','--remove',f'tcp:{port}'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+ server.shutdown()

@@ -5,7 +5,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parent.parent
 assert (root / 'app/build.gradle').is_file() and (root / 'gradlew').is_file()
-targets = [root / name for name in ['.gradle', '.kotlin', 'build', 'app/build']]
+targets = [root / name for name in ['.gradle', '.kotlin', 'build', 'app/build', 'codex-runtime/build']]
 targets += list((root / 'examples').glob('*/build'))
 targets += [p for p in root.rglob('__pycache__') if '.git' not in p.relative_to(root).parts]
 for path in targets:

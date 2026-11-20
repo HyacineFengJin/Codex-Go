@@ -1,14 +1,15 @@
 {
-  "version": "0.21.0",
+  "version": "0.23.0",
   "abi": "arm64-v8a",
-  "apkBytes": 290622828,
-  "sha256": "35b80ba5bbf9267440ff85b66f82eddbd15a3dcae89ded5430c81ce1f42d685c",
-  "unitTests": 146,
+  "apkBytes": 340497108,
+  "sha256": "88629eada4ae6e3729db947e23f501dc93ed05f570cf606c229a465e95daf42a",
+  "unitTests": 147,
   "unitFailures": 0,
-  "versionCode": 27,
+  "versionCode": 29,
+  "codexVersion": "0.171.0",
   "uiSmoke": false,
   "runtimeIncluded": true,
   "antigravityRuntimeIncluded": false,
-  "runtimeManifestSha256": "7f86f9e23bfcc1257f29af42981f2a3306d9db5c463a617f9fe1e71a82475e18",
-  "runtimeSourceApkSha256": "1bebe795929d5e7d67ea8521cf1b8d6b57fa074109cd460b034819f2be8f2fa1"
+  "runtimeManifestSha256": "1338c720eea813015ef686310cfe72b2bc8cb7b468f0877fc0a8d9d44180006b",
+  "runtimeSourceApkSha256": "cbe40ebba78f5e7970e2b281a24b93a60fb9ee635573a6561037610b1c0adbb6"
 }

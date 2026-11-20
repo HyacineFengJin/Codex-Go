@@ -1,0 +1,40 @@
+plugins { id 'com.android.application' }
+
+def abi = project.findProperty('runtimeAbi') ?: 'arm64-v8a'
+if (!(abi in ['arm64-v8a', 'x86_64'])) throw new GradleException('Unsupported runtime ABI')
+def directory = rootProject.file(".gradle/cli-packs/${abi}")
+def lockName = abi == 'arm64-v8a' ? 'runtime.lock.json' : 'runtime-x86_64.lock.json'
+def source = new groovy.json.JsonSlurper().parse(rootProject.file("tools/${lockName}")).find { it.kind == 'codex' }
+def parts = source.version.split('\\.').collect { it.toInteger() }
+
+android {
+    namespace 'dev.codex.go.cli'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'dev.codex.go.cli'
+        minSdk 30
+        targetSdk 35
+        versionCode parts[0] * 1_000_000 + parts[1] * 1_000 + parts[2]
+        versionName source.version
+        ndk { abiFilters.add(abi) }
+    }
+    sourceSets.main {
+        assets.srcDirs = [new File(directory, 'assets')]
+        jniLibs.srcDirs = [new File(directory, 'jniLibs')]
+    }
+    packaging {
+        jniLibs { useLegacyPackaging = true; keepDebugSymbols += ['**/*.so'] }
+    }
+}
+
+def validate = tasks.register('validateCliPack') {
+    doLast {
+        def manifest = new File(directory, 'assets/cli/manifest.json')
+        if (!manifest.isFile()) throw new GradleException('Run tools/prepare_runtime.py --cli-pack first')
+        def packed = new groovy.json.JsonSlurper().parse(manifest)
+        if (packed.version != source.version || packed.sourceSha256 != source.sha256 || packed.abi != abi) {
+            throw new GradleException('CLI pack differs from the lock. Regenerate the pack.')
+        }
+    }
+}
+tasks.matching { it.name.startsWith('merge') && it.name.endsWith('Assets') }.configureEach { dependsOn validate }

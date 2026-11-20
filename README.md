@@ -4,7 +4,9 @@
 
 首版专注本机。没有远程主机管理。
 
-[下载 0.21.0 预览版（ARM64 APK）](https://github.com/HyacineFengJin/Codex-Go/releases/download/v0.21.0/codex-go.apk) · [所有 Release](https://github.com/HyacineFengJin/Codex-Go/releases) · [版本说明](docs/release.md)
+[下载 0.23.0 预览版（ARM64 APK）](https://github.com/HyacineFengJin/Codex-Go/releases/download/v0.23.0/codex-go.apk) · [所有 Release](https://github.com/HyacineFengJin/Codex-Go/releases) · [版本说明](docs/release.md)
+
+0.23.0 将 Codex CLI 更新到 0.171.0，模型目录包含 GPT‑6.2 Sol 和 Astra。以后可单独安装 CLI 运行时包。「设置 → 关于」提供 CLI 下载和应用更新检查。
 
 0.21.0 修复跨引擎分享 / 快速消息的草稿恢复、重复合并和文件编辑器旋转丢稿；验证升级安装、退回桌面、进程终止、强制停止及设备重启后继续使用。见 [本轮检查](docs/lifecycle-selfcheck.md) 和 [限制审计](docs/limits.md)。同时发布此前的局部玻璃悬浮窗、[APK 插件系统](docs/plugins.md) 及解除配额后的大内容 / 取消修复。公开 APK 包含 Codex 运行时；[Antigravity 实验适配](docs/antigravity.md) 保留在源码中，未包含 Google CLI。
 
@@ -22,13 +24,13 @@ Android 11 及以上。原创部分使用 [MIT License](LICENSE)，第三方部�
 - 精简的 M3 Expressive + Bento 界面：常驻模型入口、彩色动作卡、短状态和按需展开的设置，适配深浅色、小屏与大字号。
 - 聊天页快捷控制，自动准备引擎，恢复已授权连接、记住 Shell 方式与悬浮窗选择。系统授权并连接后 AI 直接可用。
 
-- App 私有 Linux 环境与官方 Codex 0.165.0，ARM64 / x86_64，免 Root / Termux；内置 Python 3、pip、Node.js、npm 和 Git。
+- App 私有 Linux 环境与官方 Codex 0.171.0，ARM64 / x86_64，免 Root / Termux；内置 Python 3、pip、Node.js、npm 和 Git。
 - ChatGPT 设备码登录；可用模型从本机 app-server 获取。顶部“模型”按钮可搜索名称 / ID、刷新和选择模型，再调整支持的思考深度。选择保存并实际传入下一次请求，运行中锁定修改。
 - 流式对话、停止任务、工具过程折叠、带 diff 的文件审批及提问表单。普通短命令可从通知审批；长命令、文件差异和提问回到 App 查看。
 - 执行中插话、排队 / 撤回、中断并发送、失败重试和编辑重发。草稿与队列按会话保存，停止、失败和重启后队列需要显式继续。
 - 项目创建 / 改名 / 切换，独立工作目录与新对话草稿；旧工作区保留在默认项目。历史、材料和产物跟随原生项目 cwd，执行归属保持不变，任务运行时可浏览其他项目并准备草稿。
 - 后台跨会话浏览：A 的流式任务继续时可查看 B，独立保存 B 的草稿 / 附件与阅读位置；任务栏、通知和审批回到 A，任务结束后显式进入 B 再发送。
-- Codex 原生历史会话；优先分页接口，对尚未实现该接口的 0.165.0 本机服务回退到 `thread/read`。单条 RPC 返回上限提高至 128 Mi 字符，可恢复积累大量截图的对话；列表读取错误可单独重试。
+- Codex 原生历史会话；优先分页接口，本机服务未提供分页时回退到 `thread/read`。单条 RPC 返回上限提高至 128 Mi 字符，可恢复积累大量截图的对话；列表读取错误可单独重试。
 - 可选历史图片压缩：后续模型请求里的旧图使用最长边 768 的 JPEG 预览，最新一次观察保持原样。原图按会话保存，Codex 可用内置的历史图片工具列出 / 重读；重启后仍可引用，读取历史原图会清除实时原图缓存。原始会话文件不改写。
 - 系统文件 / 图片导入、发送前预览与移除、工作区引用。PNG / JPEG / WebP / GIF 作为图片输入；其他文件交给工作区工具读取。客户端不另设附件数量或文件大小配额；具体图片支持由当前引擎决定。
 - 工作区浏览、文本新建 / 编辑、产物卡片、图片与小文本预览、导出和系统打开 / 分享。编辑器会检查文件是否被 Codex 同时修改。
@@ -47,7 +49,7 @@ Android 11 及以上。原创部分使用 [MIT License](LICENSE)，第三方部�
 
 ## 使用
 
-从 [GitHub Release](https://github.com/HyacineFengJin/Codex-Go/releases/tag/v0.21.0) 下载 `codex-go.apk`。本机构建输出固定为 `artifacts/codex-go.apk`，构建时覆盖更新，不保留一排历史 APK。
+从 [GitHub Release](https://github.com/HyacineFengJin/Codex-Go/releases/tag/v0.23.0) 下载 `codex-go.apk`。本机构建输出固定为 `artifacts/codex-go.apk`，构建时覆盖更新，不保留一排历史 APK。
 
 1. 在聊天页直接启动，或点闪电打开「快捷控制」。首次启动检查空间并解包内置环境；以后打开 App 默认自动准备。
 2. 选择设备码登录，复制验证码到浏览器完成验证。返回对话后，点顶部“模型 · …”选择模型，旁边“思考 · …”可调整思考深度。
@@ -64,26 +66,38 @@ Android 11 及以上。原创部分使用 [MIT License](LICENSE)，第三方部�
 
 无线调试：系统的配对窗口保持打开，在通知中回复配对码；系统允许时可启用常驻配对小窗直接填写；部分系统配对窗口会强制隐藏悬浮窗，此时使用通知。通知的单回复动作参考 Shizuku，具体输入样式由手机系统决定。配对完成后自动连接独立的调试端口。发现失败时可输入无线调试主页的连接端口。
 
+## 单独更新 Codex CLI
+
+主 APK 已内置 CLI。需要单独更新时，先停止 Codex 引擎，再从发布页下载安装 `codex-cli-<版本>-arm64-v8a.apk`。随后启动 Codex，关于页会显示正在使用的独立版本。安装包由 Android 安装器处理。Codex Go 只接受同签名、同架构且版本不低于内置 CLI 的包。
+
+新版无法启动时会回退到内置 CLI。也可在「设置 → 关于」关闭「独立 CLI」后重启引擎，或在系统应用设置卸载 Codex Go CLI。对话、账号、草稿和项目继续由 Codex Go 保存。
+
 ## 构建
 
 需要 JDK 21、Android SDK 36、Python 3、`ar` 和网络。
 
 ```sh
-bash tools/build_apk.sh
 bash tools/build_apk.sh x86_64   # 完整模拟器运行包
 python tools/check_protocol.py
 ```
 
-部分旧的 Termux / Alpine 包已从下载站下架。重建本版 ARM64 运行时可以从已发布、已核验哈希的 0.17.0 APK 提取相同依赖；只提取清单引用的运行时文件，不复制旧应用代码：
+部分旧的 Termux / Alpine 包已从下载站下架。重建 ARM64 运行时时可从已发布的 0.21.0 APK 复用锁定的 Linux 依赖，同时按当前锁文件更新 Codex 自身。
 
 ```sh
-# 先从 v0.17.0 Release 下载 codex-go.apk，保存为 /path/to/codex-go-0.17.0.apk
-CODEX_GO_RUNTIME_APK=/path/to/codex-go-0.17.0.apk \
-CODEX_GO_RUNTIME_APK_SHA256=1bebe795929d5e7d67ea8521cf1b8d6b57fa074109cd460b034819f2be8f2fa1 \
+# 先从 v0.21.0 Release 下载 codex-go.apk，保存为 /path/to/codex-go-0.21.0.apk
+CODEX_GO_RUNTIME_APK=/path/to/codex-go-0.21.0.apk \
+CODEX_GO_RUNTIME_APK_SHA256=35b80ba5bbf9267440ff85b66f82eddbd15a3dcae89ded5430c81ce1f42d685c \
 bash tools/build_apk.sh arm64-v8a
 ```
 
-`tools/runtime*.lock.json` 与 `tools/toolchain-*.lock.json` 固定下载地址和 SHA256；不要无意删除锁文件。运行时二进制和生成的资产不进入 Git。固定工具集之外的新 ELF 或原生扩展仍受 Android 执行限制，不承诺任意原生依赖安装可用。
+独立 CLI APK 可从锁定的官方 Codex 包构建，无需重新打包主程序或 Alpine 工具链。
+
+```sh
+python3 tools/prepare_runtime.py --abi arm64-v8a --cli-pack
+./gradlew -PruntimeAbi=arm64-v8a :codex-runtime:assembleDebug
+```
+
+独立包与主程序需要使用同一签名。`tools/runtime*.lock.json` 与 `tools/toolchain-*.lock.json` 固定下载地址和 SHA256；不要无意删除锁文件。运行时二进制和生成的资产不进入 Git。固定工具集之外的新 ELF 或原生扩展仍受 Android 执行限制，不承诺任意原生依赖安装可用。
 
 手机包和哈希信息为 `artifacts/codex-go.apk`、`artifacts/codex-go.json`。模拟器包放在 `.gradle/validation/codex-go-x86_64-debug.apk`，测试截图与原始报告放在 `.gradle/validation/reports/`。每个架构的完整运行时独立生成在 `.gradle/runtime-bundles/`，不会混包。`-PuiSmoke` 仅用于不带引擎的界面检查。
 

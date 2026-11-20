@@ -7,3 +7,5 @@ rootProject.name = 'CodexGo'
 include ':app'
 include ':text-tools-plugin'
 project(':text-tools-plugin').projectDir = file('examples/text-tools')
+
+include ':codex-runtime'

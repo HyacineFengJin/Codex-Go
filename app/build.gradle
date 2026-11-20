@@ -6,6 +6,9 @@ plugins {
 def selectedAbi = project.findProperty('runtimeAbi') ?: (project.hasProperty('uiSmoke') ? 'x86_64' : 'arm64-v8a')
 if (!(selectedAbi in ['arm64-v8a', 'x86_64'])) throw new GradleException('runtimeAbi must be arm64-v8a or x86_64')
 def runtimeBundle = rootProject.file(".gradle/runtime-bundles/${selectedAbi}")
+def runtimeLockName = selectedAbi == 'arm64-v8a' ? 'runtime.lock.json' : 'runtime-x86_64.lock.json'
+def runtimeLock = new groovy.json.JsonSlurper().parse(rootProject.file("tools/${runtimeLockName}"))
+def codexVersion = runtimeLock.find { it.kind == 'codex' }.version
 android {
     namespace 'dev.codex.go'
     compileSdk 36
@@ -13,10 +16,11 @@ android {
         applicationId 'dev.codex.go'
         minSdk 30
         targetSdk 35
-        versionCode 27
-        versionName '0.21.0'
+        versionCode 29
+        versionName '0.23.0'
         buildConfigField 'boolean', 'UI_SMOKE', project.hasProperty('uiSmoke') ? 'true' : 'false'
         buildConfigField 'String', 'RUNTIME_ABI', '"' + selectedAbi + '"'
+        buildConfigField 'String', 'CODEX_VERSION', '"' + codexVersion + '"'
         ndk { abiFilters.add(selectedAbi) }
     }
     sourceSets { main {
@@ -64,7 +68,7 @@ if (!project.hasProperty('uiSmoke')) {
             def manifestFile = new File(runtimeBundle, 'assets/runtime/manifest.json')
             if (!manifestFile.exists()) throw new GradleException("Run python tools/prepare_runtime.py --abi ${selectedAbi} before packaging")
             def manifest = new groovy.json.JsonSlurper().parse(manifestFile)
-            if (manifest.abi != selectedAbi) throw new GradleException('Runtime bundle ABI mismatch')
+            if (manifest.abi != selectedAbi || manifest.codexVersion != codexVersion) throw new GradleException('Runtime bundle ABI/version mismatch: run prepare_runtime.py')
             ['rootfs.zip', 'ca.pem'].each { file ->
                 if (!new File(runtimeBundle, 'assets/runtime/' + file).isFile()) throw new GradleException('Runtime asset missing: ' + file)
             }

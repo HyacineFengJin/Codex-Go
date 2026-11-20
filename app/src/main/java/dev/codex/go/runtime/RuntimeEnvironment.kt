@@ -7,6 +7,7 @@ import android.system.Os
 import dev.codex.go.BuildConfig
 import org.json.JSONObject
 import java.io.File
+import java.io.InputStream
 import java.util.UUID
 import java.util.zip.ZipInputStream
 
@@ -36,16 +37,7 @@ class RuntimeEnvironment(private val context: Context) {
         progress("准备手机里的 Linux 环境…")
         val staging = File(context.filesDir, "install-${UUID.randomUUID()}").apply { mkdirs() }
         try {
-            ZipInputStream(context.assets.open("runtime/rootfs.zip")).use { zip ->
-                while (true) {
-                    val entry = zip.nextEntry ?: break
-                    val target = safeChild(staging, entry.name)
-                    if (entry.isDirectory) target.mkdirs() else {
-                        target.parentFile!!.mkdirs()
-                        target.outputStream().use { zip.copyTo(it) }
-                    }
-                }
-            }
+            context.assets.open("runtime/rootfs.zip").use { unpack(it, staging) }
             File(staging, ".executables.json").takeIf(File::exists)?.readText()?.let { text ->
                 val paths = org.json.JSONArray(text)
                 for (index in 0 until paths.length()) Os.chmod(safeChild(staging, paths.getString(index)).path, 0b111101101)
@@ -71,19 +63,53 @@ class RuntimeEnvironment(private val context: Context) {
         val servers = connectivity.getLinkProperties(connectivity.activeNetwork)?.dnsServers.orEmpty()
         File(root, "etc/resolv.conf").writeText(servers.joinToString("\n", postfix = "\n") { "nameserver ${it.hostAddress}" })
     }
-    fun launch(proxy: String, overrides: List<String> = emptyList(), guestCwd: String = "/workspace", engine: AgentEngine = AgentEngine.Codex): Process {
+    private var installedCli: InstalledCli? = null
+    private var cliFiles: File? = null
+    val independentCliVersion get() = installedCli?.version
+
+    /** Pin the runtime for both the main app-server and its auxiliary screen reader. */
+    fun prepareIndependentCli(proxy: String): Boolean {
+        val candidate = InstalledCli.find(context) ?: return true
+        return try {
+            cliFiles = candidate.prepare(context)
+            installedCli = candidate
+            candidate.verify(launchProcess(proxy, emptyList(), "/workspace", AgentEngine.Codex, versionCheck = true))
+            true
+        } catch (_: Exception) {
+            useBundledCli()
+            false
+        }
+    }
+
+    fun useBundledCli() {
+        installedCli = null
+        cliFiles = null
+    }
+
+    fun launch(proxy: String, overrides: List<String> = emptyList(), guestCwd: String = "/workspace", engine: AgentEngine = AgentEngine.Codex) =
+        launchProcess(proxy, overrides, guestCwd, engine, versionCheck = false)
+
+    private fun launchProcess(proxy: String, overrides: List<String>, guestCwd: String, engine: AgentEngine, versionCheck: Boolean): Process {
         val native = context.applicationInfo.nativeLibraryDir
         val command = mutableListOf("$native/libproot.so", "-0", "--link2symlink", "-r", root.path, "-w", guestCwd)
         listOf("/dev", "/proc", "/sys", "${workspace.path}:/workspace", "${projects.path}:/projects", "${helpers.path}:/codex-go").forEach { command += listOf("-b", it) }
         val bindings = JSONObject(File(root, ".bindings.json").readText())
-        bindings.keys().forEach { guest -> command += listOf("-b", "$native/${bindings.getString(guest)}:$guest") }
+        val external = installedCli?.takeIf { engine == AgentEngine.Codex }
+        if (external != null) command += listOf("-b", "${checkNotNull(cliFiles).path}:/opt/codex")
+        bindings.keys().forEach { guest ->
+            if (external == null || !guest.startsWith("/opt/codex/")) {
+                command += listOf("-b", "$native/${bindings.getString(guest)}:$guest")
+            }
+        }
+        external?.bindings?.forEach { (guest, file) -> command += listOf("-b", "${file.path}:$guest") }
         if (engine == AgentEngine.Antigravity) {
             check(File(native, "libguest_agy.so").isFile) { "This build does not include Antigravity CLI. Build with -Pantigravity after preparing its official runtime." }
             command += listOf("-b", "$native/libguest_agy.so:/usr/local/bin/agy", "-b", "${antigravity.path}:/root")
             command += listOf("/usr/bin/python3", "/codex-go/antigravity_bridge.py", "/usr/local/bin/agy", "acp", "--disable-telemetry", "--app-data-dir", "codex-go")
         } else {
             command += listOf("-b", "${account.path}:/root/.codex")
-            command += listOf("/usr/local/bin/codex", "app-server", "--listen", "stdio://")
+            command += "/usr/local/bin/codex"
+            command += if (versionCheck) listOf("--version") else listOf("app-server", "--listen", "stdio://")
             overrides.forEach { command += listOf("-c", it) }
         }
         return ProcessBuilder(command).apply {
@@ -99,6 +125,19 @@ class RuntimeEnvironment(private val context: Context) {
         }.start()
     }
     companion object {
+        internal fun unpack(input: InputStream, destination: File) {
+            ZipInputStream(input).use { zip ->
+                while (true) {
+                    val entry = zip.nextEntry ?: break
+                    val target = safeChild(destination, entry.name)
+                    if (entry.isDirectory) target.mkdirs() else {
+                        target.parentFile!!.mkdirs()
+                        target.outputStream().use { zip.copyTo(it) }
+                    }
+                }
+            }
+        }
+
         fun safeChild(root: File, relative: String): File {
             val target = File(root, relative)
             require(!relative.startsWith('/') && target.canonicalPath.startsWith(root.canonicalPath + File.separator)) { "运行环境包含无效路径" }

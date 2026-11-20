@@ -4,7 +4,7 @@
 
 | 组件 | 用途 / 上游 |
 | --- | --- |
-| OpenAI Codex 0.165.0 | 官方 ARM64 package，Apache-2.0；https://github.com/openai/codex |
+| OpenAI Codex 0.171.0 | 官方 ARM64 package，Apache-2.0；https://github.com/openai/codex |
 | Termux PRoot | Android Linux 兼容，GPL-2.0；https://github.com/termux/proot |
 | libtalloc | PRoot 依赖，LGPL-3.0-or-later；https://talloc.samba.org/ |
 | libandroid-shmem | Android 共享内存适配，BSD-3-Clause；https://github.com/termux/libandroid-shmem |

@@ -141,7 +141,11 @@ import java.io.File
             Text(if (batteryExempt) tr(R.string.unrestricted_background_activity) else tr(R.string.battery_optimization_may_limit_background_activity), style = MaterialTheme.typography.bodyMedium)
             TextButton(onClick = { openSettings(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)) }) { Text(tr(R.string.battery_settings)) }
         }
-        ExpandablePanel(tr(R.string.about), "Codex Go ${BuildConfig.VERSION_NAME}") { Text(tr(R.string.codex_0_165_0_arg_android_11_community_client_not_affiliated_with , BuildConfig.RUNTIME_ABI), style = MaterialTheme.typography.bodySmall) }
+        ExpandablePanel(tr(R.string.about), "Codex Go ${BuildConfig.VERSION_NAME}") {
+            Text(tr(R.string.about_bundled_codex, BuildConfig.CODEX_VERSION, BuildConfig.RUNTIME_ABI), style = MaterialTheme.typography.bodySmall)
+            CliUpdateControls(state, engine)
+            AppUpdateControls()
+        }
     }
     if (confirmStop) AlertDialog(onDismissRequest = { confirmStop = false }, title = { Text(tr(R.string.stop_the_local_environment)) }, text = { Text(tr(R.string.the_current_task_will_be_interrupted_files_and_chat_history_will)) }, confirmButton = { TextButton(onClick = { confirmStop = false; engine.stopEngine() }) { Text(tr(R.string.stop)) } }, dismissButton = { TextButton(onClick = { confirmStop = false }) { Text(tr(R.string.cancel)) } })
     if (confirmRepair) AlertDialog(onDismissRequest = { confirmRepair = false }, title = { Text(tr(R.string.repair_the_bundled_environment)) }, text = { Text(tr(R.string.stop_the_engine_reinstall_the_bundled_linux_environment_then_rest)) }, confirmButton = { TextButton(onClick = { confirmRepair = false; engine.repairEngine() }) { Text(tr(R.string.keep_data_repair)) } }, dismissButton = { TextButton(onClick = { confirmRepair = false }) { Text(tr(R.string.cancel)) } })

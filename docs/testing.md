@@ -3,7 +3,7 @@
 ## 输出约定
 
 ```sh
-bash tools/build_apk.sh             # artifacts/codex-go.apk：当前 ARM64 手机包
+bash tools/build_apk.sh             # ARM64，锁定的旧依赖下架时参照 README 指定基础 APK
 bash tools/build_apk.sh x86_64      # .gradle/validation/codex-go-x86_64-debug.apk
 ```
 
@@ -22,6 +22,8 @@ python3 tools/check_runtime_reuse.py
 python3 tools/check_editor_recovery.py --serial emulator-5570
 python3 tools/check_storage_recovery.py --serial emulator-5570
 python3 tools/check_lifecycle_recovery.py --serial emulator-5570
+# 从已安装的完整 0.21.0 x86_64 包原地升级，并验证 GPT-6.2 Sol / Astra。
+python3 tools/check_lifecycle_recovery.py --serial emulator-5570 --upgrade-apk .gradle/validation/codex-go-x86_64-debug.apk
 # 安装 v0.17.0 源码的界面测试包后再运行；保留数据升级到当前完整 x86_64 包。
 python3 tools/check_upgrade_recovery.py --serial emulator-5570
 ```

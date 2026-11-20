@@ -1,3 +1,27 @@
+# Codex Go 0.23.0 · 独立 CLI 更新
+
+2026-11-20，公开预览版。本版整合 0.22.0 的 Codex CLI 0.171.0、GPT‑6.2 Sol / Astra 和应用更新检查，并支持单独安装或更新 Codex CLI APK。
+
+- 主程序可用内置 CLI 启动。Android 安装独立 CLI 后，下次启动引擎会核对包签名、架构和版本，再切换到独立运行时。
+- 更新独立包前先停止引擎，安装完成后重启。关闭「独立 CLI」或卸载独立包可切回内置。独立版本启动或握手失败时自动回退。
+- 模型目录从当前运行的 CLI 获取。账号、历史、项目、草稿和队列继续由主程序管理。
+
+Android 15 x86_64 模拟器通过内置 0.165.0 → 独立 0.171.0 的实际升级，主 APK 哈希保持相同，并验证历史 / 草稿恢复、新模型请求、工具执行、重启、卸载回退以及握手失败自动回退。147 项 JVM 测试和两种架构构建 / lint 通过。ARM64 APK 已核对签名与载荷，真机待验证。模型响应使用本机测试服务。
+
+[GitHub Release](https://github.com/HyacineFengJin/Codex-Go/releases/tag/v0.23.0) · [验证记录](../artifacts/verification.json)
+
+---
+
+# Codex Go 0.22.0 · Codex CLI 与模型目录
+
+2026-11-20，本地构建。内置 Codex CLI 更新至 0.171.0，顶部模型选择器通过原生目录提供 GPT‑6.2 Sol 和 Astra。引擎默认选项沿用上游目录默认，手动模型选择保存在会话设置中。实际模型访问取决于账号和工作区。 [Codex CLI 发布说明](https://github.com/openai/codex/releases/tag/rust-v0.171.0)
+
+「设置 → 关于」显示内置 CLI 版本。ARM64 构建可手动检查 Codex Go 的 GitHub Release，发现新版后打开该发布页，下载的 APK 由 Android 安装。内置 CLI 随 APK 一并升级。
+
+通过 147 项 JVM 测试和两种架构的构建 / lint。Android 15 x86_64 上用完整原生包覆盖安装 0.21.0，确认旧历史、草稿和工作区保留，两款模型 ID 都进入原生请求，Astra 选择在设备重启后仍有效。文件导入、图片、工具执行、导出及排队 / 中断流程也通过。ARM64 包的关于页和 GitHub 查询在模拟器上通过，原生启动受与旧版相同的模拟器转译加载错误影响，仍待真机验证。模型回复来自本机测试服务。 [验证记录](../artifacts/verification.json)
+
+---
+
 # Codex Go 0.21.0 · 恢复与日常使用回归
 
 2026-11-16，公开预览版。[下载 Release](https://github.com/HyacineFengJin/Codex-Go/releases/tag/v0.21.0)。

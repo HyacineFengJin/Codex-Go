@@ -49,7 +49,7 @@ with zipfile.ZipFile(destination) as apk:
     manifest = json.loads(apk.read('assets/runtime/manifest.json'))
     assert manifest['abi'] == abi, 'Distributed APK must contain its complete runtime'
     assert ('assets/antigravity/manifest.json' in apk.namelist()) == (f'lib/{abi}/libguest_agy.so' in apk.namelist()), 'Optional CLI manifest and binary disagree'
-    result.update(versionCode=metadata['versionCode'], uiSmoke=False, runtimeIncluded=True,
+    result.update(versionCode=metadata['versionCode'], codexVersion=manifest['codexVersion'], uiSmoke=False, runtimeIncluded=True,
                   antigravityRuntimeIncluded='assets/antigravity/manifest.json' in apk.namelist(),
                   runtimeManifestSha256=hashlib.sha256(apk.read('assets/runtime/manifest.json')).hexdigest())
 
